@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:group_project/userProfileTab/contactus.dart';
 import 'package:group_project/userProfileTab/editprofile.dart';
 import 'package:group_project/userProfileTab/login.dart';
+import 'package:group_project/userProfileTab/payment.dart';
+import 'package:group_project/userProfileTab/themeProvider.dart';
+import 'package:provider/provider.dart';
 
 class User extends StatefulWidget {
   const User({super.key});
@@ -19,7 +23,6 @@ class _User extends State<User> {
 
   @override
   Widget build(BuildContext context) {
-    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -28,23 +31,22 @@ class _User extends State<User> {
           "Profile",
           style: Theme.of(context).textTheme.headlineLarge,
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(isDark ? Icons.dark_mode : Icons.light_mode))
-        ],
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               SizedBox(
-                width: 100,
-                height: 100,
+                width: 80,
+                height: 80,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Icon(Icons.person_3),
+                  child: Image.asset(
+                    "assets/woman.png",
+                    width: 80,
+                    height: 80,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -72,9 +74,14 @@ class _User extends State<User> {
                 title: "Edit Profile",
                 icon: Icons.edit,
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => EditProfile()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const EditProfile()));
                 },
+              ),
+              const SizedBox(
+                height: 10,
               ),
               ProfileMenu(
                 title: "Payment",
@@ -84,16 +91,23 @@ class _User extends State<User> {
                       MaterialPageRoute(builder: (context) => const Payment()));
                 },
               ),
+              const SizedBox(
+                height: 10,
+              ),
               ProfileMenu(
                 title: "Contact Us",
                 icon: Icons.phone,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContactUs()));
+                },
               ),
-              ProfileMenu(
-                title: "Settings",
-                icon: Icons.settings,
-                onPressed: () {},
+              const SizedBox(
+                height: 10,
               ),
+              const SetDarkMode(),
               const Divider(),
               const SizedBox(
                 height: 20,
@@ -131,6 +145,8 @@ class ProfileMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var iconColor =
+        Provider.of<ThemeProvider>(context).themeData.listTileTheme.iconColor;
     return ListTile(
       onTap: onPressed,
       leading: Container(
@@ -138,11 +154,8 @@ class ProfileMenu extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
-            color: Colors.lime.withOpacity(0.2)),
-        child: Icon(
-          icon,
-          color: const Color.fromARGB(255, 188, 165, 231),
-        ),
+            color: iconColor?.withOpacity(0.2)),
+        child: Icon(icon, color: iconColor),
       ),
       title: Text(
         title,
@@ -166,21 +179,46 @@ class ProfileMenu extends StatelessWidget {
   }
 }
 
-class Payment extends StatelessWidget {
-  const Payment({super.key});
+class SetDarkMode extends StatefulWidget {
+  const SetDarkMode({super.key});
+  @override
+  State<SetDarkMode> createState() => _SetDarkMode();
+}
+
+class _SetDarkMode extends State<SetDarkMode> {
+  bool isDark = false;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Payment",
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+    var iconColor =
+        Provider.of<ThemeProvider>(context).themeData.listTileTheme.iconColor;
+    return ListTile(
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: iconColor?.withOpacity(0.2)),
+          child: Icon(isDark ? Icons.light_mode : Icons.dark_mode,
+              color: iconColor),
         ),
-        body: SingleChildScrollView(
-            child: Container(
-          padding: const EdgeInsets.all(20),
-        )));
+        title: Text(
+          "Dark Mode",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        trailing: Switch(
+          value: isDark,
+          activeColor: Colors.blue,
+          onChanged: (value) {
+            setState(() {
+              isDark = value;
+              Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
+            });
+          },
+        ));
   }
 }

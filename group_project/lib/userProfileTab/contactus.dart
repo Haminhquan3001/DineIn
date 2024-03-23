@@ -4,18 +4,16 @@ import 'package:flutter/widgets.dart';
 import 'package:group_project/userProfileTab/themeProvider.dart';
 import 'package:provider/provider.dart';
 
-class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+class ContactUs extends StatefulWidget {
+  const ContactUs({super.key});
   @override
-  State<EditProfile> createState() => _EditProfile();
+  State<ContactUs> createState() => _ContactUs();
 }
 
-class _EditProfile extends State<EditProfile> {
-  final _usernameController = TextEditingController();
+class _ContactUs extends State<ContactUs> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _repasswordController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _msgController = TextEditingController();
 
   @override
   void initState() {
@@ -26,10 +24,8 @@ class _EditProfile extends State<EditProfile> {
   void dispose() {
     super.dispose();
     _emailController.dispose();
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _repasswordController.dispose();
-    _phoneController.dispose();
+    _nameController.dispose();
+    _msgController.dispose();
   }
 
   @override
@@ -40,35 +36,20 @@ class _EditProfile extends State<EditProfile> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Edit Profile",
+          "Contact Us",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 50),
           child: Column(
             children: [
-              SizedBox(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    "assets/woman.png",
-                    width: 80,
-                    height: 80,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
               Form(
                   child: Column(
                 children: [
                   TextFormField(
-                    controller: _usernameController,
+                    controller: _nameController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(50)),
@@ -76,14 +57,14 @@ class _EditProfile extends State<EditProfile> {
                             borderRadius: BorderRadius.circular(50),
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
-                        label: const Text("Username"),
+                        label: const Text("Your Name"),
                         prefixIcon: Icon(
                           Icons.person_3_outlined,
                           color: iconColor,
                         )),
                   ),
                   const SizedBox(
-                    height: 15,
+                    height: 20,
                   ),
                   TextFormField(
                     controller: _emailController,
@@ -101,48 +82,26 @@ class _EditProfile extends State<EditProfile> {
                         )),
                   ),
                   const SizedBox(
-                    height: 15,
+                    height: 20,
                   ),
                   TextFormField(
-                    controller: _phoneController,
+                    controller: _msgController,
+                    maxLines: 5,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50)),
+                            borderRadius: BorderRadius.circular(20)),
                         focusedBorder: const OutlineInputBorder(
                             borderSide:
                                 BorderSide(width: 2, color: Colors.black)),
-                        label: const Text("Phone No"),
-                        prefixIcon: Icon(Icons.phone, color: iconColor)),
+                        labelText: "Your Message...",
+                        prefixIcon: Icon(Icons.messenger_outline_outlined,
+                            color: iconColor)),
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            borderSide: const BorderSide(
-                                width: 2, color: Colors.black)),
-                        label: const Text("Password"),
-                        prefixIcon: Icon(Icons.password, color: iconColor)),
-                  ),
                   const SizedBox(
                     height: 15,
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            borderSide: const BorderSide(
-                                width: 2, color: Colors.black)),
-                        label: const Text("Re-enter Password"),
-                        prefixIcon: Icon(Icons.password, color: iconColor)),
                   ),
                   const SizedBox(
                     height: 15,
@@ -157,7 +116,7 @@ class _EditProfile extends State<EditProfile> {
                           side: BorderSide.none,
                           shape: const StadiumBorder()),
                       child: const Text(
-                        "Save Profile",
+                        "Submit",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

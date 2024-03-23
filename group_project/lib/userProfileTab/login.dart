@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:group_project/userProfileTab/signup.dart';
+import 'package:group_project/userProfileTab/themeProvider.dart';
+import 'package:provider/provider.dart';
 import 'user.dart';
 
 class Login extends StatefulWidget {
@@ -43,15 +45,12 @@ class _Login extends State<Login> {
           children: [
             const Text(
               "Welcome back!",
-              style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const Text(
                 "Enter your credientials below to log in to your account",
-                style: TextStyle(fontSize: 25, color: Colors.black54)),
+                style: TextStyle(fontSize: 25)),
             const SizedBox(
               height: 50,
             ),
@@ -105,8 +104,8 @@ class _Login extends State<Login> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          print(
-              "USERNAMEEEEE is: ${_usernameController.text} PASSSSSSSS is: ${_passwordController.text}");
+          // print(
+          //     "USERNAMEEEEE is: ${_usernameController.text} PASSSSSSSS is: ${_passwordController.text}");
           //NEED TO VERIFY THE USERNAME AND LOGIN
           //IF SUCESS RETURN EITHER HOME PAGE OR USER ACCOUNT PAGE
           //IF NOT RETURN THIS PAGE WITH POP UP
@@ -126,6 +125,8 @@ class _Login extends State<Login> {
   }
 
   Widget _usernameTextFieldWidget() {
+    var iconColor =
+        Provider.of<ThemeProvider>(context).themeData.listTileTheme.iconColor;
     return TextFormField(
       controller: _usernameController,
       decoration: InputDecoration(
@@ -135,11 +136,16 @@ class _Login extends State<Login> {
               borderRadius: BorderRadius.circular(50),
               borderSide: const BorderSide(width: 2, color: Colors.black)),
           label: const Text("Username or email"),
-          prefixIcon: const Icon(Icons.person_3_outlined)),
+          prefixIcon: Icon(
+            Icons.person_3_outlined,
+            color: iconColor,
+          )),
     );
   }
 
   Widget _passwordTextFieldWidget() {
+    var iconColor =
+        Provider.of<ThemeProvider>(context).themeData.listTileTheme.iconColor;
     return TextFormField(
       controller: _passwordController,
       obscureText: _showPassword,
@@ -149,9 +155,16 @@ class _Login extends State<Login> {
               borderRadius: BorderRadius.circular(50),
               borderSide: const BorderSide(width: 2, color: Colors.black)),
           label: const Text("Password"),
-          prefixIcon: const Icon(Icons.fingerprint),
+          prefixIcon: Icon(
+            Icons.fingerprint,
+            color: iconColor,
+          ),
           suffixIcon: IconButton(
-            icon: const Icon(Icons.remove_red_eye_sharp),
+            icon: Icon(
+                _showPassword
+                    ? Icons.remove_red_eye_sharp
+                    : Icons.remove_red_eye_outlined,
+                color: iconColor),
             onPressed: _toggle,
           )),
     );
@@ -205,7 +218,7 @@ class _Login extends State<Login> {
               )),
           label: const Text(
             "Sign In with Google",
-            style: TextStyle(color: Colors.black, fontSize: 18),
+            style: TextStyle(fontSize: 18),
           )),
     );
   }
@@ -216,14 +229,12 @@ class _Login extends State<Login> {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const SignUp()));
         },
-        child: const Text.rich(TextSpan(
-            text: "Don't have an account?",
-            style: TextStyle(color: Colors.black),
-            children: [
-              TextSpan(
-                text: " Sign Up",
-                style: TextStyle(color: Colors.red),
-              )
-            ])));
+        child:
+            const Text.rich(TextSpan(text: "Don't have an account?", children: [
+          TextSpan(
+            text: " Sign Up",
+            style: TextStyle(color: Colors.red),
+          )
+        ])));
   }
 }

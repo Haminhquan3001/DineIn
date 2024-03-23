@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:group_project/userProfileTab/themeProvider.dart';
+import 'package:provider/provider.dart';
 import 'user.dart';
 import 'package:group_project/userProfileTab/login.dart';
 
@@ -48,14 +50,11 @@ class _SignUp extends State<SignUp> {
           children: [
             const Text(
               "Sign up",
-              style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const Text("Enter your credientials below to create an account",
-                style: TextStyle(fontSize: 25, color: Colors.black54)),
+                style: TextStyle(fontSize: 25)),
             const SizedBox(
               height: 50,
             ),
@@ -121,6 +120,8 @@ class _SignUp extends State<SignUp> {
   }
 
   Widget _emailTextFieldWidget() {
+    var iconColor =
+        Provider.of<ThemeProvider>(context).themeData.listTileTheme.iconColor;
     return TextFormField(
       controller: _emailController,
       decoration: InputDecoration(
@@ -129,11 +130,16 @@ class _SignUp extends State<SignUp> {
               borderRadius: BorderRadius.circular(50),
               borderSide: const BorderSide(width: 2, color: Colors.black)),
           label: const Text("Email"),
-          prefixIcon: const Icon(Icons.email)),
+          prefixIcon: Icon(
+            Icons.email,
+            color: iconColor,
+          )),
     );
   }
 
   Widget _fullnameTextFieldWidget() {
+    var iconColor =
+        Provider.of<ThemeProvider>(context).themeData.listTileTheme.iconColor;
     return TextFormField(
       controller: _fullnameController,
       decoration: InputDecoration(
@@ -142,11 +148,16 @@ class _SignUp extends State<SignUp> {
               borderRadius: BorderRadius.circular(50),
               borderSide: const BorderSide(width: 2, color: Colors.black)),
           label: const Text("Enter your Full Name"),
-          prefixIcon: const Icon(Icons.person_3_outlined)),
+          prefixIcon: Icon(
+            Icons.person_3_outlined,
+            color: iconColor,
+          )),
     );
   }
 
   Widget _passwordTextFieldWidget() {
+    var iconColor =
+        Provider.of<ThemeProvider>(context).themeData.listTileTheme.iconColor;
     return TextFormField(
       obscureText: _showPassword,
       controller: _passwordController,
@@ -156,9 +167,14 @@ class _SignUp extends State<SignUp> {
               borderRadius: BorderRadius.circular(50),
               borderSide: const BorderSide(width: 2, color: Colors.black)),
           label: const Text("Password"),
-          prefixIcon: const Icon(Icons.fingerprint),
+          prefixIcon: Icon(Icons.fingerprint, color: iconColor),
           suffixIcon: IconButton(
-            icon: const Icon(Icons.remove_red_eye_sharp),
+            icon: Icon(
+              _showPassword
+                  ? Icons.remove_red_eye_sharp
+                  : Icons.remove_red_eye_outlined,
+              color: iconColor,
+            ),
             onPressed: _toggle,
           )),
     );
@@ -176,8 +192,9 @@ class _SignUp extends State<SignUp> {
             }),
         RichText(
             text: TextSpan(children: [
-          const TextSpan(
-              text: "I accept the", style: TextStyle(color: Colors.black54)),
+          TextSpan(
+              text: "I accept the ",
+              style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
           TextSpan(
               text: " terms and privacy policy",
               style: const TextStyle(color: Colors.red),
@@ -240,7 +257,7 @@ class _SignUp extends State<SignUp> {
         },
         child: const Text.rich(TextSpan(
             text: "Already have an account?",
-            style: TextStyle(color: Colors.black, fontSize: 15),
+            style: TextStyle(fontSize: 15),
             children: [
               TextSpan(
                 text: " Log in",
