@@ -37,6 +37,14 @@ dependencies:
   table_calendar: ^3.1.0
   flutter_svg: ^2.0.10+1
   google_fonts: ^6.2.0
+  provider: ^6.1.2
+  go_router: ^13.2.1
+  logger: ^2.1.0
+  fpdart: ^1.1.0
+  supabase_flutter: ^2.3.4
+  google_sign_in: ^6.2.1
+  lottie: ^3.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +72,9 @@ flutter:
     - assets/restaurants/
     - assets/users/
     - assets/dishes/
-    - assets/svg/
+    - assets/icons_svg/
+    - assets/logo/
+    - assets/core/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class User with ChangeNotifier {
+class UserProvider with ChangeNotifier {
   String _username = '';
   String _password = '';
   String _email = '';

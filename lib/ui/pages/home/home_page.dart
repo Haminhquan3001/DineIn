@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/ui/widgets/bottom_navbar.widget.dart';
 import 'restaurant_card.dart';
 
 class HomePage extends StatelessWidget {
@@ -89,7 +88,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 20,
       ),
-      bottomNavigationBar: const BottomNavBar(),
+      // bottomNavigationBar: const BottomNavBar(),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
         child: Column(
