@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/config/icon_assets.dart';
 import 'package:group_project/ui/widgets/app_icons.dart';
-import 'package:logger/web.dart';
-// import 'package:go_router/go_router.dart';
 
-Logger log = Logger();
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({super.key});
@@ -20,6 +18,7 @@ class BottomNavBar extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: goRouter.routeInformationProvider,
       builder: (context, RouteInformation? routeInformation, child) {
+        log.d(routeInformation?.uri.pathSegments);
         String currentTab = routeInformation?.uri.pathSegments[0] ?? 'home';
 
         return BottomNavigationBar(

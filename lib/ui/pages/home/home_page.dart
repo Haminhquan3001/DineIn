@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:group_project/providers/user.provider.dart';
+import 'package:provider/provider.dart';
 import 'restaurant_card.dart';
 
 class HomePage extends StatelessWidget {
@@ -84,6 +87,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double padding = 30;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 20,

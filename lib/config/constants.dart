@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/web.dart';
 
 /// Simple preloader inside a Center widget
 const preloader =
@@ -12,6 +13,15 @@ const formPadding = EdgeInsets.symmetric(vertical: 20, horizontal: 16);
 
 /// Error message to display the user when unexpected error occurs.
 const unexpectedErrorMessage = 'Unexpected error occurred.';
+
+final log = Logger();
+
+class ApiResponse<T> {
+  final T? data;
+  final String? error;
+
+  ApiResponse({this.data, this.error});
+}
 
 /// Set of extension methods to easily display a snackbar
 // extension ShowSnackBar on BuildContext {

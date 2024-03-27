@@ -43,7 +43,7 @@ class _SplashPageState extends State<SplashPage> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
           ),
-          child: Image.asset('assets/logo/dinein-logo-light.png'),
+          child: Image.asset('assets/logo/dinein-logo-light.png'), //TODO change logo depending on theme
         ),
       ),
     );

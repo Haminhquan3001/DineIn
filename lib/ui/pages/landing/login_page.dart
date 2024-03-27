@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/pages/landing/widgets/google_credentials_button.dart';
 import 'package:group_project/ui/pages/landing/widgets/or_divider.dart';
 import 'package:group_project/ui/pages/landing/widgets/password_crendetials_button.dart';
@@ -7,6 +8,7 @@ import 'package:group_project/ui/pages/landing/widgets/redirect_to.dart';
 import 'package:group_project/ui/widgets/input_password_form.dart';
 import 'package:group_project/ui/widgets/input_text_form.dart';
 import 'package:group_project/ui/widgets/space_y.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,7 +19,7 @@ class LoginPage extends StatefulWidget {
 class _Login extends State<LoginPage> {
   bool isChecked = false;
   bool _showPassword = true;
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   void _toggle() {
     setState(() {
@@ -32,13 +34,15 @@ class _Login extends State<LoginPage> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
         body: Center(
       child: SingleChildScrollView(
@@ -61,8 +65,8 @@ class _Login extends State<LoginPage> {
                 child: Column(
               children: [
                 InputTextForm(
-                  text: 'Username or email',
-                  controller: _usernameController,
+                  text: 'Email',
+                  controller: _emailController,
                   icon: Icons.person_3_outlined,
                 ),
                 const SpaceY(20),
@@ -85,16 +89,50 @@ class _Login extends State<LoginPage> {
                   ],
                 ),
                 const SpaceY(15),
-                PasswordCredentialsButton(
-                  loginOrSignupText: 'Log In',
-                  onPressed: () {}, // TODO: implement login with password
-                ),
+                Consumer<UserProvider>(builder: (context, provider, _) {
+                  return PasswordCredentialsButton(
+                    isLoading: provider.isLoading,
+                    loginOrSignupText: 'Log In',
+                    onPressed: () async {
+                      final res = await userProvider.useLoginWithPassword(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
+
+                      // if the widget is not mounted, don't do anything
+                      // this prevents memory leaks
+                      if (!context.mounted) return;
+
+                      if (res.error != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(res.error!)),
+                        );
+                      }
+
+                      context.pushReplacement('/home');
+                    },
+                  );
+                }),
                 const SpaceY(10),
                 const OrDivider(),
                 const SpaceY(10),
                 GoogleCredentialsButton(
                   loginOrSignupText: 'Login',
-                  onPressed: () => context.replace('/login'),
+                  onPressed: () async {
+                    final res = await userProvider.useLoginWithGoogle();
+
+                    // if the widget is not mounted, don't do anything
+                    // this prevents memory leaks
+                    if (!context.mounted) return;
+
+                    if (res.error != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(res.error!)),
+                      );
+                    }
+
+                    context.pushReplacement('/home');
+                  },
                 ),
                 const SpaceY(10),
                 RedirectTo(

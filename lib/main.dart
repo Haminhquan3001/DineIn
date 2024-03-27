@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/backend/auth/infraestructure/repositories/auth_repository_impl.dart';
+import 'package:group_project/backend/auth/infraestructure/sources/auth_supabase_api.dart';
 import 'package:group_project/backend/core/database/env.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // initializing supabase instance - connection to the database
-  await Supabase.initialize(
+  final supabase = await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseKey,
   );
@@ -20,7 +22,9 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => ThemeProvider()),
-      ChangeNotifierProvider(create: (context) => UserProvider()),
+      ChangeNotifierProvider(
+          create: (context) => UserProvider(AuthRepositoryImpl(
+              remoteApi: AuthSupabaseApi(supabase: supabase.client)))),
     ],
     child: const MyApp(),
   ));

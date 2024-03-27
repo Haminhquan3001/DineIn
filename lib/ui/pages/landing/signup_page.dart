@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/pages/landing/widgets/google_credentials_button.dart';
 import 'package:group_project/ui/pages/landing/widgets/or_divider.dart';
 import 'package:group_project/ui/pages/landing/widgets/password_crendetials_button.dart';
@@ -8,6 +9,7 @@ import 'package:group_project/ui/pages/landing/widgets/term_and_policy_checkbox.
 import 'package:group_project/ui/widgets/input_password_form.dart';
 import 'package:group_project/ui/widgets/input_text_form.dart';
 import 'package:group_project/ui/widgets/space_y.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -50,6 +52,8 @@ class _SignUp extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -93,16 +97,58 @@ class _SignUp extends State<SignUpPage> {
                     onChanged: _toogleCheck,
                   ),
                   const SpaceY(10),
-                  PasswordCredentialsButton(
-                    loginOrSignupText: 'Sign Up',
-                    onPressed: () {},
-                  ),
+                  Consumer<UserProvider>(builder: (context, provider, _) {
+                    return PasswordCredentialsButton(
+                      isLoading: provider.isLoading,
+                      loginOrSignupText: 'Sign Up',
+                      onPressed: () async {
+                        if (!_isChecked) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Please accept the terms and policy')),
+                          );
+                          return;
+                        }
+
+                        final res = await provider.useSignUpWithPassword(
+                            _fullnameController.text,
+                            _emailController.text,
+                            _passwordController.text);
+
+                        if (!context.mounted) return;
+
+                        if (res.error != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(res.error!)),
+                          );
+                        }
+
+                        context.pushReplacement('/login');
+                      },
+                    );
+                  }),
                   const SpaceY(10),
                   const OrDivider(),
                   const SpaceY(10),
                   GoogleCredentialsButton(
-                      loginOrSignupText: 'Continue',
-                      onPressed: () {},),
+                    loginOrSignupText: 'Sign up',
+                    onPressed: () async {
+                      final res = await userProvider.useLoginWithGoogle();
+
+                      // if the widget is not mounted, don't do anything
+                      // this prevents memory leaks
+                      if (!context.mounted) return;
+
+                      if (res.error != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(res.error!)),
+                        );
+                      }
+
+                      context.pushReplacement('/home');
+                    },
+                  ),
                   const SpaceY(10),
                   RedirectTo(
                     messages: const ['Already have an account?', ' Log in'],
