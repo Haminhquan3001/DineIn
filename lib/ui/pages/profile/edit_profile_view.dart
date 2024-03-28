@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/providers/user.provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:group_project/providers/user.provider.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -30,14 +31,14 @@ class _EditProfile extends State<EditProfileView> {
     _phoneController.dispose();
   }
 
-  void saveProfile() {
-    //TODO: save the new user profile to the database
-  }
-
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final user = userProvider.user;
+    final user = userProvider.getUser;
+
+    _usernameController.text = user.name;
+    _emailController.text = user.email;
+    _phoneController.text = user.phone ?? '';
 
     Image userPicture = user.avatarUrl != null
         ? Image.network(user.avatarUrl!)
@@ -76,7 +77,7 @@ class _EditProfile extends State<EditProfileView> {
                             borderRadius: BorderRadius.circular(50),
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
-                        label: const Text("Username"),
+                        label: const Text('Full name'),
                         prefixIcon: const Icon(
                           Icons.person_3_outlined,
                         )),
@@ -93,7 +94,7 @@ class _EditProfile extends State<EditProfileView> {
                             borderRadius: BorderRadius.circular(50),
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
-                        label: const Text("Email"),
+                        label: const Text('Email'),
                         prefixIcon: const Icon(
                           Icons.email,
                         )),
@@ -109,13 +110,14 @@ class _EditProfile extends State<EditProfileView> {
                         focusedBorder: const OutlineInputBorder(
                             borderSide:
                                 BorderSide(width: 2, color: Colors.black)),
-                        label: const Text("Phone No"),
+                        label: const Text('Phone'),
                         prefixIcon: const Icon(Icons.phone)),
                   ),
                   const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
+                    obscureText: true,
                     controller: _passwordController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -124,14 +126,15 @@ class _EditProfile extends State<EditProfileView> {
                             borderRadius: BorderRadius.circular(50),
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
-                        label: const Text("Password"),
+                        label: const Text("New password"),
                         prefixIcon: const Icon(Icons.password)),
                   ),
                   const SizedBox(
                     height: 15,
                   ),
                   TextFormField(
-                    controller: _passwordController,
+                    obscureText: true,
+                    controller: _repasswordController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(50)),
@@ -139,7 +142,7 @@ class _EditProfile extends State<EditProfileView> {
                             borderRadius: BorderRadius.circular(50),
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
-                        label: const Text("Re-enter Password"),
+                        label: const Text("Re-enter new password"),
                         prefixIcon: const Icon(Icons.password)),
                   ),
                   const SizedBox(
@@ -147,18 +150,49 @@ class _EditProfile extends State<EditProfileView> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {}, // TODO: pass function
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 74, 81, 117),
-                          side: BorderSide.none,
-                          shape: const StadiumBorder()),
-                      child: const Text(
-                        "Save Profile",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    child:
+                        Consumer<UserProvider>(builder: (context, provider, _) {
+                      return ElevatedButton(
+                        onPressed: provider.isLoading
+                            ? null
+                            : () async {
+                                final res = await provider.useUpdateProfile(
+                                  name: _usernameController.text,
+                                  email: _emailController.text,
+                                  phone: _phoneController.text,
+                                  password: _passwordController.text,
+                                );
+
+                                if (!context.mounted || !mounted) return;
+
+                                if (res.error != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(res.error!)),
+                                  );
+                                  return;
+                                }
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(res.data!)),
+                                );
+
+                                _passwordController.clear();
+                                _repasswordController.clear();
+                                context.pop();
+                              },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 74, 81, 117),
+                            side: BorderSide.none,
+                            shape: const StadiumBorder()),
+                        child: provider.isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                "Save Profile",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                      );
+                    }),
                   ),
                 ],
               ))

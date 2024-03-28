@@ -10,6 +10,29 @@ class AppTheme {
 
     iconTheme: const IconThemeData(color: Colors.orange),
 
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return const Color.fromARGB(125, 74, 81, 117); // disabled color
+            }
+            return const Color.fromARGB(255, 74, 81, 117); // normal color
+          },
+        ),
+        foregroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return Colors.black; // disabled text color
+            }
+            return Colors.white; // normal text color
+          },
+        ),
+        side: MaterialStateProperty.all(BorderSide.none),
+        shape: MaterialStateProperty.all(const StadiumBorder()),
+      ),
+    ),
+
     /// Primary color of the app
     // primaryColor: Colors.orange,
     // primaryColorDark: Colors.orange,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/ui/pages/landing/login_page.dart';
 import 'package:group_project/ui/pages/landing/signup_page.dart';
 import 'package:group_project/ui/pages/home/home_page.dart';
@@ -30,10 +31,11 @@ GoRouter router = GoRouter(
       builder: (context, state) => const WelcomePage(),
     ),
     GoRoute(
-      path: '/login',
-      name: 'login',
-      builder: (context, state) => const LoginPage(),
-    ),
+        path: '/login',
+        name: 'login',
+        builder: (context, state) {
+          return LoginPage(query: state.uri.queryParameters['email']);
+        }),
     GoRoute(
       path: '/signup',
       name: 'signup',

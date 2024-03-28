@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/user.provider.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ContactUsView extends StatefulWidget {
   const ContactUsView({super.key});
@@ -100,17 +103,47 @@ class _ContactUs extends State<ContactUsView> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {}, //TODO contact us
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 74, 81, 117),
-                          side: BorderSide.none,
-                          shape: const StadiumBorder()),
-                      child: const Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    child: Consumer<UserProvider>(
+                      builder: (context, provider, _) {
+                        return ElevatedButton(
+                          onPressed: provider.isLoading
+                              ? null
+                              : () async {
+                                  try {
+                                    final res =
+                                        await provider.useSendContactForm(
+                                            senderName: _nameController.text,
+                                            senderEmail: _emailController.text,
+                                            senderMessage: _msgController.text);
+
+                                    if (!context.mounted || !mounted) return;
+
+                                    if (res.error != null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(content: Text(res.error!)),
+                                      );
+                                      return;
+                                    }
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(res.data!)));
+                                  } on Exception catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(e.toString())));
+                                  }
+                                },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 74, 81, 117),
+                              side: BorderSide.none,
+                              shape: const StadiumBorder()),
+                          child: provider.isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text("Submit",
+                                  style: TextStyle(color: Colors.white)),
+                        );
+                      },
                     ),
                   ),
                 ],

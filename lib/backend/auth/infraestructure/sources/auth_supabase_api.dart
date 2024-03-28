@@ -1,7 +1,6 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:group_project/backend/auth/infraestructure/models/user_model.dart';
 import 'package:group_project/backend/core/error/exceptions.dart';
-import 'package:group_project/config/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthApiDataSource {
@@ -20,7 +19,21 @@ abstract interface class AuthApiDataSource {
 
   Future<void> signOut();
 
-  UserModel getCurrentUser();
+  Future<UserModel> getServerUser();
+
+  Future<String> sendContactForm({
+    required String senderName,
+    required String senderEmail,
+    required String senderMessage,
+  });
+
+  Future<String> updateProfile({
+    String? name,
+    String? email,
+    String? phone,
+  });
+
+  Future<String> updatePassword({required String password});
 }
 
 class AuthSupabaseApi implements AuthApiDataSource {
@@ -41,7 +54,8 @@ class AuthSupabaseApi implements AuthApiDataSource {
       );
 
       if (response.user == null) {
-        throw ServerException('loginWithPassword: user is null');
+        throw ServerException(
+            'Supabase API: could not login. The user was null');
       }
 
       return response.user!.id;
@@ -59,24 +73,25 @@ class AuthSupabaseApi implements AuthApiDataSource {
     required String password,
   }) async {
     try {
-      final AuthResponse response = await supabase.auth.signUp(
-        password: password,
+      final response = await supabase.auth.signUp(
         email: email,
+        password: password,
         data: {
           'full_name': name.trim(),
         },
         emailRedirectTo: 'io.supabase.flutterquickstart://login-callback/',
       );
 
-      if (response.user == null) {
-        throw ServerException('signUpWithEmailAndPassword: user is null');
+      if (response.user?.id == null) {
+        throw ServerException(
+            'Ups! You could not sign up with your Crendentials.');
       }
 
-      return response.user!.id;
+      return "201: Sucesss";
     } on AuthException catch (e) {
-      throw ServerException(e.message);
+      throw ServerException('Supabase error: ${e.message}');
     } catch (e) {
-      throw ServerException(e.toString());
+      throw ServerException('Server error: ${e.toString()}');
     }
   }
 
@@ -118,7 +133,7 @@ class AuthSupabaseApi implements AuthApiDataSource {
     } on AuthException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
-      throw ServerException('loginWithGoogle: user is null');
+      throw ServerException('Ups! You could not login with Google.');
     }
   }
 
@@ -127,16 +142,76 @@ class AuthSupabaseApi implements AuthApiDataSource {
     return supabase.auth.signOut();
   }
 
+  /// This should call the users table and get all data transformeed into a User
+  // TODO add try-catch
   @override
-  UserModel getCurrentUser() {
-    final user = supabase.auth.currentUser!;
-    final Map<String, dynamic> json = {};
+  Future<UserModel> getServerUser() async {
+    final userId = supabase.auth.currentUser?.id;
 
-    json['id'] = user.id;
-    json['name'] = user.userMetadata!['full_name'];
-    json['email'] = user.email;
-    json['avatar_url'] = user.userMetadata!['avatar_url'];
+    // get user from users table by id
+    final json =
+        await supabase.from('users').select().eq('id', userId!).single();
 
     return UserModel.fromJson(json);
+  }
+
+  @override
+  Future<String> sendContactForm({
+    required String senderName,
+    required String senderEmail,
+    required String senderMessage,
+  }) async {
+    try {
+      await supabase.from('contact_us').insert({
+        'sender_name': senderName,
+        'sender_email': senderEmail,
+        'sender_message': senderMessage,
+      });
+
+      return 'Message sent. We will contact as you soon as possible.';
+    } on AuthException catch (e) {
+      throw ServerException(e.message);
+    } on Exception catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<String> updateProfile(
+      {String? name, String? email, String? phone, String? password}) async {
+    try {
+      final toUpdate = {
+        if (name != null && name.isNotEmpty) 'full_name': name,
+        if (email != null && email.isNotEmpty) 'email': email,
+        if (phone != null && phone.isNotEmpty) 'phone': phone,
+      };
+
+      await supabase
+          .from('users')
+          .update(toUpdate)
+          .eq('id', supabase.auth.currentUser!.id);
+
+      return '201 success';
+    } on AuthException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<String> updatePassword({required String password}) async {
+    try {
+      await supabase.auth.updateUser(
+        UserAttributes(password: password),
+        emailRedirectTo: 'io.supabase.flutterquickstart://login-callback/',
+      );
+
+      return '';
+    } on AuthException catch (e) {
+      throw ServerException(e.message);
+    } catch (error) {
+      throw ServerException(error.toString());
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/pages/landing/widgets/google_credentials_button.dart';
 import 'package:group_project/ui/pages/landing/widgets/or_divider.dart';
@@ -97,6 +98,7 @@ class _SignUp extends State<SignUpPage> {
                     onChanged: _toogleCheck,
                   ),
                   const SpaceY(10),
+                  //TODO: FOLLOW THIS AS A GUIDE
                   Consumer<UserProvider>(builder: (context, provider, _) {
                     return PasswordCredentialsButton(
                       isLoading: provider.isLoading,
@@ -116,15 +118,22 @@ class _SignUp extends State<SignUpPage> {
                             _emailController.text,
                             _passwordController.text);
 
-                        if (!context.mounted) return;
+                        if (!context.mounted || !mounted) return;
 
                         if (res.error != null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text(res.error!)),
                           );
+                          return;
                         }
-
-                        context.pushReplacement('/login');
+                        // successful singup
+                        context.pushReplacementNamed(
+                          'login',
+                          queryParameters: {
+                            'email':
+                                'Please confirm your email at ${_emailController.text}',
+                          },
+                        );
                       },
                     );
                   }),
@@ -144,8 +153,9 @@ class _SignUp extends State<SignUpPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(res.error!)),
                         );
+                        return;
                       }
-
+                      // succesfull login
                       context.pushReplacement('/home');
                     },
                   ),

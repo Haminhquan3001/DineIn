@@ -11,8 +11,8 @@ class User {
   String? phone;
   String? avatarUrl;
   CreditCard? credicard;
-  List<Restaurant> wishlist;
-  List<Reservation> reservation;
+  List<Restaurant>? wishlist;
+  List<Reservation>? reservation;
 
   // owner properties
   bool isOwner;
@@ -26,8 +26,8 @@ class User {
     this.phone,
     this.avatarUrl,
     this.credicard,
-    this.wishlist = const [],
-    this.reservation = const [],
+    this.wishlist,
+    this.reservation,
 
     // owner properties
     this.isOwner = false, // default value false if not provided
@@ -53,10 +53,27 @@ class User {
       phone: phone ?? this.phone,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       credicard: credicard ?? this.credicard,
-      wishlist: wishlist ?? List.from(this.wishlist),
-      reservation: reservation ?? List.from(this.reservation),
+      wishlist: wishlist ?? List.from(this.wishlist ?? []),
+      reservation: reservation ?? List.from(this.reservation ?? []),
       isOwner: isOwner ?? this.isOwner,
       ownerRestaurant: ownerRestaurant ?? this.ownerRestaurant,
+    );
+  }
+
+  // TODO: add more fields as the app grows
+  // In frontend, must check forn nulls
+  User copyWithObject(User user) {
+    return User(
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone ?? phone,
+      avatarUrl: user.avatarUrl ?? avatarUrl,
+      // credicard: user.credicard ?? credicard,
+      // wishlist: user.wishlist ?? List.from(wishlist ?? []),
+      // reservation: user.reservation ?? List.from(reservation ?? []),
+      // isOwner: user.isOwner ?? isOwner,
+      // ownerRestaurant: user.ownerRestaurant ?? ownerRestaurant,
     );
   }
 }

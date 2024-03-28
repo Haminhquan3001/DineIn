@@ -12,7 +12,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
-    final user = userProvider.user;
+    final user = userProvider.getUser;
 
     // TODO: in every hard refresh, the user_provider is cleaned up
     // leading to an error to the whole app workflow

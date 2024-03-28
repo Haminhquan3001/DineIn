@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/pages/landing/widgets/google_credentials_button.dart';
 import 'package:group_project/ui/pages/landing/widgets/or_divider.dart';
@@ -11,7 +12,8 @@ import 'package:group_project/ui/widgets/space_y.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String? query;
+  const LoginPage({super.key, this.query});
   @override
   State<LoginPage> createState() => _Login();
 }
@@ -41,7 +43,13 @@ class _Login extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+    if (widget.query != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(widget.query!)),
+        );
+      });
+    }
 
     return Scaffold(
         body: Center(
@@ -94,7 +102,7 @@ class _Login extends State<LoginPage> {
                     isLoading: provider.isLoading,
                     loginOrSignupText: 'Log In',
                     onPressed: () async {
-                      final res = await userProvider.useLoginWithPassword(
+                      final res = await provider.useLoginWithPassword(
                         _emailController.text,
                         _passwordController.text,
                       );
@@ -107,8 +115,9 @@ class _Login extends State<LoginPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text(res.error!)),
                         );
+                        return;
                       }
-
+                      // sucesss login
                       context.pushReplacement('/home');
                     },
                   );
@@ -116,24 +125,28 @@ class _Login extends State<LoginPage> {
                 const SpaceY(10),
                 const OrDivider(),
                 const SpaceY(10),
-                GoogleCredentialsButton(
-                  loginOrSignupText: 'Login',
-                  onPressed: () async {
-                    final res = await userProvider.useLoginWithGoogle();
+                Consumer<UserProvider>(builder: (context, provider, _) {
+                  return GoogleCredentialsButton(
+                    loginOrSignupText: 'Login',
+                    onPressed: () async {
+                      final res = await provider.useLoginWithGoogle();
 
-                    // if the widget is not mounted, don't do anything
-                    // this prevents memory leaks
-                    if (!context.mounted) return;
+                      // since the provider makes to rebuild the widgets,
+                      // we need to check if the widget is mounted before doing anything
+                      // this prevents memory leaks
+                      if (!context.mounted) return;
 
-                    if (res.error != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(res.error!)),
-                      );
-                    }
-
-                    context.pushReplacement('/home');
-                  },
-                ),
+                      if (res.error != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(res.error!)),
+                        );
+                        return;
+                      }
+                      // succesfull login
+                      context.pushReplacement('/home');
+                    },
+                  );
+                }),
                 const SpaceY(10),
                 RedirectTo(
                   messages: const ["Don't have an accont?", " Sign Up"],

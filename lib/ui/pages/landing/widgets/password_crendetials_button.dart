@@ -16,11 +16,12 @@ class PasswordCredentialsButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
             backgroundColor: const Color.fromARGB(255, 74, 81, 117),
             side: BorderSide.none,
             shape: const StadiumBorder()),
+
         child: isLoading
             ? const CircularProgressIndicator()
             : Text(
