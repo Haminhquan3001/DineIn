@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:group_project/ui/pages/profile/widgets/method_dialog_widget.dart';
 
 class PaymentView extends StatefulWidget {
   const PaymentView({super.key});

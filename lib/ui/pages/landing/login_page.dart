@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:group_project/config/constants.dart';
 import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/pages/landing/widgets/google_credentials_button.dart';
 import 'package:group_project/ui/pages/landing/widgets/or_divider.dart';

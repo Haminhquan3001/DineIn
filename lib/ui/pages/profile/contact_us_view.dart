@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/providers/user.provider.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ContactUsView extends StatefulWidget {
   const ContactUsView({super.key});
