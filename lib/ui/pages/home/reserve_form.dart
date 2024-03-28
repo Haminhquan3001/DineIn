@@ -11,11 +11,6 @@ class ReserveForm extends StatelessWidget {
       fontWeight: FontWeight.w700,
     );
 
-    const myCustomStyle2 = TextStyle(
-      color: Color.fromARGB(254, 0, 0, 0),
-      fontSize: 17,
-      fontWeight: FontWeight.w700,
-    );
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.all(10),
