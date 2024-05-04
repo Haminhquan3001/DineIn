@@ -3,9 +3,11 @@ import 'restaurant_info.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Map resObj;
+  final bool favorite;
   const RestaurantCard({
     super.key,
     required this.resObj,
+    required this.favorite,
   });
 
   @override
@@ -56,7 +58,11 @@ class RestaurantCard extends StatelessWidget {
                           ),
                           width: 30,
                           height: 30,
-                          child: const Icon(Icons.favorite_border),
+                          child: Icon(
+                              favorite
+                                  ? Icons.favorite_outlined
+                                  : Icons.favorite_border,
+                              color: favorite ? Colors.red : Colors.black),
                         ),
                       ),
                     ],

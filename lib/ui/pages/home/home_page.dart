@@ -86,7 +86,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double padding = 30;
+    double padding = 10;
 
     return Scaffold(
       appBar: AppBar(
@@ -140,7 +140,7 @@ class HomePage extends StatelessWidget {
                   ),
                   Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(235, 189, 209, 210),
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       height: 40,
@@ -156,7 +156,7 @@ class HomePage extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                decoration: const BoxDecoration(color: Color(0xffF5F5F5)),
+                decoration: const BoxDecoration(color: Colors.white),
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: res_info.length,
@@ -164,6 +164,7 @@ class HomePage extends StatelessWidget {
                     var resObj = res_info[index];
                     return RestaurantCard(
                       resObj: resObj,
+                      favorite: false,
                     );
                   }),
                 ),

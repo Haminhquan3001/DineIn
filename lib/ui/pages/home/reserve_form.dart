@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class ReserveForm extends StatelessWidget {
   const ReserveForm({super.key});
@@ -11,11 +14,6 @@ class ReserveForm extends StatelessWidget {
       fontWeight: FontWeight.w700,
     );
 
-    const myCustomStyle2 = TextStyle(
-      color: Color.fromARGB(254, 0, 0, 0),
-      fontSize: 17,
-      fontWeight: FontWeight.w700,
-    );
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.all(10),
@@ -36,23 +34,15 @@ class ReserveForm extends StatelessWidget {
                 ),
               ],
             ),
-            // Padding(
-            //   padding: EdgeInsets.only(left: 20.0),
-            //   child: Text(
-            //     "Select Date & Time",
-            //     style: myCustomStyle2,
-            //   ),
-            // ),
-
             const CustomTableCalendar(),
             const Expanded(
               child: TimeGrid(),
             ),
             const ReserveButton(),
             Container(
-              margin: const EdgeInsets.all(8),
+              margin: const EdgeInsets.all(2),
               child: const SizedBox(
-                height: 20,
+                height: 10,
               ),
             ),
           ],
@@ -75,6 +65,7 @@ class _CustomTableCalendar extends State<CustomTableCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    _selectedDay = context.watch<ReserveFormProvider>().selectedDate;
     return Column(
       children: [
         TableCalendar(
@@ -86,7 +77,9 @@ class _CustomTableCalendar extends State<CustomTableCalendar> {
           focusedDay: _focusedDay,
           selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
           onDaySelected: (selectedDay, focusedDay) {
+            context.read<ReserveFormProvider>().updateSelectedDate(selectedDay);
             setState(() {
+              //update selected state here
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
             });
@@ -103,12 +96,6 @@ class _CustomTableCalendar extends State<CustomTableCalendar> {
             ),
           ),
         ),
-        // Display the selected date (optional)
-        if (_selectedDay != null)
-          Text(
-            'Selected Date: ${_selectedDay!.toIso8601String()}',
-            style: const TextStyle(fontSize: 10.0),
-          ),
       ],
     );
   }
@@ -119,17 +106,10 @@ class TimeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List times = [
-      "10:00 AM",
-      "11:00 AM",
-      "12:00 PM",
-      "01:00 PM",
-      "02:00 PM",
-      "03:00 PM",
-      "04:00 PM",
-      "05:00 PM",
-      "06:00 PM",
-    ];
+    String openingTime = "9:00 AM";
+    String closingTime = "9:00 PM";
+
+    List<String> times = generateTimeSlots(openingTime, closingTime);
     return Scaffold(
         body: GridView.builder(
       itemCount: times.length,
@@ -137,7 +117,7 @@ class TimeGrid extends StatelessWidget {
           const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(0),
           child: TimeCard(time: times[index]),
         );
       },
@@ -151,16 +131,26 @@ class TimeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: Text(
-          time,
-          style: const TextStyle(
-            fontSize: 10,
+    final String selectedTime =
+        context.watch<ReserveFormProvider>().selectedTime;
+    final bool selected = selectedTime.compareTo(time) == 0;
+    return TextButton(
+      style: const ButtonStyle(splashFactory: NoSplash.splashFactory),
+      onPressed: () {
+        context.read<ReserveFormProvider>().updateSelectedTime(time);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: selected ? Colors.orange : Colors.black),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Center(
+          child: Text(
+            time,
+            style: TextStyle(
+              fontSize: 10,
+              color: selected ? Colors.orange : Colors.black,
+            ),
           ),
         ),
       ),
@@ -172,28 +162,179 @@ class ReserveButton extends StatelessWidget {
   const ReserveButton({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 152, 1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Center(
-        child: TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ReserveForm(),
+    final selectedTime = context.watch<ReserveFormProvider>().selectedTime;
+    final selectedDate = context.watch<ReserveFormProvider>().selectedDate;
+
+    bool checkSelectedTimeAndDate() {
+      if (selectedTime.isEmpty || selectedDate == null) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    return TextButton(
+      onPressed: () {
+        if (checkSelectedTimeAndDate()) {
+          showDialog(
+            context: context,
+            builder: (context) => const ConfirmDialog(),
+          );
+        } else {
+          const snackBar = SnackBar(
+            content: Center(
+              child: Text(
+                "Please select both date & time",
+                style: TextStyle(color: Colors.white),
               ),
-            );
-          },
-          child: const Text(
+            ),
+            backgroundColor: Colors.black54,
+            behavior: SnackBarBehavior.floating,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 45,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 255, 152, 1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Center(
+          child: Text(
             "Confirm",
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w700,
               fontSize: 16,
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+List<String> generateTimeSlots(String openingTime, String closingTime) {
+  List<String> timeSlots = [];
+
+  List openTokens = openingTime.split(":");
+  int openTime = int.parse(openTokens[0]);
+  String openP = openTokens[1].split(" ")[1];
+  String currTime = "";
+
+  while (currTime.compareTo(closingTime) != 0) {
+    currTime = "$openTime:00 $openP";
+    timeSlots.add(currTime);
+    openTime += 1;
+    if (openTime == 12) {
+      openP = "PM";
+    }
+    if (openTime > 12) {
+      openTime -= 12;
+    }
+  }
+
+  return timeSlots;
+}
+
+class ConfirmDialog extends StatelessWidget {
+  const ConfirmDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final String selectedTime = context
+        .watch<ReserveFormProvider>()
+        .selectedTime
+        .replaceAll("AM", "a.m.")
+        .replaceAll("PM", "p.m.");
+    final DateTime? selectedDate =
+        context.watch<ReserveFormProvider>().selectedDate;
+
+    return Dialog(
+      backgroundColor: const Color.fromARGB(255, 198, 192, 152),
+      surfaceTintColor: Colors.transparent,
+      child: SizedBox(
+        height: 200,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 30),
+                child: Text(
+                  "Your reservation will be at\n$selectedTime on ${DateFormat.yMMMMd().format(selectedDate!)}.",
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              const Expanded(child: Text("")),
+              Row(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: TextButton(
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.only(
+                                top: 8.0, bottom: 8.0, right: 14, left: 14),
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 192, 26, 14),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          )),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  const Expanded(child: Text("")),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: TextButton(
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.only(
+                                top: 8.0, bottom: 8.0, right: 14, left: 14),
+                            child: Text(
+                              "Confirm",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 28, 84, 16),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          )),
+                      onPressed: () {
+                        const snackBar = SnackBar(
+                          content: Center(
+                            child: Text(
+                              "Thank you! Your reservation is confirmed.",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          backgroundColor: Colors.green,
+                          behavior: SnackBarBehavior.floating,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Navigator.of(context).pop(); //TODO
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

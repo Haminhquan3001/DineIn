@@ -53,7 +53,7 @@ GoRouter router = GoRouter(
         GoRoute(
           path: '/wishlist',
           name: 'wishlist',
-          builder: (context, state) => const WishlistPage(),
+          builder: (context, state) => WishlistPage(),
         ),
         GoRoute(
           path: '/reservation',

@@ -165,7 +165,7 @@ class OverviewAndReviews extends StatelessWidget {
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: Text(overview)),
                 ),
                 const Expanded(child: Text("")), //Reserve button
@@ -293,7 +293,7 @@ class FoodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double widthImage = 200;
-    double heightImage = 120;
+    double heightImage = 110;
     var myCustomStyle = const TextStyle(
       color: Color.fromARGB(254, 0, 0, 0),
       fontSize: 14,
