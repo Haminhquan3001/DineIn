@@ -445,7 +445,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
                 GestureDetector(
                   onTap: _getImage,
                   child: Container(
-                    height: 100,
+                    height: 250,
                     color: Colors.grey[200],
                     child: _imageSelected
                         ? Image.file(
