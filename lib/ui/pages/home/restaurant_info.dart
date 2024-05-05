@@ -247,7 +247,9 @@ class RestaurantInfo extends StatelessWidget {
                   SizedBox(
                     height: 280,
                     width: contextWidth,
-                    child: const OverviewAndReviews(),
+                    child: OverviewAndReviews(
+                      resObj: resObj,
+                    ),
                   ),
 
                   const SizedBox(

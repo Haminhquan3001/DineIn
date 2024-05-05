@@ -5,7 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class ReserveForm extends StatelessWidget {
-  const ReserveForm({super.key});
+  const ReserveForm({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     const myCustomStyle = TextStyle(
@@ -18,14 +21,14 @@ class ReserveForm extends StatelessWidget {
       body: Container(
         margin: const EdgeInsets.all(10),
         decoration: const BoxDecoration(color: Colors.white),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
+            SizedBox(
               height: 50,
             ),
-            const Row(
+            Row(
               children: [
                 BackButton(),
                 Text(
@@ -34,17 +37,15 @@ class ReserveForm extends StatelessWidget {
                 ),
               ],
             ),
-            const CustomTableCalendar(),
-            const Expanded(
+            CustomTableCalendar(),
+            Expanded(
               child: TimeGrid(),
             ),
-            const ReserveButton(),
-            Container(
-              margin: const EdgeInsets.all(2),
-              child: const SizedBox(
-                height: 10,
-              ),
+            CounterWidget(),
+            SizedBox(
+              height: 5,
             ),
+            ReserveButton(),
           ],
         ),
       ),
@@ -113,8 +114,8 @@ class TimeGrid extends StatelessWidget {
     return Scaffold(
         body: GridView.builder(
       itemCount: times.length,
-      gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 5, childAspectRatio: 1.5),
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.all(0),
@@ -140,6 +141,7 @@ class TimeCard extends StatelessWidget {
         context.read<ReserveFormProvider>().updateSelectedTime(time);
       },
       child: Container(
+        height: 40,
         decoration: BoxDecoration(
           border: Border.all(color: selected ? Colors.orange : Colors.black),
           borderRadius: BorderRadius.circular(10),
@@ -158,8 +160,92 @@ class TimeCard extends StatelessWidget {
   }
 }
 
+class CounterWidget extends StatelessWidget {
+  const CounterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final int guest = context.watch<ReserveFormProvider>().guest;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          "Guests: ",
+          style: TextStyle(fontSize: 18),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.orangeAccent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 45,
+                child: TextButton(
+                  onPressed: () {
+                    if (guest > 1) {
+                      context
+                          .read<ReserveFormProvider>()
+                          .updateGuest(guest - 1);
+                    }
+                  },
+                  child: const Text(
+                    "-",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 35,
+                width: 35,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    '$guest',
+                    style: const TextStyle(fontSize: 25.0),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 45,
+                child: TextButton(
+                  onPressed: () {
+                    if (guest < 50) {
+                      context
+                          .read<ReserveFormProvider>()
+                          .updateGuest(guest + 1);
+                    }
+                  },
+                  child: const Text(
+                    '+',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class ReserveButton extends StatelessWidget {
-  const ReserveButton({super.key});
+  const ReserveButton({
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     final selectedTime = context.watch<ReserveFormProvider>().selectedTime;
@@ -182,6 +268,7 @@ class ReserveButton extends StatelessWidget {
           );
         } else {
           const snackBar = SnackBar(
+            duration: Duration(milliseconds: 500),
             content: Center(
               child: Text(
                 "Please select both date & time",
@@ -240,34 +327,51 @@ List<String> generateTimeSlots(String openingTime, String closingTime) {
 }
 
 class ConfirmDialog extends StatelessWidget {
-  const ConfirmDialog({super.key});
+  const ConfirmDialog({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     final String selectedTime = context
         .watch<ReserveFormProvider>()
         .selectedTime
-        .replaceAll("AM", "a.m.")
-        .replaceAll("PM", "p.m.");
+        .replaceAll("AM", "am")
+        .replaceAll("PM", "pm");
     final DateTime? selectedDate =
         context.watch<ReserveFormProvider>().selectedDate;
 
+    final guest = context.watch<ReserveFormProvider>().guest;
+    final restaurantName =
+        context.watch<ReserveFormProvider>().currentRestaurant;
+
     return Dialog(
-      backgroundColor: const Color.fromARGB(255, 198, 192, 152),
+      backgroundColor: const Color.fromARGB(255, 202, 200, 186),
       surfaceTintColor: Colors.transparent,
       child: SizedBox(
-        height: 200,
+        height: 300,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 30),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 20),
+                child: Text(restaurantName,
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 153, 47, 40),
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600)),
+              ),
+              const Expanded(child: Text("")),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  "Your reservation will be at\n$selectedTime on ${DateFormat.yMMMMd().format(selectedDate!)}.",
-                  style: const TextStyle(fontSize: 20),
-                ),
+                    "Table for $guest on ${DateFormat('EEEE').format(selectedDate!)}, ${DateFormat.yMMMMd().format(selectedDate)} at $selectedTime",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    )),
               ),
               const Expanded(child: Text("")),
               Row(
@@ -277,7 +381,7 @@ class ConfirmDialog extends StatelessWidget {
                     child: TextButton(
                       child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color.fromARGB(255, 180, 47, 47),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Padding(
@@ -286,7 +390,7 @@ class ConfirmDialog extends StatelessWidget {
                             child: Text(
                               "Cancel",
                               style: TextStyle(
-                                color: Color.fromARGB(255, 192, 26, 14),
+                                color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -302,7 +406,7 @@ class ConfirmDialog extends StatelessWidget {
                     child: TextButton(
                       child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: const Color.fromARGB(255, 162, 176, 120),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Padding(
@@ -318,6 +422,7 @@ class ConfirmDialog extends StatelessWidget {
                           )),
                       onPressed: () {
                         const snackBar = SnackBar(
+                          duration: Duration(milliseconds: 500),
                           content: Center(
                             child: Text(
                               "Thank you! Your reservation is confirmed.",
@@ -328,7 +433,16 @@ class ConfirmDialog extends StatelessWidget {
                           behavior: SnackBarBehavior.floating,
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        Navigator.of(context).pop(); //TODO
+                        Navigator.of(context).pop();
+                        context.read<ReserveFormProvider>().updateGuest(1);
+                        context
+                            .read<ReserveFormProvider>()
+                            .updateSelectedTime("");
+                        context
+                            .read<ReserveFormProvider>()
+                            .updateSelectedDate(DateTime.now());
+                        
+                        //TODO
                       },
                     ),
                   ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'restaurant_info.dart';
+import 'package:provider/provider.dart';
+import 'package:group_project/providers/reserve_form.provider.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Map resObj;
@@ -17,6 +19,9 @@ class RestaurantCard extends StatelessWidget {
     double fontSizeName = 18, fontSizeLocation = 12, fontSizeOther = 14;
     return TextButton(
       onPressed: () {
+        context
+            .read<ReserveFormProvider>()
+            .updateCurrentRestaurant(resObj["name"]);
         Navigator.push(
           context,
           MaterialPageRoute(

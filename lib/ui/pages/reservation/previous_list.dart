@@ -78,8 +78,17 @@ class PreviousList extends StatelessWidget {
   }
 }
 
-class ReviewPage extends StatelessWidget {
+class ReviewPage extends StatefulWidget {
   const ReviewPage({super.key});
+  @override
+  State<StatefulWidget> createState() => _ReviewPage();
+}
+
+class _ReviewPage extends State<ReviewPage> {
+  final GlobalKey<FormState> _key = GlobalKey();
+  String? _review;
+  double _rating = 3;
+  final fieldText = TextEditingController();
 
   final myCustomStyle = const TextStyle(
     color: Color.fromARGB(254, 0, 0, 0),
@@ -128,7 +137,7 @@ class ReviewPage extends StatelessWidget {
                     color: Colors.amber,
                   ),
                   onRatingUpdate: (rating) {
-                    print(rating);
+                    _rating = rating;
                   },
                 ),
                 const SizedBox(height: 16.0),
@@ -141,30 +150,45 @@ class ReviewPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(
                         bottom: 10, left: 15, right: 15, top: 5),
-                    child: TextFormField(
-                      maxLines: 5,
-                      maxLength: 150,
-                      decoration: const InputDecoration(
-                        hintText: 'Write a review',
-                        border: InputBorder.none,
+                    child: Form(
+                      key: _key,
+                      child: TextFormField(
+                        maxLines: 5,
+                        maxLength: 150,
+                        controller: fieldText,
+                        decoration: const InputDecoration(
+                          hintText: 'Write a review',
+                          border: InputBorder.none,
+                        ),
+                        autocorrect: false,
+                        obscureText: false,
+                        autofocus: false,
+                        validator: (value) {
+                          if (null == value || value.isEmpty) {
+                            return 'No review provided';
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          _review = newValue;
+                        },
                       ),
-                      autocorrect: false,
-                      obscureText: false,
-                      autofocus: false,
-                      validator: (value) {
-                        if (null == value || value.isEmpty) {
-                          return 'No review provided';
-                        }
-                        return null;
-                      },
-                      // onSaved: (newValue) {
-                      //   _username = newValue;
-                      // },
                     ),
                   ),
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final state = _key.currentState;
+                    if (state!.validate()) {
+                      setState(() {
+                        state.save();
+                      });
+                    }
+                    fieldText.clear();
+                    //TODO
+                    print(_rating);
+                    print(_review);
+                  },
                   child: Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.all(13),
