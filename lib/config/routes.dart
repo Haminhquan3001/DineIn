@@ -10,6 +10,7 @@ import 'package:group_project/ui/pages/profile/edit_profile_view.dart';
 import 'package:group_project/ui/pages/profile/payment_methods_view.dart';
 import 'package:group_project/ui/pages/profile/payment_view.dart';
 import 'package:group_project/ui/pages/profile/profile_page.dart';
+import 'package:group_project/ui/pages/profile/owner_form.dart';
 import 'package:group_project/ui/pages/reservation/reservation_page.dart';
 import 'package:group_project/ui/pages/wishlist/wishlist_page.dart';
 import 'package:group_project/ui/widgets/bottom_navbar.widget.dart';
@@ -47,12 +48,12 @@ GoRouter router = GoRouter(
         GoRoute(
           path: '/home',
           name: 'home',
-          builder: (context, state) => HomePage(),
+          builder: (context, state) => const HomePage(),
         ),
         GoRoute(
           path: '/wishlist',
           name: 'wishlist',
-          builder: (context, state) => const WishlistPage(),
+          builder: (context, state) => WishlistPage(),
         ),
         GoRoute(
           path: '/reservation',
@@ -83,6 +84,11 @@ GoRouter router = GoRouter(
               path: 'contact-us',
               name: 'contact-us',
               builder: (context, state) => const ContactUsView(),
+            ),
+            GoRoute(
+              path: 'owner-form',
+              name: 'owner-form',
+              builder: (context, state) => RestaurantForm(),
             ),
           ],
         ),

@@ -22,14 +22,14 @@ class RestaurantInfo extends StatelessWidget {
       fontWeight: FontWeight.w700,
     );
 
-    double imageHeight = 220;
+    double imageHeight = 200;
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
         automaticallyImplyLeading: false,
-        toolbarHeight: 20,
+        toolbarHeight: 0,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -123,39 +123,39 @@ class RestaurantInfo extends StatelessWidget {
                   ),
 
                   //Short location
-                  Text(
-                    resObj["location"].toString(),
-                    style: myCustomStyle,
+                  Row(
+                    children: [
+                      Text(
+                        resObj["location"].toString(),
+                        style: myCustomStyle,
+                      ),
+                      const Expanded(child: Text("")),
+                      Row(children: [
+                        const Icon(
+                          Icons.star,
+                          color: Colors.red,
+                          size: 18,
+                        ),
+                        const SizedBox(
+                          width: 2,
+                        ),
+                        Text(
+                          resObj["ratings"].toString(),
+                          style: myCustomStyle,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "(52 reviews)",
+                          style: myCustomStyle,
+                        ),
+                      ]),
+                    ],
                   ),
 
                   const SizedBox(
-                    height: 3,
-                  ),
-
-                  //ratings + total reviews
-                  Row(children: [
-                    const Icon(
-                      Icons.star,
-                      color: Colors.red,
-                      size: 18,
-                    ),
-                    const SizedBox(
-                      width: 2,
-                    ),
-                    Text(
-                      resObj["ratings"].toString(),
-                      style: myCustomStyle,
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      "(52 reviews)",
-                      style: myCustomStyle,
-                    ),
-                  ]),
-                  const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
 
                   Text(
@@ -220,7 +220,7 @@ class RestaurantInfo extends StatelessWidget {
                           const Icon(Icons.local_phone_outlined),
                           SizedBox(width: padding),
                           Text(
-                            "0902119229",
+                            "2407220292",
                             style: myCustomStyle,
                           ),
                         ],
@@ -245,9 +245,11 @@ class RestaurantInfo extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 300,
+                    height: 280,
                     width: contextWidth,
-                    child: const OverviewAndReviews(),
+                    child: OverviewAndReviews(
+                      resObj: resObj,
+                    ),
                   ),
 
                   const SizedBox(

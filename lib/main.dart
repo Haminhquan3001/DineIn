@@ -3,10 +3,11 @@ import 'package:group_project/backend/auth/infraestructure/repositories/auth_rep
 import 'package:group_project/backend/auth/infraestructure/sources/auth_supabase_api.dart';
 import 'package:group_project/backend/core/database/env.dart';
 import 'package:provider/provider.dart';
-
 import 'package:group_project/config/routes.dart';
 import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/providers/user.provider.dart';
+import 'package:group_project/providers/reserve_form.provider.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -19,6 +20,7 @@ void main() async {
 
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (context) => ReserveFormProvider()),
       ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ChangeNotifierProvider(
           create: (context) => UserProvider(AuthRepositoryImpl(

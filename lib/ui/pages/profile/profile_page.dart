@@ -74,6 +74,12 @@ class ProfilePage extends StatelessWidget {
                 onPressed: () => context.push('/profile/contact-us'),
               ),
               const SpaceY(10),
+              MenuTab(
+                title: "Owner Form",
+                icon: Icons.app_registration,
+                onPressed: () => context.push('/profile/owner-form'),
+              ),
+              const SpaceY(10),
               const SwitchThemeTab(),
               const Divider(),
               const SpaceY(20),

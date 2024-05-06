@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/backend/core/entities/restaurant/restaurant.dart';
 import 'reserve_form.dart';
 
 class OverviewAndReviews extends StatelessWidget {
+  final Map resObj;
   const OverviewAndReviews({
     super.key,
+    required this.resObj,
   });
 
   @override
@@ -165,11 +168,12 @@ class OverviewAndReviews extends StatelessWidget {
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      margin: const EdgeInsets.only(top: 10),
                       child: Text(overview)),
                 ),
                 const Expanded(child: Text("")), //Reserve button
-                const ReserveButton(),
+                ReserveButton(
+                ),
               ],
             ),
             ListView.builder(
@@ -201,7 +205,8 @@ class OverviewAndReviews extends StatelessWidget {
                     ),
                   ),
                 ),
-                const ReserveButton(),
+                ReserveButton(
+                ),
               ],
             ),
           ],
@@ -293,7 +298,7 @@ class FoodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double widthImage = 200;
-    double heightImage = 120;
+    double heightImage = 110;
     var myCustomStyle = const TextStyle(
       color: Color.fromARGB(254, 0, 0, 0),
       fontSize: 14,
@@ -328,7 +333,9 @@ class FoodCard extends StatelessWidget {
 }
 
 class ReserveButton extends StatelessWidget {
-  const ReserveButton({super.key});
+  const ReserveButton({
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -342,7 +349,7 @@ class ReserveButton extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const ReserveForm(),
+                builder: (context) => ReserveForm(),
               ),
             );
           },
