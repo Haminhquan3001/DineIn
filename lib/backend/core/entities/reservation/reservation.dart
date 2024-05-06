@@ -1,17 +1,18 @@
 class Reservation {
   String id;
   String restaurantId;
-  String? userId;
+  String userId;
+  
   DateTime startDate;
   DateTime endDate;
-  int? guests;
+  int guests;
   bool isReserved;
   DateTime createdAt;
-  
+
   Reservation({
     required this.id,
     required this.endDate,
-    this.userId,
+    required this.userId,
     required this.restaurantId,
     required this.startDate,
     required this.guests,

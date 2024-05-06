@@ -4,7 +4,7 @@ class Review {
   final String userId;
   final String content;
   final double rating;
-  final DateTime date;
+  final DateTime createdAt;
 
   const Review({
     required this.id,
@@ -12,6 +12,6 @@ class Review {
     required this.userId,
     required this.content,
     required this.rating,
-    required this.date,
+    required this.createdAt,
   });
 }

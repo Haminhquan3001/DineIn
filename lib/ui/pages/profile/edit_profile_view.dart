@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/ui/widgets/space_y.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/providers/user.provider.dart';
 
@@ -62,9 +63,7 @@ class _EditProfile extends State<EditProfileView> {
                 height: 120,
                 child: userPicture,
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SpaceY(30),
               Form(
                   child: Column(
                 children: [
@@ -82,9 +81,9 @@ class _EditProfile extends State<EditProfileView> {
                           Icons.person_3_outlined,
                         )),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+
+                  const SpaceY(15),
+
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
@@ -99,9 +98,9 @@ class _EditProfile extends State<EditProfileView> {
                           Icons.email,
                         )),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+
+                  const SpaceY(15), //
+
                   TextFormField(
                     controller: _phoneController,
                     decoration: InputDecoration(
@@ -113,9 +112,9 @@ class _EditProfile extends State<EditProfileView> {
                         label: const Text('Phone'),
                         prefixIcon: const Icon(Icons.phone)),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+
+                  const SpaceY(15),
+
                   TextFormField(
                     obscureText: true,
                     controller: _passwordController,
@@ -129,9 +128,9 @@ class _EditProfile extends State<EditProfileView> {
                         label: const Text("New password"),
                         prefixIcon: const Icon(Icons.password)),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+
+                  const SpaceY(15),
+
                   TextFormField(
                     obscureText: true,
                     controller: _repasswordController,
@@ -145,9 +144,9 @@ class _EditProfile extends State<EditProfileView> {
                         label: const Text("Re-enter new password"),
                         prefixIcon: const Icon(Icons.password)),
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+
+                  const SpaceY(15),
+
                   SizedBox(
                     width: double.infinity,
                     child:

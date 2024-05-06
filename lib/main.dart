@@ -10,10 +10,8 @@ import 'package:group_project/providers/user.provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-  // Ensures that the Flutter widgets are initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
-  // initializing supabase instance - connection to the database
   final supabase = await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseKey,

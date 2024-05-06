@@ -10,7 +10,7 @@ class User {
 
   String? phone;
   String? avatarUrl;
-  CreditCard? credicard;
+  CreditCard? creditcard;
   List<Restaurant>? wishlist;
   List<Reservation>? reservation;
 
@@ -25,7 +25,7 @@ class User {
     required this.email,
     this.phone,
     this.avatarUrl,
-    this.credicard,
+    this.creditcard,
     this.wishlist,
     this.reservation,
 
@@ -40,7 +40,7 @@ class User {
     String? email,
     String? phone,
     String? avatarUrl,
-    CreditCard? credicard,
+    CreditCard? creditcard,
     List<Restaurant>? wishlist,
     List<Reservation>? reservation,
     bool? isOwner,
@@ -52,7 +52,7 @@ class User {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       avatarUrl: avatarUrl ?? this.avatarUrl,
-      credicard: credicard ?? this.credicard,
+      creditcard: creditcard ?? this.creditcard,
       wishlist: wishlist ?? List.from(this.wishlist ?? []),
       reservation: reservation ?? List.from(this.reservation ?? []),
       isOwner: isOwner ?? this.isOwner,

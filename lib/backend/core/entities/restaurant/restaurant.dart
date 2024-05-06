@@ -17,14 +17,14 @@ class Restaurant {
   final PriceRange? priceRange;
   final FoodCategory category;
 
-  final OpeningHours? openingHours;
+  final OpeningHours? openingHours; 
   final String? phone;
   final String? email;
 
   final List<Review>? reviews;
   final int? reviewsCount;
 
-  final List<MenuItem> featuredMenuItems;
+  final List<MenuItem> menuItems;
 
   // a restaurant can have many reservations where an user can subscribe to
   final List<Reservation> reservations;
@@ -50,9 +50,9 @@ class Restaurant {
     this.reviews,
 
     //
-    required this.featuredMenuItems,
+    required this.menuItems,
 
-    // 
+    //
     this.reservations = const [],
   });
 }

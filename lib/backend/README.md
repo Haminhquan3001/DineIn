@@ -34,7 +34,7 @@ Theme.of(context).colorScheme.<here_appears_all_colors>
 ## TODO
 
 - [x] Set up routing
-- [] Set up Supabase in flutter
+- [x] Set up Supabase in flutter
 - [] Design, create tables in supabase
 - [] Create classes for services and link it with providers
 - [] Replace mock data with services
