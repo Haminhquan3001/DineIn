@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:group_project/config/constants.dart';
 import 'package:group_project/ui/pages/landing/login_page.dart';
 import 'package:group_project/ui/pages/landing/signup_page.dart';
 import 'package:group_project/ui/pages/home/home_page.dart';
