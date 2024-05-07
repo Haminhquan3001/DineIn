@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   List _foundRestanrants = [];
+  List _restaurantsFiltered = [];
 
   @override
   initState() {
@@ -24,8 +25,9 @@ class _HomePage extends State<HomePage> {
       final response = await Supabase.instance.client
           .from('restaurants')
           .select('*, food_categories(*), reviews(*, users(*))');
-      
+
       setState(() => _foundRestanrants = response);
+      setState(() => _restaurantsFiltered = response);
     } on Exception catch (e) {
       if (mounted) {
         showKwunSnackBar(context: context, message: e.toString());
@@ -39,13 +41,14 @@ class _HomePage extends State<HomePage> {
       results = _foundRestanrants;
     } else {
       results = _foundRestanrants
-          .where((res) =>
-              res["restaurant_name"].toLowerCase().contains(keyword.toLowerCase()))
+          .where((res) => res["restaurant_name"]
+              .toLowerCase()
+              .contains(keyword.toLowerCase()))
           .toList();
     }
 
     setState(() {
-      _foundRestanrants = results;
+      _restaurantsFiltered = results;
     });
   }
 
@@ -103,9 +106,9 @@ class _HomePage extends State<HomePage> {
                   decoration: const BoxDecoration(color: Colors.white),
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: _foundRestanrants.length,
+                    itemCount: _restaurantsFiltered.length,
                     itemBuilder: ((context, index) {
-                      var resObj = _foundRestanrants[index];
+                      var resObj = _restaurantsFiltered[index];
                       return RestaurantCard(
                         resObj: resObj,
                         favorite: false,
