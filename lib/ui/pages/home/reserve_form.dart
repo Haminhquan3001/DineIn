@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/providers/reserve_form.provider.dart';
+import 'package:group_project/providers/user.provider.dart';
+import 'package:group_project/ui/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 class ReserveForm extends StatelessWidget {
-  const ReserveForm({
-    super.key,
-  });
+  final Map resObj;
+  const ReserveForm({super.key, required this.resObj});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class CustomTableCalendar extends StatefulWidget {
   const CustomTableCalendar({super.key});
 
   @override
-  _CustomTableCalendar createState() => _CustomTableCalendar();
+  State<StatefulWidget> createState() => _CustomTableCalendar();
 }
 
 class _CustomTableCalendar extends State<CustomTableCalendar> {
@@ -333,6 +336,15 @@ class ConfirmDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // necessary data to insert into the database
+    final String selectedDateToInsert = DateFormat('yyyy-MM-dd')
+        .format(context.watch<ReserveFormProvider>().selectedDate!);
+    final String selectedTimeToInsert =
+        context.watch<ReserveFormProvider>().selectedTime;
+    final Map<String, dynamic> selectedRestaurantObj =
+        context.watch<ReserveFormProvider>().getRestaurant;
+    final userId = context.watch<UserProvider>().getUser.id;
+
     final String selectedTime = context
         .watch<ReserveFormProvider>()
         .selectedTime
@@ -420,19 +432,33 @@ class ConfirmDialog extends StatelessWidget {
                               ),
                             ),
                           )),
-                      onPressed: () {
-                        const snackBar = SnackBar(
-                          duration: Duration(milliseconds: 500),
-                          content: Center(
-                            child: Text(
-                              "Thank you! Your reservation is confirmed.",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          backgroundColor: Colors.green,
-                          behavior: SnackBarBehavior.floating,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      onPressed: () async {
+                        showKwunSnackBar(
+                            context: context,
+                            message:
+                                "Thank you! Your reservation is confirmed.",
+                            color: Colors.green);
+
+                        try {
+                          await Supabase.instance.client
+                              .from('reservations')
+                              .insert({
+                            'date': selectedDateToInsert,
+                            'time': selectedTimeToInsert,
+                            'guests': guest,
+                            'is_reserved': true,
+                            'restaurant_id': selectedRestaurantObj['id'],
+                            'user_id': userId,
+                          });
+                        } on Exception catch (e) {
+                          if (context.mounted) {
+                            showKwunSnackBar(
+                                context: context, message: e.toString());
+                          }
+                        }
+
+                        if (!context.mounted) return;
+
                         Navigator.of(context).pop();
                         context.read<ReserveFormProvider>().updateGuest(1);
                         context
@@ -441,7 +467,7 @@ class ConfirmDialog extends StatelessWidget {
                         context
                             .read<ReserveFormProvider>()
                             .updateSelectedDate(DateTime.now());
-                        
+
                         //TODO
                       },
                     ),

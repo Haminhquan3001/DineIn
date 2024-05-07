@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/ui/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'restaurant_card.dart';
+// import 'dart:developer' as developer;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,93 +12,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
-  final List res_info = [
-    {
-      "image": "assets/restaurants/res1.jpeg",
-      "name": "Little Italy Trattoria",
-      "ratings": 4.7,
-      "location": "College Park, MD",
-      "price": "20-40",
-    },
-    {
-      "image": "assets/restaurants/res2.avif",
-      "name": "Spicy Curry House",
-      "ratings": 4.5,
-      "location": "Washington D.C.",
-      "price": "30-35",
-    },
-    {
-      "image": "assets/restaurants/res3.webp",
-      "name": "Sizzling Steakhouse",
-      "ratings": 4.9,
-      "location": "Baltimore, MD",
-      "price": "20-31",
-    },
-    {
-      "image": "assets/restaurants/res4.jpeg",
-      "name": "Simply Vegan",
-      "ratings": 4.8,
-      "location": "Annapolis, MD",
-      "price": "32-45",
-    },
-    {
-      "image": "assets/restaurants/res5.jpg",
-      "name": "The Noodle Bar",
-      "ratings": 4.3,
-      "location": "Alexandria, VA",
-      "price": "50-52",
-    },
-    {
-      "image": "assets/restaurants/res1.jpeg",
-      "name": "Oyster Bay Seafood",
-      "ratings": 4.6,
-      "location": "Virginia Beach, VA",
-      "price": "25-37",
-    },
-    {
-      "image": "assets/restaurants/res2.avif",
-      "name": "Sushi Symphony",
-      "ratings": 4.4,
-      "location": "Richmond, VA",
-      "price": "20-40",
-    },
-    {
-      "image": "assets/restaurants/res3.webp",
-      "name": "Mountain Grill",
-      "ratings": 4.1,
-      "location": "Charlottesville, VA",
-      "price": "20-40",
-    },
-    {
-      "image": "assets/restaurants/res4.jpeg",
-      "name": "Taste of Asia",
-      "ratings": 4.8,
-      "location": "Frederick, MD",
-      "price": "20-40",
-    },
-    {
-      "image": "assets/restaurants/res5.jpg",
-      "name": "Crepe Cafe",
-      "ratings": 4.2,
-      "location": "Arlington, VA",
-      "price": "20-40",
-    },
-  ];
-
   List _foundRestanrants = [];
 
   @override
   initState() {
-    _foundRestanrants = res_info;
     super.initState();
+    fetchRestaurants();
+  }
+
+  Future fetchRestaurants() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('restaurants')
+          .select('*, food_categories(*), reviews(*, users(*))');
+      // developer.log(jsonEncode(response));
+      
+      setState(() => _foundRestanrants = response);
+    } on Exception catch (e) {
+      if (mounted) {
+        showKwunSnackBar(context: context, message: e.toString());
+      }
+    }
   }
 
   void _runFilter(String keyword) {
     List results = [];
     if (keyword.isEmpty) {
-      results = res_info;
+      results = _foundRestanrants;
     } else {
-      results = res_info
+      results = _foundRestanrants
           .where((res) =>
               res["name"].toLowerCase().contains(keyword.toLowerCase()))
           .toList();
@@ -141,15 +86,20 @@ class _HomePage extends State<HomePage> {
                   style: myCustomStyle,
                 ),
               ),
+
+              // Search Bar
               TextField(
                 onChanged: (value) => _runFilter(value),
                 decoration: const InputDecoration(
                     labelText: 'Search for a restaurant',
                     suffixIcon: Icon(Icons.search)),
               ),
+
               const SizedBox(
                 height: 5,
               ),
+
+              // Restaurant List
               Expanded(
                 child: Container(
                   decoration: const BoxDecoration(color: Colors.white),
@@ -173,16 +123,3 @@ class _HomePage extends State<HomePage> {
     );
   }
 }
-
-
-
-                  // Container(
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.white,
-                  //       borderRadius: BorderRadius.circular(10),
-                  //     ),
-                  //     height: 40,
-                  //     width: 40,
-                  //     child: const Icon(
-                  //       Icons.filter_alt,
-                  //     )),

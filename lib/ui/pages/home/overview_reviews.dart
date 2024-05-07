@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/backend/core/entities/restaurant/restaurant.dart';
+import 'package:group_project/ui/utils/format_date.dart';
 import 'reserve_form.dart';
 
 class OverviewAndReviews extends StatelessWidget {
@@ -11,84 +11,9 @@ class OverviewAndReviews extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    List<Map<String, dynamic>> reviews = [
-      {
-        "user_pic": "assets/restaurants/res1.jpeg",
-        "user_full_name": "Jane Smith",
-        "ratings": 5.0,
-        "time": "2024-03-18| 03:30pm", // Replace with actual review time
-        "review":
-            "Highly recommend this place! The atmosphere was wonderful and the food was top-notch."
-      },
-      {
-        "user_pic": "assets/users/user2.jpeg",
-        "user_full_name": "Alice Williams",
-        "ratings": 4.0,
-        "time": "2024-03-18| 12:00pm", // Replace with actual review time
-        "review": "The food was good, but the service was a bit slow."
-      },
-      {
-        "user_pic": "assets/users/user3.jpeg",
-        "user_full_name": "David Miller",
-        "ratings": 4.8,
-        "time": "2024-03-17| 6:30pm", // Replace with actual review time
-        "review":
-            "This place is a hidden gem! The food was fresh and flavorful."
-      },
-      {
-        "user_pic": "assets/users/user4.jpeg",
-        "user_full_name": "Emily Garcia",
-        "ratings": 3.5,
-        "time": "2024-03-17| 11:00am", // Replace with actual review time
-        "review": "The food was decent, but the portions were a bit small."
-      },
-      {
-        "user_pic": "assets/users/user5.jpeg",
-        "user_full_name": "Michael Brown",
-        "ratings": 5.0,
-        "time": "2024-03-16| 08:00pm", // Replace with actual review time
-        "review":
-            "Absolutely loved it! The food was amazing and the staff was very attentive."
-      },
-      {
-        "user_pic": "assets/users/user1.jpeg",
-        "user_full_name": "John Doe",
-        "ratings": 4.5,
-        "time": "2024-03-19| 10:00am", // Replace with actual review time
-        "review":
-            "Great experience! The food was delicious and the service was friendly."
-      },
-      {
-        "user_pic": "assets/users/user2.jpeg",
-        "user_full_name": "Sarah Hernandez",
-        "ratings": 4.2,
-        "time": "2024-03-16| 02:00pm", // Replace with actual review time
-        "review":
-            "Great place for a casual dinner. The food was good and the prices were reasonable."
-      },
-      {
-        "user_pic": "assets/users/user3.jpeg",
-        "user_full_name": "Matthew Johnson",
-        "ratings": 3.8,
-        "time": "2024-03-15| 07:00pm", // Replace with actual review time
-        "review": "The food was okay, but the wait time was a bit long."
-      },
-      {
-        "user_pic": "assets/users/user4.jpeg",
-        "user_full_name": "Jennifer Davis",
-        "ratings": 4.7,
-        "time": "2024-03-15| 12:30pm", // Replace with actual review time
-        "review":
-            "Delicious food and great service! We will definitely be back."
-      },
-      {
-        "user_pic": "assets/users/user5.jpeg",
-        "user_full_name": "William Jones",
-        "ratings": 4.1,
-        "time": "2024-03-14| 05:00pm", // Replace with actual review time
-        "review": "The food was good, but the atmosphere was a bit noisy."
-      },
-    ];
+    List<dynamic> reviews = resObj["reviews"];
+
+    // TODO replace this
     List<Map<String, dynamic>> menuItems = [
       {
         "food_image": "assets/dishes/food1.jpeg",
@@ -137,8 +62,8 @@ class OverviewAndReviews extends StatelessWidget {
       },
     ];
 
-    String overview =
-        "Craving a taste of Italy? Little Italy Trattoria in College Park, MD serves authentic Italian cuisine in a warm and welcoming ambiance. Their menu features classic dishes made with fresh ingredients, making it a crowd favorite with a 4.7 star rating.";
+    String overview = resObj["description"] ?? "";
+    // String overview =  "asd";
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -163,19 +88,25 @@ class OverviewAndReviews extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
+            // Overview
             Column(
               children: [
                 SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Container(
                       margin: const EdgeInsets.only(top: 10),
-                      child: Text(overview)),
+                      child: Text(
+                        overview,
+                        maxLines: 8,
+                        overflow: TextOverflow.ellipsis,
+                      )),
                 ),
                 const Expanded(child: Text("")), //Reserve button
-                ReserveButton(
-                ),
+                ReserveButton(resObj: resObj),
               ],
             ),
+
+            //Reviews
             ListView.builder(
               scrollDirection: Axis.vertical,
               itemCount: reviews.length,
@@ -186,6 +117,8 @@ class OverviewAndReviews extends StatelessWidget {
                 );
               }),
             ),
+
+            // TODO Menu: replace with actual data
             Column(
               children: [
                 Expanded(
@@ -205,8 +138,7 @@ class OverviewAndReviews extends StatelessWidget {
                     ),
                   ),
                 ),
-                ReserveButton(
-                ),
+                ReserveButton(resObj: resObj),
               ],
             ),
           ],
@@ -218,10 +150,12 @@ class OverviewAndReviews extends StatelessWidget {
 
 class ReviewCard extends StatelessWidget {
   final Map reviewObj;
-  const ReviewCard({
+  final Map user;
+
+  ReviewCard({
     super.key,
     required this.reviewObj,
-  });
+  }) : user = reviewObj["users"];
 
   @override
   Widget build(BuildContext context) {
@@ -242,8 +176,9 @@ class ReviewCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(30),
-                child: Image.asset(
-                  reviewObj["user_pic"],
+                child: Image.network(
+                  user["avatar_url"] ??
+                      "https://static.vecteezy.com/system/resources/thumbnails/020/911/740/small_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png",
                   width: 30,
                   height: 30,
                   fit: BoxFit.cover,
@@ -255,7 +190,7 @@ class ReviewCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    reviewObj["user_full_name"],
+                    user["full_name"],
                     style: myCustomStyle,
                   ),
                   Row(children: [
@@ -268,7 +203,7 @@ class ReviewCard extends StatelessWidget {
                       width: 3,
                     ),
                     Text(
-                      reviewObj["ratings"].toString(),
+                      reviewObj["rating"].toString(),
                       style: myCustomStyle,
                     ),
                   ]),
@@ -276,11 +211,9 @@ class ReviewCard extends StatelessWidget {
               )
             ],
           ),
+          Text(formatDate(reviewObj["created_at"])),
           Text(
-            reviewObj["time"].toString(),
-          ),
-          Text(
-            reviewObj["review"].toString(),
+            reviewObj["content"].toString(),
           )
         ],
       ),
@@ -333,8 +266,10 @@ class FoodCard extends StatelessWidget {
 }
 
 class ReserveButton extends StatelessWidget {
+  final Map resObj;
   const ReserveButton({
     super.key,
+    required this.resObj,
   });
   @override
   Widget build(BuildContext context) {
@@ -349,7 +284,7 @@ class ReserveButton extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => ReserveForm(),
+                builder: (context) => ReserveForm(resObj: resObj),
               ),
             );
           },

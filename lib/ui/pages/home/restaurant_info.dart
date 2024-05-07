@@ -43,8 +43,8 @@ class RestaurantInfo extends StatelessWidget {
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      resObj["image"].toString(),
+                    child: Image.network(
+                      resObj["image_url"].toString(),
                       width: contextWidth,
                       fit: BoxFit.cover,
                     ),
@@ -114,7 +114,7 @@ class RestaurantInfo extends StatelessWidget {
                 children: [
                   //Restaurant name
                   Text(
-                    resObj["name"],
+                    resObj["restaurant_name"],
                     style: TextStyle(
                       color: const Color.fromARGB(254, 0, 0, 0),
                       fontSize: fontSizeName,
@@ -126,7 +126,11 @@ class RestaurantInfo extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        resObj["location"].toString(),
+                        resObj["address"]
+                            .toString()
+                            .split(',')
+                            .sublist(1)
+                            .join(', '),
                         style: myCustomStyle,
                       ),
                       const Expanded(child: Text("")),
@@ -140,14 +144,14 @@ class RestaurantInfo extends StatelessWidget {
                           width: 2,
                         ),
                         Text(
-                          resObj["ratings"].toString(),
+                          resObj["rating"].toString(),
                           style: myCustomStyle,
                         ),
                         const SizedBox(
                           width: 5,
                         ),
                         Text(
-                          "(52 reviews)",
+                          "(${resObj["reviews_count"]} Reviews)",
                           style: myCustomStyle,
                         ),
                       ]),
@@ -159,7 +163,15 @@ class RestaurantInfo extends StatelessWidget {
                   ),
 
                   Text(
-                    "Dine-in | Takeaway | Delivery",
+                    resObj["food_categories"]["category_name"]
+                        .toString()
+                        .replaceRange(
+                            0,
+                            1,
+                            resObj["food_categories"]["category_name"]
+                                .toString()
+                                .substring(0, 1)
+                                .toUpperCase()),
                     style: myCustomStyle,
                   ),
 
@@ -168,27 +180,29 @@ class RestaurantInfo extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
+
                       //Opening Hours
-                      Row(
-                        children: [
-                          const Icon(Icons.query_builder),
-                          SizedBox(width: padding),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Opening Hours",
-                                style: myCustomStyle,
-                              ),
-                              Text(
-                                "10am-11pm",
-                                style: myCustomStyle,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                      if (resObj["working_start"] != null)
+                        Row(
+                          children: [
+                            const Icon(Icons.query_builder),
+                            SizedBox(width: padding),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Opening Hours",
+                                  style: myCustomStyle,
+                                ),
+                                Text(
+                                  "${resObj["working_start"]} - ${resObj["working_end"]}",
+                                  style: myCustomStyle,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
 
                       SizedBox(
                         height: paddingHeight,
@@ -203,7 +217,7 @@ class RestaurantInfo extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "19231 Knox Road, College Park, MD",
+                                resObj["address"],
                                 style: myCustomStyle,
                               ),
                               // Text("View on map"),
@@ -214,31 +228,35 @@ class RestaurantInfo extends StatelessWidget {
                       SizedBox(
                         height: paddingHeight,
                       ),
+
                       //Phone number
-                      Row(
-                        children: [
-                          const Icon(Icons.local_phone_outlined),
-                          SizedBox(width: padding),
-                          Text(
-                            "2407220292",
-                            style: myCustomStyle,
-                          ),
-                        ],
-                      ),
+                      if (resObj["phone"] != null)
+                        Row(
+                          children: [
+                            const Icon(Icons.local_phone_outlined),
+                            SizedBox(width: padding),
+                            Text(
+                              resObj["phone"] ?? "",
+                              style: myCustomStyle,
+                            ),
+                          ],
+                        ),
                       SizedBox(
                         height: paddingHeight,
                       ),
+
                       //Email
-                      Row(
-                        children: [
-                          const Icon(Icons.email_outlined),
-                          SizedBox(width: padding),
-                          Text(
-                            "bejose@cooking.gmail.com",
-                            style: myCustomStyle,
-                          ),
-                        ],
-                      ),
+                      if (resObj["email"] != null)
+                        Row(
+                          children: [
+                            const Icon(Icons.email_outlined),
+                            SizedBox(width: padding),
+                            Text(
+                              resObj["email"],
+                              style: myCustomStyle,
+                            ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 20,
                       ),

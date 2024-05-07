@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:group_project/providers/reserve_form.provider.dart';
 
 class RestaurantCard extends StatelessWidget {
-  final Map resObj;
+  final Map<String, dynamic> resObj;
   final bool favorite;
   const RestaurantCard({
     super.key,
@@ -19,9 +19,13 @@ class RestaurantCard extends StatelessWidget {
     double fontSizeName = 18, fontSizeLocation = 12, fontSizeOther = 14;
     return TextButton(
       onPressed: () {
+        // save ther restaurant object to the provider
+        context.read<ReserveFormProvider>().updateRestaurantObject(resObj);
+
         context
             .read<ReserveFormProvider>()
-            .updateCurrentRestaurant(resObj["name"]);
+            .updateCurrentRestaurant(resObj["restaurant_name"]);
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -42,8 +46,8 @@ class RestaurantCard extends StatelessWidget {
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      resObj["image"].toString(),
+                    child: Image.network(
+                      resObj["image_url"].toString(),
                       height: 100,
                       width: contextWidth,
                       fit: BoxFit.cover,
@@ -83,7 +87,7 @@ class RestaurantCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        resObj["name"],
+                        resObj["restaurant_name"],
                         style: TextStyle(
                           color: const Color.fromARGB(254, 0, 0, 0),
                           fontSize: fontSizeName,
@@ -100,7 +104,7 @@ class RestaurantCard extends StatelessWidget {
                       width: 3,
                     ),
                     Text(
-                      resObj["ratings"].toString(),
+                      resObj["rating"].toString(),
                       style: TextStyle(
                         color: const Color.fromARGB(254, 0, 0, 0),
                         fontSize: fontSizeOther,
@@ -115,7 +119,7 @@ class RestaurantCard extends StatelessWidget {
                 child: Row(children: [
                   Expanded(
                     child: Text(
-                      resObj["location"].toString(),
+                      resObj["address"].toString(),
                       style: TextStyle(
                         color: const Color.fromARGB(254, 0, 0, 0),
                         fontSize: fontSizeLocation,
@@ -129,7 +133,7 @@ class RestaurantCard extends StatelessWidget {
                     size: 18,
                   ),
                   Text(
-                    resObj["price"].toString(),
+                    resObj["min_price"].toString(),
                     style: TextStyle(
                       color: const Color.fromARGB(254, 0, 0, 0),
                       fontSize: fontSizeOther,

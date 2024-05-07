@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:group_project/backend/auth/domain/repositories/auth_repository.dart';
 import 'package:group_project/backend/core/entities/user/user.dart';
 import 'package:group_project/config/constants.dart';
-import 'package:logger/web.dart';
-
-final log = Logger();
 
 class UserProvider with ChangeNotifier {
   UserProvider(this._authRepository);
