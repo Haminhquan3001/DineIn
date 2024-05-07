@@ -12,7 +12,7 @@ class ReserveFormProvider with ChangeNotifier {
   String get currentRestaurant => _currentRestaurant;
   DateTime? get selectedDate => _selectedDate;
   int get guest => _guests;
-  Map<String, dynamic> get getRestaurant => _restaurant;
+  Map<String, dynamic> get getRestaurantObj => _restaurant;
 
   // setters
   void updateSelectedTime(String time) {

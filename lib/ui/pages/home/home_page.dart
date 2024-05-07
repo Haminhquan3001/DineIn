@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'restaurant_card.dart';
-// import 'dart:developer' as developer;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,7 +24,6 @@ class _HomePage extends State<HomePage> {
       final response = await Supabase.instance.client
           .from('restaurants')
           .select('*, food_categories(*), reviews(*, users(*))');
-      // developer.log(jsonEncode(response));
       
       setState(() => _foundRestanrants = response);
     } on Exception catch (e) {
@@ -42,7 +40,7 @@ class _HomePage extends State<HomePage> {
     } else {
       results = _foundRestanrants
           .where((res) =>
-              res["name"].toLowerCase().contains(keyword.toLowerCase()))
+              res["restaurant_name"].toLowerCase().contains(keyword.toLowerCase()))
           .toList();
     }
 

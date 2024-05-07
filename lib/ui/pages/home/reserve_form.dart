@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/config/constants.dart';
 import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
@@ -110,8 +109,9 @@ class TimeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String openingTime = "9:00 AM";
-    String closingTime = "9:00 PM";
+    final restaurantObj = context.watch<ReserveFormProvider>().getRestaurantObj;
+    String openingTime = restaurantObj["working_start"];
+    String closingTime = restaurantObj["working_end"];
 
     List<String> times = generateTimeSlots(openingTime, closingTime);
     return Scaffold(
@@ -310,8 +310,13 @@ List<String> generateTimeSlots(String openingTime, String closingTime) {
   List<String> timeSlots = [];
 
   List openTokens = openingTime.split(":");
+  List closeTokens = closingTime.split(":");
   int openTime = int.parse(openTokens[0]);
   String openP = openTokens[1].split(" ")[1];
+  String closeP = closeTokens[1].split(" ")[1];
+
+  closingTime = (int.parse(closeTokens[0]) - 1).toString() + ":00 " + closeP;
+
   String currTime = "";
 
   while (currTime.compareTo(closingTime) != 0) {
@@ -342,7 +347,7 @@ class ConfirmDialog extends StatelessWidget {
     final String selectedTimeToInsert =
         context.watch<ReserveFormProvider>().selectedTime;
     final Map<String, dynamic> selectedRestaurantObj =
-        context.watch<ReserveFormProvider>().getRestaurant;
+        context.watch<ReserveFormProvider>().getRestaurantObj;
     final userId = context.watch<UserProvider>().getUser.id;
 
     final String selectedTime = context
