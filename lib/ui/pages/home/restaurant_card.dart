@@ -76,15 +76,7 @@ class RestaurantCard extends StatelessWidget {
 
                               // either save to favorites
                               if (isToggled) {
-                                Map<String, dynamic> restaurantToSave = {
-                                  "id": resObj["id"],
-                                  "image_url": resObj["image_url"],
-                                  "restaurant_name": resObj["restaurant_name"],
-                                  "rating": resObj["rating"],
-                                  "address": resObj["address"],
-                                  "min_price": resObj["min_price"]
-                                };
-                                favoriteRestaurants.add(restaurantToSave);
+                                favoriteRestaurants.add(resObj);
                               }
 
                               // or remove from favorites
