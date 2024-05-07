@@ -1,13 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:group_project/providers/user.provider.dart';
+import 'package:group_project/ui/pages/profile/widgets/become_owner_dialog.dart';
 import 'package:group_project/ui/pages/profile/widgets/menu_tab.dart';
 import 'package:group_project/ui/pages/profile/widgets/switch_theme_tab.dart';
 import 'package:group_project/ui/widgets/space_y.dart';
 import 'package:provider/provider.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  bool isOwner = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserInfo();
+  }
+
+  void fetchUserInfo() async {
+    final res = await Supabase.instance.client
+        .from("users")
+        .select("is_owner")
+        .eq("id", Supabase.instance.client.auth.currentUser!.id)
+        .single();
+
+    setState(() => isOwner = res['is_owner']);
+  }
+
+  void updateIsOwner(value) {
+    setState(() => isOwner = value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +104,26 @@ class ProfilePage extends StatelessWidget {
                 onPressed: () => context.push('/profile/contact-us'),
               ),
               const SpaceY(10),
-              MenuTab(
-                title: "Owner Form",
-                icon: Icons.app_registration,
-                onPressed: () => context.push('/profile/owner-form'),
-              ),
+
+              // Owner feature
+              if (isOwner)
+                MenuTab(
+                  title: "Manage Restaurant",
+                  icon: Icons.app_registration,
+                  onPressed: () => context.push('/profile/owner-form'),
+                )
+
+              // TODO add more MenuTab for owners feature
+              else
+                MenuTab(
+                  title: "Become Owner",
+                  icon: Icons.app_registration,
+                  onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) =>
+                          BecomeOwnerDialog(updateIsOwner: updateIsOwner)),
+                ),
+
               const SpaceY(10),
               const SwitchThemeTab(),
               const Divider(),

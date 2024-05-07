@@ -118,8 +118,6 @@ class _HomePage extends State<HomePage> {
 
                       var resObj = _restaurantsFiltered[index];
 
-                      log.d(favoriteRestaurants);
-
                       bool isFavorite = favoriteRestaurants.any(
                           (eachFavorite) => eachFavorite['id'] == resObj['id']);
 

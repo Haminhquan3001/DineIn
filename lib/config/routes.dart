@@ -88,7 +88,7 @@ GoRouter router = GoRouter(
             GoRoute(
               path: 'owner-form',
               name: 'owner-form',
-              builder: (context, state) => RestaurantForm(),
+              builder: (context, state) => const RestaurantForm(),
             ),
           ],
         ),

@@ -97,7 +97,6 @@ class _SignUp extends State<SignUpPage> {
                     onChanged: _toogleCheck,
                   ),
                   const SpaceY(10),
-                  //TODO: FOLLOW THIS AS A GUIDE
                   Consumer<UserProvider>(builder: (context, provider, _) {
                     return PasswordCredentialsButton(
                       isLoading: provider.isLoading,

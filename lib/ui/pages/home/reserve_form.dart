@@ -515,8 +515,6 @@ class ConfirmDialog extends StatelessWidget {
                         context
                             .read<ReserveFormProvider>()
                             .updateSelectedDate(DateTime.now());
-
-                        //TODO
                       },
                     ),
                   ),

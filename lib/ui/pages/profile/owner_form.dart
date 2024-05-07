@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:group_project/config/constants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class RestaurantForm extends StatefulWidget {
   const RestaurantForm({super.key});
@@ -11,10 +14,11 @@ class RestaurantForm extends StatefulWidget {
 
 class MenuItem {
   String? name;
+  String? description;
   double? price;
   File? image;
 
-  MenuItem({this.name, this.price, this.image});
+  MenuItem({this.name, this.description, this.price, this.image});
 }
 
 class _RestaurantFormState extends State<RestaurantForm> {
@@ -23,6 +27,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
 
   Future<void> _addMenuItem(BuildContext context) async {
     String? name;
+    String? description;
     double? price;
     File? image;
 
@@ -60,6 +65,19 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     price = double.tryParse(value)!;
                   },
                 ),
+                TextFormField(
+                  decoration:
+                      const InputDecoration(labelText: 'Food Description'),
+                  validator: (value) {
+                    if (value != null && value.isEmpty) {
+                      return 'Please enter the food description';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    description = value;
+                  },
+                ),
                 const SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: () async {
@@ -87,8 +105,12 @@ class _RestaurantFormState extends State<RestaurantForm> {
               onPressed: () {
                 if (name != null && price != null && image != null) {
                   setState(() {
-                    _menuItems
-                        .add(MenuItem(name: name, price: price, image: image));
+                    _menuItems.add(MenuItem(
+                      name: name,
+                      price: price,
+                      description: description,
+                      image: image,
+                    ));
                   });
                   Navigator.of(context).pop();
                 }
@@ -111,7 +133,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
   String _phoneNumber = '';
   String _email = '';
   String _overview = '';
-  File? _image;
+  XFile? _image;
   bool _imageSelected = false;
 
   final _restaurantNameController = TextEditingController();
@@ -127,30 +149,106 @@ class _RestaurantFormState extends State<RestaurantForm> {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        _image = pickedFile;
         _imageSelected = true;
       });
     }
   }
 
-  void _submitForm() {
+  /// returns an object with restaurant id and image url
+  Future<Map<String, String>> _uploadRestaurantImageToBucket() async {
+    final String restaurantId = const Uuid().v4();
+    final bytes = await _image!.readAsBytes();
+    final fileExt = _image!.path.split('.').last;
+    final fileName = '$restaurantId.$fileExt';
+    final filePath = fileName;
+
+    const expiresInTenYears = 60 * 60 * 24 * 365 * 10;
+
+    // upload image to supabase bucket
+    await Supabase.instance.client.storage.from('restaurant_images').uploadBinary(
+          filePath,
+          bytes,
+          fileOptions: FileOptions(contentType: _image!.mimeType),
+        );
+    // get url
+    final imageUrlResponse = await Supabase.instance.client.storage
+        .from('avatars')
+        .createSignedUrl(filePath, expiresInTenYears);
+
+    return {
+      "restaurant_id": restaurantId,
+      "image_url": imageUrlResponse,
+    };
+  }
+
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      // save restaurant image to bucket
+      final Map<String, String> json = await _uploadRestaurantImageToBucket();
+
+      log.d(json);
+
+      // // create a new restaurant to db
+      // final restaurant = await Supabase.instance.client
+      //     .from('restaurants')
+      //     .insert({
+      //       // required
+      //       'id': json['restaurant_id'],
+      //       'name': _restaurantNameController.text,
+      //       'rating': 2.5,
+      //       'reviews_count': 0,
+      //       'category_id': "TODO", // TODO
+      //       'address': _locationController.text,
+
+      //       // optionals
+      //       "owner_id": Supabase.instance.client.auth.currentUser!.id,
+      //       'description': _overview,
+      //       'location': {}, // in LatLng
+      //       'image_url': json['image_url'],
+      //       'phone': _phoneNumber,
+      //       'email': _email,
+      //       'min_price': _lowPrice,
+      //       'max_price': _highPrice,
+      //       'working_start': _openingTime.toString(),
+      //       'working_end': _closingTime.toString(),
+      //     })
+      //     .select()
+      //     .single();
+      // // get the restaurant id
+
+      // // insert menu items to Supabase
+      // final List<Map<String, dynamic>> menuItemsToInsert =
+      //     _menuItems.map((item) {
+      //   return {
+      //     'name': item.name,
+      //     'description': item.description,
+      //     'price': item.price,
+      //     'available': true,
+      //     'restaurant_id': restaurant['id'],
+
+      //     // optional
+      //     'image_url': item.image?.path ?? '',
+      //   };
+      // }).toList();
+      // Supabase.instance.client.from('menu_items').insert(menuItemsToInsert);
+
       // Process or submit the form data
-      print('Restaurant Name: ${_restaurantNameController.text}');
-      print(
-          'Prices: ${_lowPriceController.text} to ${_highPriceController.text}');
-      print('Options: $_options');
-      print('Opening Hours: $_openingTime to $_closingTime');
-      print('Location: ${_locationController.text}');
-      print('Phone Number: ${_phoneNumberController.text}');
-      print('Email: ${_emailController.text}');
-      print('Overview: ${_overviewController.text}');
-      for (var menuItem in _menuItems) {
-        print(
-            ' - Name: ${menuItem.name}, Price: ${menuItem.price}, Image path: ${menuItem.image?.path}');
-      }
+      // print('Restaurant Name: ${_restaurantNameController.text}');
+      // print(
+      //     'Prices: ${_lowPriceController.text} to ${_highPriceController.text}');
+      // print('Options: $_options');
+      // print('Opening Hours: $_openingTime to $_closingTime');
+      // print('Location: ${_locationController.text}');
+      // print('Phone Number: ${_phoneNumberController.text}');
+      // print('Email: ${_emailController.text}');
+      // print('Overview: ${_overviewController.text}');
+      // for (var menuItem in _menuItems) {
+      //   print(
+      //       ' - Name: ${menuItem.name}, Price: ${menuItem.price}, Image path: ${menuItem.image?.path}');
+      // }
     }
   }
 
@@ -449,7 +547,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     color: Colors.grey[200],
                     child: _imageSelected
                         ? Image.file(
-                            _image!,
+                            File(_image!.path),
                             fit: BoxFit.cover,
                           )
                         : const Icon(
