@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'reservation_class.dart';
+import 'package:go_router/go_router.dart';
+import 'package:group_project/ui/widgets/custom_snackbar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UpcomingList extends StatelessWidget {
-  final List<Reservation> reservations = [
-    Reservation(
-        "Parallel 37", "Ikeja, Lagos", "Sunday, 23rd June", "8:15pm", 4),
-    Reservation(
-        "Yin and Yummy", "Ikeja, Lagos", "Friday, 18th March", "8:30pm", 3),
-  ];
+  // TODO sort based on date
+  final List<Map<String, dynamic>> reservations;
 
-  //Might need to sort the list based on the date
+  final VoidCallback refreshReservation;
 
-  UpcomingList({super.key});
+  const UpcomingList(
+      {required this.refreshReservation,
+      required this.reservations,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +27,37 @@ class UpcomingList extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(reservation.name,
+                  Text(reservation['restaurants']['restaurant_name'],
                       style: const TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.w700)),
-                  Text(reservation.location),
-                  Text('${reservation.numGuests} guests'),
-                  Text('${reservation.date} - ${reservation.time}'),
+                  Text(reservation['restaurants']['address']),
+                  Text('${reservation['guests']} guests'),
+                  Text('${reservation['date']} - ${reservation['time']}'),
                   Row(
                     children: [
                       const Expanded(child: Text("")),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          try {
+                            await Supabase.instance.client
+                                .from("reservations")
+                                .delete()
+                                .eq("id", reservation['id']);
+
+                            // revalidate the data
+                            refreshReservation();
+
+                            if (!context.mounted) return;
+                            showKwunSnackBar(
+                                context: context,
+                                message: "Your booking has been cancelled",
+                                color: Colors.green);
+                          } on Exception catch (e) {
+                            if (!context.mounted) return;
+                            showKwunSnackBar(
+                                context: context, message: e.toString());
+                          }
+                        },
                         child: Container(
                             padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
@@ -61,4 +82,3 @@ class UpcomingList extends StatelessWidget {
     );
   }
 }
-

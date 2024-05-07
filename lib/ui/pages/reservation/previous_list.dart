@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'reservation_class.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:group_project/ui/widgets/custom_snackbar.dart';
 
 class PreviousList extends StatelessWidget {
-  final List<Reservation> reservations = [
-    Reservation(
-        "Parallel 37", "Ikeja, Lagos", "Sunday, 23rd June", "8:15pm", 4),
-    Reservation(
-        "Yin and Yummy", "Ikeja, Lagos", "Friday, 18th March", "8:30pm", 4),
-    Reservation(
-        "Parallel 37", "Ikeja, Lagos", "Sunday, 23rd June", "8:15pm", 4),
-    Reservation(
-        "Yin and Yummy", "Ikeja, Lagos", "Friday, 18th March", "8:30pm", 4),
-    Reservation(
-        "Parallel 37", "Ikeja, Lagos", "Sunday, 23rd June", "8:15pm", 4),
-    Reservation(
-        "Yin and Yummy", "Ikeja, Lagos", "Friday, 18th March", "8:30pm", 4),
-  ];
+  const PreviousList({required this.reservations, super.key});
 
-  PreviousList({super.key});
+  // TODO sort based on date
+  final List<Map<String, dynamic>> reservations;
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +23,11 @@ class PreviousList extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(reservation.name,
+                  Text(reservation['restaurants']['restaurant_name'],
                       style: const TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.w700)),
-                  Text(reservation.location),
-                  Text('${reservation.date} - ${reservation.time}'),
+                  Text(reservation['restaurants']['address']),
+                  Text('${reservation['date']} - ${reservation['time']}'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -47,7 +37,8 @@ class PreviousList extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ReviewPage(),
+                              builder: (context) =>
+                                  ReviewPage(reservationObj: reservation),
                             ),
                           );
                         },
@@ -79,7 +70,8 @@ class PreviousList extends StatelessWidget {
 }
 
 class ReviewPage extends StatefulWidget {
-  const ReviewPage({super.key});
+  final Map<String, dynamic> reservationObj;
+  const ReviewPage({required this.reservationObj, super.key});
   @override
   State<StatefulWidget> createState() => _ReviewPage();
 }
@@ -177,17 +169,34 @@ class _ReviewPage extends State<ReviewPage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final state = _key.currentState;
                     if (state!.validate()) {
                       setState(() {
                         state.save();
                       });
                     }
+
+                    try {
+                      await Supabase.instance.client.from('reviews').insert({
+                        "content": _review,
+                        "rating": _rating,
+                        "restaurant_id": widget.reservationObj['restaurant_id'],
+                        "user_id": widget.reservationObj['user_id'],
+                      });
+
+                      if (!context.mounted) return;
+                      showKwunSnackBar(
+                          context: context,
+                          message: "Your review has been submitted");
+                    } on Exception catch (e) {
+                      if (!context.mounted) return;
+                      showKwunSnackBar(
+                          context: context,
+                          message: "Failed to submit your review: $e");
+                    }
+
                     fieldText.clear();
-                    //TODO
-                    print(_rating);
-                    print(_review);
                   },
                   child: Container(
                       width: MediaQuery.of(context).size.width,

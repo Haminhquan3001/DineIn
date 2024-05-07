@@ -20,7 +20,7 @@ class UserProvider with ChangeNotifier {
   }
 
   bool isLoggedIn() {
-    return _user.id == '';
+    return _user.id != '';
   }
 
   Future<ApiResponse<User>> useLoginWithPassword(
@@ -87,6 +87,8 @@ class UserProvider with ChangeNotifier {
 
     _isLoading = false;
     _user = User(id: '', name: '', email: '');
+
+    // TODO clean from local storage
     notifyListeners();
   }
 
