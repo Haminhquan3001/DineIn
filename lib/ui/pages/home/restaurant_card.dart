@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
+import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'restaurant_info.dart';
 import 'package:provider/provider.dart';
 import 'package:group_project/providers/reserve_form.provider.dart';
@@ -59,21 +63,42 @@ class RestaurantCard extends StatelessWidget {
                         child: Text(""),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          width: 30,
-                          height: 30,
-                          child: Icon(
-                              favorite
-                                  ? Icons.favorite_outlined
-                                  : Icons.favorite_border,
-                              color: favorite ? Colors.red : Colors.black),
-                        ),
-                      ),
+                          padding: const EdgeInsets.all(18.0),
+                          child: ToggleHeartIconButton(
+                            initialValue: favorite,
+                            onChanged: (bool isToggled) {
+                              // get from data from localstorage
+                              String favoriteRestaurantsString =
+                                  KwunLocalStorage.getString("favorites");
+
+                              List<dynamic> favoriteRestaurants =
+                                  jsonDecode(favoriteRestaurantsString);
+
+                              // either save to favorites
+                              if (isToggled) {
+                                Map<String, dynamic> restaurantToSave = {
+                                  "id": resObj["id"],
+                                  "image_url": resObj["image_url"],
+                                  "restaurant_name": resObj["restaurant_name"],
+                                  "rating": resObj["rating"],
+                                  "address": resObj["address"],
+                                  "min_price": resObj["min_price"]
+                                };
+                                favoriteRestaurants.add(restaurantToSave);
+                              }
+
+                              // or remove from favorites
+                              else {
+                                // remove by name
+                                favoriteRestaurants.removeWhere(
+                                    (curr) => curr["id"] == resObj["id"]);
+                              }
+
+                              // save new data
+                              KwunLocalStorage.setString(
+                                  "favorites", jsonEncode(favoriteRestaurants));
+                            },
+                          )),
                     ],
                   ),
                 ],

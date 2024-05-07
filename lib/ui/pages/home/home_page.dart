@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:group_project/config/constants.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'restaurant_card.dart';
@@ -108,10 +112,20 @@ class _HomePage extends State<HomePage> {
                     scrollDirection: Axis.vertical,
                     itemCount: _restaurantsFiltered.length,
                     itemBuilder: ((context, index) {
+                      // get favorite restaurant object from localstorage
+                      List<dynamic> favoriteRestaurants =
+                          jsonDecode(KwunLocalStorage.getString("favorites"));
+
                       var resObj = _restaurantsFiltered[index];
+
+                      log.d(favoriteRestaurants);
+
+                      bool isFavorite = favoriteRestaurants.any(
+                          (eachFavorite) => eachFavorite['id'] == resObj['id']);
+
                       return RestaurantCard(
                         resObj: resObj,
-                        favorite: false,
+                        favorite: isFavorite,
                       );
                     }),
                   ),

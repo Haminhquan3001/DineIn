@@ -308,23 +308,66 @@ class ReserveButton extends StatelessWidget {
 
 List<String> generateTimeSlots(String openingTime, String closingTime) {
   List<String> timeSlots = [];
-
+  List<String> defaultTimeSlots = [
+    "12:00 PM",
+    "1:00 PM",
+    "2:00 PM",
+    "3:00 PM",
+    "4:00 PM",
+    "5:00 PM",
+    "6:00 PM",
+    "7:00 PM",
+    "8:00 PM"
+  ];
   List openTokens = openingTime.split(":");
   List closeTokens = closingTime.split(":");
   int openTime = int.parse(openTokens[0]);
   String openP = openTokens[1].split(" ")[1];
   String closeP = closeTokens[1].split(" ")[1];
 
-  closingTime = (int.parse(closeTokens[0]) - 1).toString() + ":00 " + closeP;
+  closingTime = "${int.parse(closeTokens[0]) - 1}:00 $closeP";
+
+  if (closingTime.compareTo("11:00 AM") == 0) {
+    closingTime = "11:00 PM";
+  } else if (closingTime.compareTo("11:00 PM") == 0) {
+    closingTime = "11:00 AM";
+  } else if (closingTime.compareTo("0:00 AM") == 0) {
+    closingTime = "12:00 AM";
+  } else if (closingTime.compareTo("0:00 PM") == 0) {
+    closingTime = "12:00 PM";
+  }
+
+  if (openingTime.compareTo("$openTime:00 $openP") != 0) {
+    openTime = openTime + 1;
+    if (openTime == 12) {
+      if (openP.compareTo("AM") == 0) {
+        openP = "PM";
+      } else {
+        openP = "AM";
+      }
+    }
+    if (openTime > 12) {
+      openTime = openTime - 12;
+    }
+  }
 
   String currTime = "";
+  int loop = 0;
 
   while (currTime.compareTo(closingTime) != 0) {
+    if (loop > 24) {
+      return defaultTimeSlots;
+    }
+    loop += 1;
     currTime = "$openTime:00 $openP";
     timeSlots.add(currTime);
     openTime += 1;
     if (openTime == 12) {
-      openP = "PM";
+      if (openP.compareTo("AM") == 0) {
+        openP = "PM";
+      } else {
+        openP = "AM";
+      }
     }
     if (openTime > 12) {
       openTime -= 12;
