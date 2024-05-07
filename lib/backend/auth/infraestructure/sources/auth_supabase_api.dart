@@ -143,16 +143,21 @@ class AuthSupabaseApi implements AuthApiDataSource {
   }
 
   /// This should call the users table and get all data transformeed into a User
-  // TODO add try-catch
   @override
   Future<UserModel> getServerUser() async {
     final userId = supabase.auth.currentUser?.id;
 
     // get user from users table by id
-    final json =
-        await supabase.from('users').select().eq('id', userId!).single();
+    try {
+      final json =
+          await supabase.from('users').select().eq('id', userId!).single();
 
-    return UserModel.fromJson(json);
+      return UserModel.fromJson(json);
+    } on AuthException catch (e) {
+      throw ServerException(e.message);
+    } on Exception catch (e) {
+      throw ServerException(e.toString());
+    }
   }
 
   @override

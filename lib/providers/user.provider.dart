@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/backend/auth/domain/repositories/auth_repository.dart';
 import 'package:group_project/backend/core/entities/user/user.dart';
 import 'package:group_project/config/constants.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
 
 class UserProvider with ChangeNotifier {
   UserProvider(this._authRepository);
@@ -88,7 +89,8 @@ class UserProvider with ChangeNotifier {
     _isLoading = false;
     _user = User(id: '', name: '', email: '');
 
-    // TODO clean from local storage
+    await KwunLocalStorage.setString("favorites", "[]");
+    await KwunLocalStorage.setBool("is_owner", false);
     notifyListeners();
   }
 

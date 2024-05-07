@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:group_project/providers/user.provider.dart';
@@ -22,7 +23,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    fetchUserInfo();
+
+    if (context.mounted) fetchUserInfo();
   }
 
   void fetchUserInfo() async {
@@ -32,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
         .eq("id", Supabase.instance.client.auth.currentUser!.id)
         .single();
 
+    KwunLocalStorage.setBool("is_owner", res['is_owner']);
     setState(() => isOwner = res['is_owner']);
   }
 

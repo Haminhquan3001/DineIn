@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:group_project/config/constants.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -28,7 +27,8 @@ class _HomePage extends State<HomePage> {
     try {
       final response = await Supabase.instance.client
           .from('restaurants')
-          .select('*, food_categories(*), reviews(*, users(*))');
+          .select('*, food_categories(*), reviews(*, users(*)), menu_items(*)');
+
 
       setState(() => _foundRestanrants = response);
       setState(() => _restaurantsFiltered = response);

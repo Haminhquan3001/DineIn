@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/ui/utils/format_date.dart';
 import 'reserve_form.dart';
 
-class OverviewAndReviews extends StatelessWidget {
+import 'package:group_project/ui/utils/format_date.dart';
+
+class OverviewAndReviews extends StatefulWidget {
   final Map resObj;
   const OverviewAndReviews({
     super.key,
@@ -10,59 +11,17 @@ class OverviewAndReviews extends StatelessWidget {
   });
 
   @override
+  State<OverviewAndReviews> createState() => _OverviewAndReviewsState();
+}
+
+class _OverviewAndReviewsState extends State<OverviewAndReviews> {
+  @override
   build(BuildContext context) {
-    List<dynamic> reviews = resObj["reviews"];
+    List<dynamic> reviews = widget.resObj["reviews"];
 
-    // TODO replace this
-    List<Map<String, dynamic>> menuItems = [
-      {
-        "food_image": "assets/dishes/food1.jpeg",
-        "food_name": "Classic Cheese Pizza",
-        "price": 10.99
-      },
-      {
-        "food_image": "assets/dishes/food2.jpeg",
-        "food_name": "All-American Cheeseburger",
-        "price": 12.50
-      },
-      {
-        "food_image": "assets/dishes/food3.webp",
-        "food_name": "Penne Alfredo",
-        "price": 14.25
-      },
-      {
-        "food_image": "assets/dishes/food5.jpg",
-        "food_name": "Chopped Salad with Grilled Chicken",
-        "price": 13.99
-      },
-      {
-        "food_image": "assets/dishes/food6.jpeg",
-        "food_name": "Buffalo Wings",
-        "price": 9.99
-      },
-      {
-        "food_image": "assets/dishes/food7.jpeg",
-        "food_name": "Fish and Chips",
-        "price": 16.50
-      },
-      {
-        "food_image": "assets/dishes/food8.jpeg",
-        "food_name": "Ribeye Steak",
-        "price": 24.95
-      },
-      {
-        "food_image": "assets/dishes/food9.jpeg",
-        "food_name": "California Roll",
-        "price": 8.75
-      },
-      {
-        "food_image": "assets/dishes/food10.webp",
-        "food_name": "Pad Thai",
-        "price": 15.25
-      },
-    ];
+    List<dynamic> menuItems = widget.resObj["menu_items"];
 
-    String overview = resObj["description"] ?? "";
+    String overview = widget.resObj["description"] ?? "";
     // String overview =  "asd";
     return DefaultTabController(
       length: 3,
@@ -102,7 +61,7 @@ class OverviewAndReviews extends StatelessWidget {
                       )),
                 ),
                 const Expanded(child: Text("")), //Reserve button
-                ReserveButton(resObj: resObj),
+                ReserveButton(resObj: widget.resObj),
               ],
             ),
 
@@ -118,7 +77,6 @@ class OverviewAndReviews extends StatelessWidget {
               }),
             ),
 
-            // TODO Menu: replace with actual data
             Column(
               children: [
                 Expanded(
@@ -138,7 +96,7 @@ class OverviewAndReviews extends StatelessWidget {
                     ),
                   ),
                 ),
-                ReserveButton(resObj: resObj),
+                ReserveButton(resObj: widget.resObj),
               ],
             ),
           ],
@@ -245,15 +203,15 @@ class FoodCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: Image.asset(
-              foodObj["food_image"],
+            child: Image.network(
+              foodObj["image_url"],
               width: widthImage,
               height: heightImage,
               fit: BoxFit.cover,
             ),
           ),
           Text(
-            foodObj["food_name"].toString(),
+            foodObj["name"].toString(),
             style: myCustomStyle,
           ),
           Text(

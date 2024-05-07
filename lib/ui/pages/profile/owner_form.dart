@@ -1,9 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:group_project/config/constants.dart';
+import 'package:go_router/go_router.dart';
+import 'package:group_project/ui/utils/format_time_of_day.dart';
+import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
+
+class MenuItem {
+  String id;
+  String? name;
+  String? description;
+  double? price;
+  File? image;
+
+  MenuItem(
+      {required this.id, this.name, this.description, this.price, this.image});
+}
 
 class RestaurantForm extends StatefulWidget {
   const RestaurantForm({super.key});
@@ -12,18 +25,8 @@ class RestaurantForm extends StatefulWidget {
   State<RestaurantForm> createState() => _RestaurantFormState();
 }
 
-class MenuItem {
-  String? name;
-  String? description;
-  double? price;
-  File? image;
-
-  MenuItem({this.name, this.description, this.price, this.image});
-}
-
 class _RestaurantFormState extends State<RestaurantForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final List<MenuItem> _menuItems = [];
 
   Future<void> _addMenuItem(BuildContext context) async {
     String? name;
@@ -62,7 +65,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     return null;
                   },
                   onChanged: (value) {
-                    price = double.tryParse(value)!;
+                    price = double.tryParse(value) ?? 0.0;
                   },
                 ),
                 TextFormField(
@@ -106,12 +109,18 @@ class _RestaurantFormState extends State<RestaurantForm> {
                 if (name != null && price != null && image != null) {
                   setState(() {
                     _menuItems.add(MenuItem(
+                      id: const Uuid().v4(),
                       name: name,
                       price: price,
                       description: description,
                       image: image,
                     ));
                   });
+
+                  showKwunSnackBar(
+                      context: context,
+                      message: "Item added",
+                      color: Colors.green);
                   Navigator.of(context).pop();
                 }
               },
@@ -124,18 +133,23 @@ class _RestaurantFormState extends State<RestaurantForm> {
   }
 
   String _restaurantName = '';
+
   int _lowPrice = 0;
   int _highPrice = 0;
-  final List<String> _options = ['Dine-in', 'Takeaway', 'Delivery'];
-  TimeOfDay _openingTime = const TimeOfDay(hour: 10, minute: 0);
-  TimeOfDay _closingTime = const TimeOfDay(hour: 20, minute: 0);
   String _location = '';
   String _phoneNumber = '';
   String _email = '';
   String _overview = '';
+
+  List<dynamic> _foodCategories = [];
+  String? _selectedCategoryId;
+  final List<MenuItem> _menuItems = [];
+
   XFile? _image;
   bool _imageSelected = false;
 
+  TimeOfDay _openingTime = const TimeOfDay(hour: 10, minute: 0);
+  TimeOfDay _closingTime = const TimeOfDay(hour: 20, minute: 0);
   final _restaurantNameController = TextEditingController();
   final _lowPriceController = TextEditingController();
   final _highPriceController = TextEditingController();
@@ -143,6 +157,20 @@ class _RestaurantFormState extends State<RestaurantForm> {
   final _phoneNumberController = TextEditingController();
   final _emailController = TextEditingController();
   final _overviewController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _getFoodCategories();
+  }
+
+  Future<void> _getFoodCategories() async {
+    final response = await Supabase.instance.client
+        .from('food_categories')
+        .select('id, category_name');
+
+    setState(() => _foodCategories = response);
+  }
 
   Future<void> _getImage() async {
     final pickedFile =
@@ -157,23 +185,26 @@ class _RestaurantFormState extends State<RestaurantForm> {
 
   /// returns an object with restaurant id and image url
   Future<Map<String, String>> _uploadRestaurantImageToBucket() async {
+    final String userId = Supabase.instance.client.auth.currentUser!.id;
     final String restaurantId = const Uuid().v4();
+
     final bytes = await _image!.readAsBytes();
     final fileExt = _image!.path.split('.').last;
     final fileName = '$restaurantId.$fileExt';
-    final filePath = fileName;
-
+    final filePath = '/$userId/restaurant/$fileName';
     const expiresInTenYears = 60 * 60 * 24 * 365 * 10;
 
     // upload image to supabase bucket
-    await Supabase.instance.client.storage.from('restaurant_images').uploadBinary(
+    await Supabase.instance.client.storage
+        .from('restaurant_images')
+        .uploadBinary(
           filePath,
           bytes,
           fileOptions: FileOptions(contentType: _image!.mimeType),
         );
     // get url
     final imageUrlResponse = await Supabase.instance.client.storage
-        .from('avatars')
+        .from('restaurant_images')
         .createSignedUrl(filePath, expiresInTenYears);
 
     return {
@@ -182,73 +213,105 @@ class _RestaurantFormState extends State<RestaurantForm> {
     };
   }
 
+  Future<String> _uploadMenuItemImageToBucket(MenuItem menuItem) async {
+    final String userId = Supabase.instance.client.auth.currentUser!.id;
+
+    final bytes = await menuItem.image!.readAsBytes();
+    final fileExt = menuItem.image!.path.split('.').last;
+    final fileName = '${menuItem.id}.$fileExt';
+    final filePath = '/$userId/menu_items/$fileName';
+
+    // upload image to supabase bucket
+    await Supabase.instance.client.storage
+        .from('restaurant_images')
+        .uploadBinary(
+          filePath,
+          bytes,
+          fileOptions: FileOptions(contentType: _image!.mimeType),
+        );
+
+    return filePath;
+  }
+
+  Future<Map<String, dynamic>> _getItemJsonToUpload(
+      MenuItem item, String restaurantId) async {
+    const expiresInTenYears = 60 * 60 * 24 * 365 * 10;
+    final path = await _uploadMenuItemImageToBucket(item);
+    final imageUrlResponse = await Supabase.instance.client.storage
+        .from('restaurant_images')
+        .createSignedUrl(path, expiresInTenYears);
+
+    return {
+      'id': item.id,
+      'name': item.name,
+      'description': item.description,
+      'price': item.price,
+      'available': true,
+      'restaurant_id': restaurantId,
+      // optional
+      'image_url': imageUrlResponse,
+    };
+  }
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
       // save restaurant image to bucket
-      final Map<String, String> json = await _uploadRestaurantImageToBucket();
+      try {
+        final Map<String, String> json = await _uploadRestaurantImageToBucket();
 
-      log.d(json);
+        // create a new restaurant to db
+        final restaurant = await Supabase.instance.client
+            .from('restaurants')
+            .insert({
+              // required
+              'id': json['restaurant_id'],
+              'restaurant_name': _restaurantNameController.text,
+              'rating': 2.5,
+              'reviews_count': 0,
+              'category_id': _selectedCategoryId,
+              'address': _locationController.text,
 
-      // // create a new restaurant to db
-      // final restaurant = await Supabase.instance.client
-      //     .from('restaurants')
-      //     .insert({
-      //       // required
-      //       'id': json['restaurant_id'],
-      //       'name': _restaurantNameController.text,
-      //       'rating': 2.5,
-      //       'reviews_count': 0,
-      //       'category_id': "TODO", // TODO
-      //       'address': _locationController.text,
+              // optionals
+              "owner_id": Supabase.instance.client.auth.currentUser!.id,
+              'description': _overviewController.text,
+              'location': {}, // in LatLng
+              'image_url': json['image_url'],
+              'phone': _phoneNumberController.text,
+              'email': _emailController.text,
+              'min_price': _lowPriceController.text,
+              'max_price': _highPriceController.text,
+              'working_start': formatTimeOfDay(_openingTime),
+              'working_end': formatTimeOfDay(_closingTime),
+            })
+            .select()
+            .single();
 
-      //       // optionals
-      //       "owner_id": Supabase.instance.client.auth.currentUser!.id,
-      //       'description': _overview,
-      //       'location': {}, // in LatLng
-      //       'image_url': json['image_url'],
-      //       'phone': _phoneNumber,
-      //       'email': _email,
-      //       'min_price': _lowPrice,
-      //       'max_price': _highPrice,
-      //       'working_start': _openingTime.toString(),
-      //       'working_end': _closingTime.toString(),
-      //     })
-      //     .select()
-      //     .single();
-      // // get the restaurant id
+        // skip if no menu items
+        if (_menuItems.isEmpty) return;
 
-      // // insert menu items to Supabase
-      // final List<Map<String, dynamic>> menuItemsToInsert =
-      //     _menuItems.map((item) {
-      //   return {
-      //     'name': item.name,
-      //     'description': item.description,
-      //     'price': item.price,
-      //     'available': true,
-      //     'restaurant_id': restaurant['id'],
+        final List<Map<String, dynamic>> menuItemsToInsert = await Future.wait(
+          _menuItems
+              .map((item) async => _getItemJsonToUpload(item, restaurant['id']))
+              .toList(),
+        );
 
-      //     // optional
-      //     'image_url': item.image?.path ?? '',
-      //   };
-      // }).toList();
-      // Supabase.instance.client.from('menu_items').insert(menuItemsToInsert);
+        // insert menu items to Supabase
+        await Supabase.instance.client
+            .from('menu_items')
+            .insert(menuItemsToInsert);
 
-      // Process or submit the form data
-      // print('Restaurant Name: ${_restaurantNameController.text}');
-      // print(
-      //     'Prices: ${_lowPriceController.text} to ${_highPriceController.text}');
-      // print('Options: $_options');
-      // print('Opening Hours: $_openingTime to $_closingTime');
-      // print('Location: ${_locationController.text}');
-      // print('Phone Number: ${_phoneNumberController.text}');
-      // print('Email: ${_emailController.text}');
-      // print('Overview: ${_overviewController.text}');
-      // for (var menuItem in _menuItems) {
-      //   print(
-      //       ' - Name: ${menuItem.name}, Price: ${menuItem.price}, Image path: ${menuItem.image?.path}');
-      // }
+        if (!mounted) return;
+
+        showKwunSnackBar(
+            context: context,
+            message: "Your new restaurant has been created 🎉",
+            color: Colors.green);
+        context.replace('/profile');
+      } on Exception catch (e) {
+        showKwunSnackBar(context: context, message: "An error occured: $e");
+      }
     }
   }
 
@@ -355,54 +418,23 @@ class _RestaurantFormState extends State<RestaurantForm> {
                   ),
                 ),
                 const SizedBox(height: 5.0),
-                SizedBox(
-                  height: 35,
-                  child: CheckboxListTile(
-                    title: const Text('Dine-in'),
-                    value: _options.contains('Dine-in'),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value!) {
-                          _options.add('Dine-in');
-                        } else {
-                          _options.remove('Dine-in');
-                        }
-                      });
-                    },
-                  ),
+
+                // checkboxes
+                Column(
+                  children: _foodCategories
+                      .map((category) => RadioListTile(
+                            title: Text(category['category_name']!),
+                            value: category['id'],
+                            groupValue: _selectedCategoryId,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedCategoryId = value as String?;
+                              });
+                            },
+                          ))
+                      .toList(),
                 ),
-                SizedBox(
-                  height: 35,
-                  child: CheckboxListTile(
-                    title: const Text('Takeaway'),
-                    value: _options.contains('Takeaway'),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value!) {
-                          _options.add('Takeaway');
-                        } else {
-                          _options.remove('Takeaway');
-                        }
-                      });
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 35,
-                  child: CheckboxListTile(
-                    title: const Text('Delivery'),
-                    value: _options.contains('Delivery'),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value!) {
-                          _options.add('Delivery');
-                        } else {
-                          _options.remove('Delivery');
-                        }
-                      });
-                    },
-                  ),
-                ),
+
                 const SizedBox(height: 10.0),
                 SizedBox(
                   height: height,
