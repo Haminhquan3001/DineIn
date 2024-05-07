@@ -32,16 +32,20 @@ class _ToggleHeartIconButtonState extends State<ToggleHeartIconButton> {
       ),
       width: 30,
       height: 30,
-      child: IconButton(
-        icon: Icon(_isToggled ? Icons.favorite_outlined : Icons.favorite_border,
-            color: _isToggled ? Colors.red : Colors.black),
-        onPressed: () {
-          setState(() {
-            _isToggled = !_isToggled;
-            widget.onChanged(_isToggled);
-          });
-        },
-        color: _isToggled ? Colors.blue : Colors.grey,
+      child: Center(
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          icon: Icon(
+              _isToggled ? Icons.favorite_outlined : Icons.favorite_border,
+              color: _isToggled ? Colors.red : Colors.black),
+          onPressed: () {
+            setState(() {
+              _isToggled = !_isToggled;
+              widget.onChanged(_isToggled);
+            });
+          },
+          color: _isToggled ? Colors.blue : Colors.grey,
+        ),
       ),
     );
   }
