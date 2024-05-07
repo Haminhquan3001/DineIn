@@ -6,7 +6,7 @@ class RestaurantForm extends StatefulWidget {
   const RestaurantForm({super.key});
 
   @override
-  _RestaurantFormState createState() => _RestaurantFormState();
+  State<RestaurantForm> createState() => _RestaurantFormState();
 }
 
 class MenuItem {
