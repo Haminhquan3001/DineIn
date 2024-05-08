@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/providers/theme.provider.dart';
 import 'package:provider/provider.dart';
 import 'overview_reviews.dart';
+
+import 'package:group_project/config/constants.dart';
+import 'package:group_project/providers/theme.provider.dart';
 
 class RestaurantInfo extends StatelessWidget {
   final Map resObj;
@@ -12,6 +14,8 @@ class RestaurantInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log.d(resObj);
+
     double contextWidth = MediaQuery.of(context).size.width;
     double padding = 18;
     double paddingHeight = 12;

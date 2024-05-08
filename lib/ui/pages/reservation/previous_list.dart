@@ -197,7 +197,8 @@ class _ReviewPage extends State<ReviewPage> {
                       if (!context.mounted) return;
                       showKwunSnackBar(
                           context: context,
-                          message: "Your review has been submitted");
+                          message: "Your review has been submitted",
+                          color: Colors.green);
                     } on Exception catch (e) {
                       if (!context.mounted) return;
                       showKwunSnackBar(

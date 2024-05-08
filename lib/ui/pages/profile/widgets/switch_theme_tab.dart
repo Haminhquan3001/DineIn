@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/providers/theme.provider.dart';
 import 'package:provider/provider.dart';
+
+import 'package:group_project/providers/theme.provider.dart';
 
 class SwitchThemeTab extends StatefulWidget {
   const SwitchThemeTab({super.key});

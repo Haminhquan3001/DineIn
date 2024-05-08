@@ -14,7 +14,6 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     _redirect();
-    // TODO: fetch restaurant data
   }
 
   Future<void> _redirect() async {

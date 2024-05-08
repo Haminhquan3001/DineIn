@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:group_project/providers/theme.provider.dart';
-import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'package:group_project/providers/theme.provider.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
 
 class BecomeOwnerDialog extends StatelessWidget {
   final void Function(dynamic) updateIsOwner;

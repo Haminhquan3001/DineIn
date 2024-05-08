@@ -1,12 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'restaurant_info.dart';
+import 'package:provider/provider.dart';
+
+import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
-import 'restaurant_info.dart';
-import 'package:provider/provider.dart';
-import 'package:group_project/providers/reserve_form.provider.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Map<String, dynamic> resObj;
