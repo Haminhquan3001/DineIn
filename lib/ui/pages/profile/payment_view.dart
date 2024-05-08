@@ -39,7 +39,8 @@ class _Payment extends State<PaymentView> {
                   height: 40,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      color: Colors.lime.withOpacity(0.2)),
+                      color: const Color.fromARGB(255, 222, 111, 209)
+                          .withOpacity(0.2)),
                   child: const Icon(
                     Icons.money,
                   ),
@@ -53,7 +54,8 @@ class _Payment extends State<PaymentView> {
                   height: 40,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      color: Colors.lime.withOpacity(0.2)),
+                      color: const Color.fromARGB(255, 222, 111, 209)
+                          .withOpacity(0.2)),
                   child: const Icon(
                     Icons.arrow_right_alt_rounded,
                     color: Color.fromARGB(255, 188, 165, 231),

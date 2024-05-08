@@ -17,16 +17,16 @@ class PasswordCredentialsButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 74, 81, 117),
-            side: BorderSide.none,
-            shape: const StadiumBorder()),
+        // style: ElevatedButton.styleFrom(
+        //     backgroundColor: const Color.fromARGB(255, 170, 144, 204),
+        //     side: BorderSide.none,
+        //     shape: const StadiumBorder()),
 
         child: isLoading
             ? const CircularProgressIndicator()
             : Text(
                 loginOrSignupText,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
       ),
     );

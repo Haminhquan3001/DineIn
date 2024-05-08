@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:group_project/providers/theme.provider.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
@@ -12,12 +14,16 @@ class PreviousList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: ListView.builder(
         itemCount: reservations.length,
         itemBuilder: (context, index) {
           final reservation = reservations[index];
           return Card(
+            color: theme.isDarkTheme
+                ? const Color.fromARGB(255, 167, 135, 209)
+                : Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -47,12 +53,12 @@ class PreviousList extends StatelessWidget {
                               left: 10, right: 10, top: 5, bottom: 5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.orange, width: 2),
+                            border: Border.all(color: const Color.fromARGB(255, 165, 104, 14), width: 2),
                           ),
                           child: const Text(
                             'Rate Us',
                             style: TextStyle(
-                                color: Colors.orange,
+                                color: Color.fromARGB(255, 165, 104, 14),
                                 fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -91,6 +97,7 @@ class _ReviewPage extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     double padding = 10;
+    final theme = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -102,7 +109,7 @@ class _ReviewPage extends State<ReviewPage> {
         padding: EdgeInsets.all(padding),
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Rate Us", style: myCustomStyle),
+            title: Text("Rate Us", style: Theme.of(context).textTheme.headlineLarge),
             centerTitle: false,
           ),
           body: Padding(
@@ -136,7 +143,7 @@ class _ReviewPage extends State<ReviewPage> {
                 Container(
                   margin: const EdgeInsets.only(left: 10, right: 10),
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 206, 206, 206),
+                    color: theme.isDarkTheme ? const Color.fromARGB(255, 170, 144, 204) : const Color.fromARGB(255, 164, 168, 209),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: Padding(
@@ -148,9 +155,11 @@ class _ReviewPage extends State<ReviewPage> {
                         maxLines: 5,
                         maxLength: 150,
                         controller: fieldText,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Write a review',
+                          hintStyle: Theme.of(context).textTheme.bodyLarge,
                           border: InputBorder.none,
+                          fillColor: theme.isDarkTheme ? const Color.fromARGB(255, 222, 198, 253) : const Color.fromARGB(255, 250, 228, 228)
                         ),
                         autocorrect: false,
                         obscureText: false,
@@ -202,15 +211,14 @@ class _ReviewPage extends State<ReviewPage> {
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.all(13),
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 216, 50, 38),
-                        border: Border.all(color: Colors.red),
+                        color: theme.isDarkTheme ? const Color.fromARGB(255, 170, 144, 204) : const Color.fromARGB(255, 164, 168, 209),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Center(
+                      child: Center(
                           child: Text(
                         'Submit',
                         style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w800),
+                            color: theme.isDarkTheme ? Colors.white : Colors.black, fontWeight: FontWeight.w800),
                       ))),
                 ),
               ],

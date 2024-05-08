@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'restaurant_info.dart';
@@ -21,6 +22,7 @@ class RestaurantCard extends StatelessWidget {
     double contextWidth = MediaQuery.of(context).size.width;
     double padding = 10;
     double fontSizeName = 18, fontSizeLocation = 12, fontSizeOther = 14;
+    final theme = Provider.of<ThemeProvider>(context);
     return TextButton(
       onPressed: () {
         // save ther restaurant object to the provider
@@ -41,7 +43,7 @@ class RestaurantCard extends StatelessWidget {
       },
       child: Container(
           decoration: BoxDecoration(
-              color: const Color.fromARGB(57, 24, 73, 109),
+              color: theme.isDarkTheme ? const Color.fromARGB(255, 170, 144, 204) :const Color.fromARGB(57, 24, 73, 109),
               borderRadius: BorderRadius.circular(10)),
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
@@ -105,16 +107,17 @@ class RestaurantCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         resObj["restaurant_name"],
-                        style: TextStyle(
-                          color: const Color.fromARGB(254, 0, 0, 0),
-                          fontSize: fontSizeName,
-                          fontWeight: FontWeight.w800,
-                        ),
+                        style: Theme.of(context).textTheme.bodyLarge,
+                        // style: TextStyle(
+                        //   color: const Color.fromARGB(254, 0, 0, 0),
+                        //   fontSize: fontSizeName,
+                        //   fontWeight: FontWeight.w800,
+                        // ),
                       ),
                     ),
                     const Icon(
                       Icons.star,
-                      color: Colors.red,
+                      color: Color.fromARGB(255, 215, 207, 7),
                       size: 18,
                     ),
                     const SizedBox(
@@ -122,11 +125,12 @@ class RestaurantCard extends StatelessWidget {
                     ),
                     Text(
                       resObj["rating"].toString(),
-                      style: TextStyle(
-                        color: const Color.fromARGB(254, 0, 0, 0),
-                        fontSize: fontSizeOther,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      // style: TextStyle(
+                      //   color: const Color.fromARGB(254, 0, 0, 0),
+                      //   fontSize: fontSizeOther,
+                      //   fontWeight: FontWeight.w700,
+                      // ),
                     ),
                   ],
                 ),
@@ -137,25 +141,27 @@ class RestaurantCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       resObj["address"].toString(),
-                      style: TextStyle(
-                        color: const Color.fromARGB(254, 0, 0, 0),
-                        fontSize: fontSizeLocation,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      // style: TextStyle(
+                      //   color: const Color.fromARGB(254, 0, 0, 0),
+                      //   fontSize: fontSizeLocation,
+                      //   fontWeight: FontWeight.w700,
+                      // ),
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.attach_money,
-                    color: Colors.black,
+                    color: theme.isDarkTheme ? Colors.white70 : Colors.black,
                     size: 18,
                   ),
                   Text(
                     resObj["min_price"].toString(),
-                    style: TextStyle(
-                      color: const Color.fromARGB(254, 0, 0, 0),
-                      fontSize: fontSizeOther,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    // style: TextStyle(
+                    //   color: const Color.fromARGB(254, 0, 0, 0),
+                    //   fontSize: fontSizeOther,
+                    //   fontWeight: FontWeight.w700,
+                    // ),
                   ),
                 ]),
               ),

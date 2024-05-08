@@ -17,6 +17,7 @@ class _SwitchThemeTab extends State<SwitchThemeTab> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context);
     return ListTile(
         leading: Container(
           width: 40,
@@ -24,17 +25,20 @@ class _SwitchThemeTab extends State<SwitchThemeTab> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
           ),
-          child: Icon(
-            isDark ? Icons.light_mode : Icons.dark_mode,
-          ),
+          child: Icon(isDark ? Icons.light_mode : Icons.dark_mode,
+              color: theme.isDarkTheme
+                  ? const Color.fromARGB(255, 101, 97, 118)
+                  : const Color.fromARGB(255, 70, 63, 58)),
         ),
         title: Text(
-          "Dark Mode",
+          isDark ? "Light Mode" : "Dark Mode",
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         trailing: Switch(
           value: isDark,
           activeColor: Colors.blue,
+          inactiveTrackColor: Colors.grey,
+          inactiveThumbColor: const Color.fromARGB(255, 202, 210, 197),
           onChanged: (value) {
             setState(() {
               isDark = value;

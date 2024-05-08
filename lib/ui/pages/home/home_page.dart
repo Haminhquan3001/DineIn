@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:group_project/config/constants.dart';
+import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'restaurant_card.dart';
 
@@ -65,7 +67,7 @@ class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double padding = 10;
-
+    final theme = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -88,7 +90,7 @@ class _HomePage extends State<HomePage> {
                 padding: const EdgeInsets.only(left: 8.0, bottom: 5.0),
                 child: Text(
                   "Explore Restaurants",
-                  style: myCustomStyle,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
 
@@ -107,7 +109,7 @@ class _HomePage extends State<HomePage> {
               // Restaurant List
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(color: Colors.white),
+                  decoration: BoxDecoration(color: theme.isDarkTheme ? const Color.fromARGB(255, 30, 50, 49) : Colors.white ),
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: _restaurantsFiltered.length,

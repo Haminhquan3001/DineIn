@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/pages/profile/widgets/method_dialog_widget.dart';
+import 'package:provider/provider.dart';
 
 class PaymentMethodView extends StatefulWidget {
   const PaymentMethodView({super.key});
@@ -15,6 +17,7 @@ class _PaymentMethodPage extends State<PaymentMethodView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -37,11 +40,14 @@ class _PaymentMethodPage extends State<PaymentMethodView> {
                 leading: const Icon(Icons.card_giftcard),
                 title: const Text("VISA"),
                 trailing: TextButton(
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder()),
-                  child:
-                      const Text("Edit", style: TextStyle(color: Colors.black)),
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(const StadiumBorder()),
+                    backgroundColor: MaterialStateProperty.all(theme.isDarkTheme
+                        ? const Color.fromARGB(255, 170, 144, 204)
+                        : const Color.fromARGB(255, 164, 168, 209)),
+                  ),
+                  child: Text("Edit",
+                      style: Theme.of(context).textTheme.bodyLarge),
                   onPressed: () {},
                 ),
               ),
@@ -49,11 +55,14 @@ class _PaymentMethodPage extends State<PaymentMethodView> {
                 height: 20,
               ),
               TextButton(
-                style: TextButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: const RoundedRectangleBorder()),
-                child: const Text("Add payment method",
-                    style: TextStyle(color: Colors.white)),
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(const StadiumBorder()),
+                  backgroundColor: MaterialStateProperty.all(theme.isDarkTheme
+                      ? const Color.fromARGB(255, 170, 144, 204)
+                      : const Color.fromARGB(255, 164, 168, 209)),
+                ),
+                child: Text("Add payment method",
+                    style: Theme.of(context).textTheme.bodyLarge),
                 onPressed: () {
                   showGeneralDialog(
                     barrierLabel: "showGeneralDialog",

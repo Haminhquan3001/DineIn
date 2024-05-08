@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UpcomingList extends StatelessWidget {
@@ -15,12 +17,16 @@ class UpcomingList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: ListView.builder(
         itemCount: reservations.length,
         itemBuilder: (context, index) {
           final reservation = reservations[index];
           return Card(
+            color: theme.isDarkTheme
+                ? const Color.fromARGB(255, 167, 135, 209)
+                : Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

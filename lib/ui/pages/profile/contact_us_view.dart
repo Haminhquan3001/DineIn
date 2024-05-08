@@ -54,9 +54,8 @@ class _ContactUs extends State<ContactUsView> {
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
                         label: const Text("Your Name"),
-                        prefixIcon: const Icon(
-                          Icons.person_3_outlined,
-                        )),
+                        prefixIcon: const Icon(Icons.person_3_outlined,
+                            color: Color.fromARGB(255, 101, 97, 118))),
                   ),
                   const SizedBox(
                     height: 20,
@@ -71,9 +70,8 @@ class _ContactUs extends State<ContactUsView> {
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
                         label: const Text("Email"),
-                        prefixIcon: const Icon(
-                          Icons.email,
-                        )),
+                        prefixIcon: const Icon(Icons.email,
+                            color: Color.fromARGB(255, 101, 97, 118))),
                   ),
                   const SizedBox(
                     height: 20,
@@ -88,8 +86,8 @@ class _ContactUs extends State<ContactUsView> {
                             borderSide:
                                 BorderSide(width: 2, color: Colors.black)),
                         labelText: "Your Message...",
-                        prefixIcon:
-                            const Icon(Icons.messenger_outline_outlined)),
+                        prefixIcon: const Icon(Icons.messenger_outline_outlined,
+                            color: Color.fromARGB(255, 101, 97, 118))),
                   ),
                   const SizedBox(
                     height: 15,
@@ -132,15 +130,15 @@ class _ContactUs extends State<ContactUsView> {
                                         SnackBar(content: Text(e.toString())));
                                   }
                                 },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 74, 81, 117),
-                              side: BorderSide.none,
-                              shape: const StadiumBorder()),
+                          // style: ElevatedButton.styleFrom(
+                          //     backgroundColor:
+                          //         const Color.fromARGB(255, 74, 81, 117),
+                          //     side: BorderSide.none,
+                          //     shape: const StadiumBorder()),
                           child: provider.isLoading
                               ? const CircularProgressIndicator()
-                              : const Text("Submit",
-                                  style: TextStyle(color: Colors.white)),
+                              : Text("Submit",
+                                  style: Theme.of(context).textTheme.bodyLarge),
                         );
                       },
                     ),

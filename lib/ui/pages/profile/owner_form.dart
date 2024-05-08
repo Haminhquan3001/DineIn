@@ -602,11 +602,11 @@ class _RestaurantFormState extends State<RestaurantForm> {
                   ),
                 ElevatedButton(
                     onPressed: () => _addMenuItem(context),
-                    child: const Text("Add a new item")),
+                    child: Text("Add a new item", style: Theme.of(context).textTheme.bodyLarge,)),
                 const SizedBox(height: 20.0),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Submit'),
+                  child: Text('Submit', style: Theme.of(context).textTheme.bodyLarge,),
                 ),
               ],
             ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/theme.provider.dart';
+import 'package:provider/provider.dart';
 import 'overview_reviews.dart';
 
 class RestaurantInfo extends StatelessWidget {
@@ -15,6 +17,7 @@ class RestaurantInfo extends StatelessWidget {
     double paddingHeight = 12;
     double padding2 = 20;
     double fontSizeName = 20;
+    final theme = Provider.of<ThemeProvider>(context);
 
     var myCustomStyle = const TextStyle(
       color: Color.fromARGB(254, 0, 0, 0),
@@ -78,7 +81,7 @@ class RestaurantInfo extends StatelessWidget {
                           width: 40,
                           height: 40,
                           padding: const EdgeInsets.only(left: 5),
-                          child: const BackButton(),
+                          child: BackButton(color: theme.isDarkTheme ? Theme.of(context).primaryColor : Colors.black),
                         ),
                       ),
                       const Expanded(
@@ -93,7 +96,7 @@ class RestaurantInfo extends StatelessWidget {
                           ),
                           width: 40,
                           height: 40,
-                          child: const Icon(Icons.favorite_border),
+                          child: Icon(Icons.favorite_border, color: theme.isDarkTheme ? Theme.of(context).primaryColor : Colors.black),
                         ),
                       ),
                     ],
@@ -115,11 +118,12 @@ class RestaurantInfo extends StatelessWidget {
                   //Restaurant name
                   Text(
                     resObj["restaurant_name"],
-                    style: TextStyle(
-                      color: const Color.fromARGB(254, 0, 0, 0),
-                      fontSize: fontSizeName,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    // style: TextStyle(
+                    //   color: const Color.fromARGB(254, 0, 0, 0),
+                    //   fontSize: fontSizeName,
+                    //   fontWeight: FontWeight.w800,
+                    // ),
                   ),
 
                   //Short location
@@ -131,13 +135,13 @@ class RestaurantInfo extends StatelessWidget {
                             .split(',')
                             .sublist(1)
                             .join(', '),
-                        style: myCustomStyle,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const Expanded(child: Text("")),
                       Row(children: [
-                        const Icon(
+                        Icon(
                           Icons.star,
-                          color: Colors.red,
+                          color: Colors.yellow.shade400,
                           size: 18,
                         ),
                         const SizedBox(
@@ -145,14 +149,14 @@ class RestaurantInfo extends StatelessWidget {
                         ),
                         Text(
                           resObj["rating"].toString(),
-                          style: myCustomStyle,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(
                           width: 5,
                         ),
                         Text(
                           "(${resObj["reviews_count"]} Reviews)",
-                          style: myCustomStyle,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ]),
                     ],
@@ -172,7 +176,7 @@ class RestaurantInfo extends StatelessWidget {
                                 .toString()
                                 .substring(0, 1)
                                 .toUpperCase()),
-                    style: myCustomStyle,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
 
                   Column(
@@ -185,7 +189,12 @@ class RestaurantInfo extends StatelessWidget {
                       if (resObj["working_start"] != null)
                         Row(
                           children: [
-                            const Icon(Icons.query_builder),
+                            Icon(
+                              Icons.query_builder,
+                              color: theme.isDarkTheme
+                                  ? const Color.fromARGB(255, 170, 144, 204)
+                                  : const Color.fromARGB(255, 242, 87, 87),
+                            ),
                             SizedBox(width: padding),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -193,11 +202,11 @@ class RestaurantInfo extends StatelessWidget {
                               children: [
                                 Text(
                                   "Opening Hours",
-                                  style: myCustomStyle,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 Text(
                                   "${resObj["working_start"]} - ${resObj["working_end"]}",
-                                  style: myCustomStyle,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ],
                             )
@@ -210,7 +219,12 @@ class RestaurantInfo extends StatelessWidget {
                       //Detailed locations
                       Row(
                         children: [
-                          const Icon(Icons.location_on_outlined),
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: theme.isDarkTheme
+                                ? const Color.fromARGB(255, 170, 144, 204)
+                                : const Color.fromARGB(255, 242, 87, 87),
+                          ),
                           SizedBox(width: padding),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -218,7 +232,7 @@ class RestaurantInfo extends StatelessWidget {
                             children: [
                               Text(
                                 resObj["address"],
-                                style: myCustomStyle,
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               // Text("View on map"),
                             ],
@@ -233,11 +247,16 @@ class RestaurantInfo extends StatelessWidget {
                       if (resObj["phone"] != null)
                         Row(
                           children: [
-                            const Icon(Icons.local_phone_outlined),
+                            Icon(
+                              Icons.local_phone_outlined,
+                              color: theme.isDarkTheme
+                                  ? const Color.fromARGB(255, 170, 144, 204)
+                                  : const Color.fromARGB(255, 242, 87, 87),
+                            ),
                             SizedBox(width: padding),
                             Text(
                               resObj["phone"] ?? "",
-                              style: myCustomStyle,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
                         ),
@@ -249,11 +268,16 @@ class RestaurantInfo extends StatelessWidget {
                       if (resObj["email"] != null)
                         Row(
                           children: [
-                            const Icon(Icons.email_outlined),
+                            Icon(
+                              Icons.email_outlined,
+                              color: theme.isDarkTheme
+                                  ? const Color.fromARGB(255, 170, 144, 204)
+                                  : const Color.fromARGB(255, 242, 87, 87),
+                            ),
                             SizedBox(width: padding),
                             Text(
                               resObj["email"],
-                              style: myCustomStyle,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
                         ),

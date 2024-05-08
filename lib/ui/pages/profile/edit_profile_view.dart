@@ -79,6 +79,7 @@ class _EditProfile extends State<EditProfileView> {
                         label: const Text('Full name'),
                         prefixIcon: const Icon(
                           Icons.person_3_outlined,
+                          color: Color.fromARGB(255, 101, 97, 118)
                         )),
                   ),
 
@@ -96,6 +97,7 @@ class _EditProfile extends State<EditProfileView> {
                         label: const Text('Email'),
                         prefixIcon: const Icon(
                           Icons.email,
+                          color: Color.fromARGB(255, 101, 97, 118)
                         )),
                   ),
 
@@ -110,7 +112,7 @@ class _EditProfile extends State<EditProfileView> {
                             borderSide:
                                 BorderSide(width: 2, color: Colors.black)),
                         label: const Text('Phone'),
-                        prefixIcon: const Icon(Icons.phone)),
+                        prefixIcon: const Icon(Icons.phone, color: Color.fromARGB(255, 101, 97, 118))),
                   ),
 
                   const SpaceY(15),
@@ -126,7 +128,7 @@ class _EditProfile extends State<EditProfileView> {
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
                         label: const Text("New password"),
-                        prefixIcon: const Icon(Icons.password)),
+                        prefixIcon: const Icon(Icons.password, color: Color.fromARGB(255, 101, 97, 118))),
                   ),
 
                   const SpaceY(15),
@@ -142,7 +144,7 @@ class _EditProfile extends State<EditProfileView> {
                             borderSide: const BorderSide(
                                 width: 2, color: Colors.black)),
                         label: const Text("Re-enter new password"),
-                        prefixIcon: const Icon(Icons.password)),
+                        prefixIcon: const Icon(Icons.password, color: Color.fromARGB(255, 101, 97, 118))),
                   ),
 
                   const SpaceY(15),
@@ -179,16 +181,16 @@ class _EditProfile extends State<EditProfileView> {
                                 _repasswordController.clear();
                                 context.pop();
                               },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 74, 81, 117),
-                            side: BorderSide.none,
-                            shape: const StadiumBorder()),
+                        // style: ElevatedButton.styleFrom(
+                        //     backgroundColor:
+                        //         const Color.fromARGB(255, 74, 81, 117),
+                        //     side: BorderSide.none,
+                        //     shape: const StadiumBorder()),
                         child: provider.isLoading
                             ? const CircularProgressIndicator()
-                            : const Text(
+                            : Text(
                                 "Save Profile",
-                                style: TextStyle(color: Colors.white),
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                       );
                     }),

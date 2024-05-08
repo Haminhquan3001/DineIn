@@ -8,7 +8,7 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData.light().copyWith(
     colorScheme: lightScheme,
 
-    iconTheme: const IconThemeData(color: Colors.orange),
+    iconTheme: const IconThemeData(color: Color.fromARGB(255, 163, 149, 148)),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
@@ -17,7 +17,7 @@ class AppTheme {
             if (states.contains(MaterialState.disabled)) {
               return const Color.fromARGB(125, 74, 81, 117); // disabled color
             }
-            return const Color.fromARGB(255, 74, 81, 117); // normal color
+            return const Color.fromARGB(255, 164, 168, 209); // normal color
           },
         ),
         foregroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -33,6 +33,22 @@ class AppTheme {
       ),
     ),
 
+    outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.disabled)) {
+                  return const Color.fromARGB(
+                      125, 74, 81, 117); // disabled color
+                }
+                return const Color.fromARGB(255, 164, 168, 209); // normal color
+              },
+            ),
+            side: MaterialStateProperty.all(BorderSide.none),
+            shape: MaterialStateProperty.all(const StadiumBorder()))),
+    inputDecorationTheme: const InputDecorationTheme(
+      hintStyle: TextStyle(color: Colors.black),
+        filled: true, fillColor: Color.fromARGB(255, 250, 228, 228)),
     /// Primary color of the app
     // primaryColor: Colors.orange,
     // primaryColorDark: Colors.orange,
@@ -88,7 +104,7 @@ class AppTheme {
     // iconTheme:
 
     /// Styles fo the font size, weight, and color to use when displaying text.
-    // textTheme: _textTheme,
+    textTheme: getTextTheme(Brightness.light),
   );
 
   static ColorScheme lightScheme = const ColorScheme.light().copyWith(
@@ -121,51 +137,105 @@ class AppTheme {
   /// Dark theme for the app
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     colorScheme: darkScheme,
-    // iconTheme:
-    // textTheme: _textTheme,
+    // iconTheme: const IconThemeData(color: Color.fromARGB(255, 101, 97, 118)),
+
+    // appBarTheme: const AppBarTheme(
+    //   elevation: 1,
+    //   backgroundColor: Colors.white38,
+    //   iconTheme: IconThemeData(color: Color.fromARGB(255, 30, 50, 49)),
+    //   titleTextStyle: TextStyle(
+    //     color: Colors.white,
+    //     fontSize: 20,
+    //   ),
+    // ),
+
+    outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (Set<MaterialState> states) {
+                if (states.contains(MaterialState.disabled)) {
+                  return const Color.fromARGB(
+                      125, 74, 81, 117); // disabled color
+                }
+                return const Color.fromARGB(255, 170, 144, 204); // normal color
+              },
+            ),
+            side: MaterialStateProperty.all(BorderSide.none),
+            shape: MaterialStateProperty.all(const StadiumBorder()))),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return const Color.fromARGB(125, 74, 81, 117); // disabled color
+            }
+            return const Color.fromARGB(255, 170, 144, 204); // normal color
+          },
+        ),
+        foregroundColor: MaterialStateProperty.resolveWith<Color>(
+          (Set<MaterialState> states) {
+            if (states.contains(MaterialState.disabled)) {
+              return Colors.black; // disabled text color
+            }
+            return Colors.white; // normal text color
+          },
+        ),
+        side: MaterialStateProperty.all(BorderSide.none),
+        shape: MaterialStateProperty.all(const StadiumBorder()),
+      ),
+    ),
+    inputDecorationTheme: const InputDecorationTheme(
+      hintStyle: TextStyle(color: Colors.black),
+      labelStyle: TextStyle(color: Colors.black),
+        filled: true, fillColor: Color.fromARGB(255, 255, 203, 203)),
+    textTheme: getTextTheme(Brightness.dark),
   );
 
   // CHANGE THIS TO YOUR OWN COLOR SCHEME
   static ColorScheme darkScheme = const ColorScheme.dark().copyWith(
-    brightness: Brightness.dark,
-    //
-    // background: ,
-    // onBackground: ,
-    //
-    // primary: ,
-    // onPrimary: ,
-    //
-    // secondary: ,
-    // onSecondary: ,
-    //
-    // tertiary: Colors.white,
-    // onTertiary: Colors.black,
-    //
-    // error: ,
-    // onError:,
-    //
-    // surface: ,
-    // onSurface:,
-  );
+      brightness: Brightness.dark,
+      //
+      background: const Color.fromARGB(255, 43, 45, 44),
+      // onBackground: ,
+      //
+
+      primary: const Color.fromARGB(255, 202, 161, 174),
+      inversePrimary: const Color.fromARGB(59, 204, 141, 141),
+
+      //
+      secondary: const Color.fromARGB(255, 179, 163, 148),
+      onSecondary: const Color.fromARGB(255, 199, 130, 131)
+      //
+      // tertiary: Colors.white,
+      // onTertiary: Colors.black,
+      //
+      // error: ,
+      // onError:,
+      //
+      // surface: ,
+      // onSurface:,
+      );
 
   // ----------------------------------------------------------
 
-  static TextTheme get textTheme {
+  static TextTheme getTextTheme(Brightness brightness) {
     const textTheme = TextTheme();
 
     final bodyFont = GoogleFonts.ibmPlexSansTextTheme(textTheme);
     final headingFont = GoogleFonts.syneMonoTextTheme(textTheme);
-
+    Color textColor =
+        brightness == Brightness.light ? Colors.black : Colors.white;
     return bodyFont.copyWith(
-      displayLarge: headingFont.displayLarge,
-      displayMedium: headingFont.displayMedium,
-      displaySmall: headingFont.displaySmall,
-      headlineLarge: headingFont.headlineLarge,
-      headlineMedium: headingFont.headlineMedium,
-      headlineSmall: headingFont.headlineSmall,
-      bodyLarge: bodyFont.bodyLarge,
-      bodyMedium: bodyFont.bodyMedium,
-      bodySmall: bodyFont.bodySmall,
+      displayLarge: headingFont.displayLarge!.copyWith(color: textColor),
+      displayMedium: headingFont.displayMedium!.copyWith(color: textColor),
+      displaySmall: headingFont.displaySmall!.copyWith(color: textColor),
+      headlineLarge: headingFont.headlineLarge!.copyWith(color: textColor),
+      headlineMedium: headingFont.headlineMedium!.copyWith(color: textColor),
+      headlineSmall: headingFont.headlineSmall!.copyWith(color: textColor),
+      bodyLarge: bodyFont.bodyLarge!.copyWith(color: textColor),
+      bodyMedium: bodyFont.bodyMedium!.copyWith(color: textColor),
+      bodySmall: bodyFont.bodySmall!.copyWith(color: textColor),
     );
   }
 }

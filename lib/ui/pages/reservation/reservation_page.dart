@@ -77,7 +77,7 @@ class _ReservationPageState extends State<ReservationPage> {
           // toolbarHeight: 20,
           title: Text(
             "My Reservations",
-            style: myCustomStyle,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ),
         body: DefaultTabController(

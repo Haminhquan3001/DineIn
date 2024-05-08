@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/utils/format_date.dart';
+import 'package:provider/provider.dart';
 import 'reserve_form.dart';
 
 class OverviewAndReviews extends StatelessWidget {
@@ -64,13 +66,14 @@ class OverviewAndReviews extends StatelessWidget {
 
     String overview = resObj["description"] ?? "";
     // String overview =  "asd";
+    final theme = Provider.of<ThemeProvider>(context);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 0,
-          bottom: const TabBar(
-            tabs: [
+          bottom: TabBar(
+            tabs: const [
               Tab(
                 text: 'Overview',
               ),
@@ -81,9 +84,14 @@ class OverviewAndReviews extends StatelessWidget {
                 text: 'Menu',
               ),
             ],
-            labelColor: Colors.red,
-            unselectedLabelColor: Colors.black,
-            indicatorColor: Colors.red,
+            labelColor: theme.isDarkTheme
+                ? const Color.fromARGB(255, 170, 144, 204)
+                : const Color.fromARGB(255, 242, 87, 87),
+            unselectedLabelColor:
+                theme.isDarkTheme ? Colors.white : Colors.black,
+            indicatorColor: theme.isDarkTheme
+                ? const Color.fromARGB(255, 170, 144, 204)
+                : const Color.fromARGB(255, 242, 87, 87),
           ),
         ),
         body: TabBarView(
@@ -237,7 +245,9 @@ class FoodCard extends StatelessWidget {
       fontSize: 14,
       fontWeight: FontWeight.w700,
     );
+    
     return Container(
+      color: const Color.fromARGB(57, 24, 73, 109),
       padding: const EdgeInsets.all(15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -254,7 +264,7 @@ class FoodCard extends StatelessWidget {
           ),
           Text(
             foodObj["food_name"].toString(),
-            style: myCustomStyle,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
             "\$${foodObj["price"]}",
@@ -273,9 +283,12 @@ class ReserveButton extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context);
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 152, 1),
+        color: theme.isDarkTheme
+            ? const Color.fromARGB(255, 170, 144, 204)
+            : const Color.fromARGB(255, 242, 87, 87),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
@@ -288,13 +301,14 @@ class ReserveButton extends StatelessWidget {
               ),
             );
           },
-          child: const Text(
+          child: Text(
             "Reserve a Table",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontSize: 16,
-            ),
+            style: Theme.of(context).textTheme.bodyLarge,
+            // style: TextStyle(
+            //   color: Colors.white,
+            //   fontWeight: FontWeight.w700,
+            //   fontSize: 16,
+            // ),
           ),
         ),
       ),

@@ -15,10 +15,10 @@ class GoogleCredentialsButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton.icon(
-        style: OutlinedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 226, 226, 226),
-            side: BorderSide.none,
-            shape: const StadiumBorder()),
+        // style: OutlinedButton.styleFrom(
+        //     backgroundColor: const Color.fromARGB(255, 226, 226, 226),
+        //     side: BorderSide.none,
+        //     shape: const StadiumBorder()),
         onPressed: onPressed,
         icon: Container(
             padding: const EdgeInsets.only(right: 5),
@@ -28,7 +28,7 @@ class GoogleCredentialsButton extends StatelessWidget {
             )),
         label: Text(
           '$loginOrSignupText with Google',
-          style: const TextStyle(fontSize: 18),
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ),
     );

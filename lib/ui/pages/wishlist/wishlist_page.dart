@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:group_project/providers/theme.provider.dart';
+import 'package:provider/provider.dart';
 
 import '../home/restaurant_card.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
@@ -20,11 +22,12 @@ class WishlistPage extends StatelessWidget {
         jsonDecode(KwunLocalStorage.getString("favorites"));
 
     double padding = 10;
-
+    final theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 20,
       ),
+      backgroundColor: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,
       // bottomNavigationBar: const BottomNavBar(),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
@@ -36,12 +39,12 @@ class WishlistPage extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8.0, bottom: 5.0),
               child: Text(
                 "My Wishlist",
-                style: myCustomStyle,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
             Expanded(
               child: Container(
-                decoration: const BoxDecoration(color: Colors.white),
+                decoration: BoxDecoration(color: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,),
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: favoriteRestaurants.length,

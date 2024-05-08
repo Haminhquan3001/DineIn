@@ -5,15 +5,15 @@ class OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
-        Expanded(
+        const Expanded(
           child: Divider(
             thickness: 0.8,
           ),
         ),
-        Text("OR", style: TextStyle(fontSize: 15)),
-        Expanded(
+        Text("OR", style: Theme.of(context).textTheme.bodyLarge),
+        const Expanded(
             child: Divider(
           thickness: 0.8,
         ))

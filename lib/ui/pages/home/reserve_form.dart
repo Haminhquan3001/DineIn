@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:group_project/providers/reserve_form.provider.dart';
+import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,36 +19,39 @@ class ReserveForm extends StatelessWidget {
       fontSize: 24,
       fontWeight: FontWeight.w700,
     );
-
+    final theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(color: Colors.white),
-        child: const Column(
+        decoration: BoxDecoration(
+            color: theme.isDarkTheme
+                ? const Color.fromARGB(255, 43, 45, 44)
+                : Colors.grey.shade100),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Row(
               children: [
-                BackButton(),
+                const BackButton(),
                 Text(
                   "Reserve a Table",
-                  style: myCustomStyle,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ],
             ),
-            CustomTableCalendar(),
-            Expanded(
+            const CustomTableCalendar(),
+            const Expanded(
               child: TimeGrid(),
             ),
-            CounterWidget(),
-            SizedBox(
+            const CounterWidget(),
+            const SizedBox(
               height: 5,
             ),
-            ReserveButton(),
+            const ReserveButton(),
           ],
         ),
       ),
@@ -69,6 +73,7 @@ class _CustomTableCalendar extends State<CustomTableCalendar> {
   @override
   Widget build(BuildContext context) {
     _selectedDay = context.watch<ReserveFormProvider>().selectedDate;
+    final theme = Provider.of<ThemeProvider>(context);
     return Column(
       children: [
         TableCalendar(
@@ -89,12 +94,16 @@ class _CustomTableCalendar extends State<CustomTableCalendar> {
           },
           // Style the calendar
           calendarStyle: CalendarStyle(
-            selectedDecoration: const BoxDecoration(
-              color: Colors.blueAccent,
+            selectedDecoration: BoxDecoration(
+              color: theme.isDarkTheme
+                  ? const Color.fromARGB(255, 173, 122, 153)
+                  : const Color.fromARGB(255, 167, 29, 49),
               shape: BoxShape.circle,
             ),
             todayDecoration: BoxDecoration(
-              color: const Color.fromARGB(255, 2, 65, 55).withOpacity(0.4),
+              color: theme.isDarkTheme
+                  ? const Color.fromARGB(255, 255, 198, 172).withOpacity(0.2)
+                  : const Color.fromARGB(255, 186, 143, 149).withOpacity(0.5),
               shape: BoxShape.circle,
             ),
           ),
@@ -138,6 +147,7 @@ class TimeCard extends StatelessWidget {
     final String selectedTime =
         context.watch<ReserveFormProvider>().selectedTime;
     final bool selected = selectedTime.compareTo(time) == 0;
+    final theme = Provider.of<ThemeProvider>(context);
     return TextButton(
       style: const ButtonStyle(splashFactory: NoSplash.splashFactory),
       onPressed: () {
@@ -146,16 +156,28 @@ class TimeCard extends StatelessWidget {
       child: Container(
         height: 40,
         decoration: BoxDecoration(
-          border: Border.all(color: selected ? Colors.orange : Colors.black),
+          border: Border.all(
+              color: selected
+                  ? (theme.isDarkTheme
+                        ? const Color.fromARGB(255, 83, 28, 179)
+                        : const Color.fromARGB(255, 167, 29, 49))
+                  : (theme.isDarkTheme
+                      ? const Color.fromARGB(255, 173, 122, 153)
+                      : const Color.fromARGB(255, 186, 143, 149))),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
           child: Text(
             time,
             style: TextStyle(
-              fontSize: 10,
-              color: selected ? Colors.orange : Colors.black,
-            ),
+                fontSize: 10,
+                color: selected
+                    ? (theme.isDarkTheme
+                        ? const Color.fromARGB(255, 83, 28, 179)
+                        : const Color.fromARGB(255, 175, 91, 91))
+                    : (theme.isDarkTheme
+                        ? const Color.fromARGB(255, 173, 122, 153)
+                        : const Color.fromARGB(255, 73, 136, 218))),
           ),
         ),
       ),
@@ -169,6 +191,7 @@ class CounterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int guest = context.watch<ReserveFormProvider>().guest;
+    final theme = Provider.of<ThemeProvider>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -178,7 +201,9 @@ class CounterWidget extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.orangeAccent,
+            color: theme.isDarkTheme
+                  ? const Color.fromARGB(255, 173, 122, 153)
+                  : const Color.fromARGB(255, 167, 29, 49),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -213,7 +238,7 @@ class CounterWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '$guest',
-                    style: const TextStyle(fontSize: 25.0),
+                    style: const TextStyle(fontSize: 25.0, color: Colors.black),
                   ),
                 ),
               ),
@@ -253,7 +278,7 @@ class ReserveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final selectedTime = context.watch<ReserveFormProvider>().selectedTime;
     final selectedDate = context.watch<ReserveFormProvider>().selectedDate;
-
+    final theme = Provider.of<ThemeProvider>(context);
     bool checkSelectedTimeAndDate() {
       if (selectedTime.isEmpty || selectedDate == null) {
         return false;
@@ -278,7 +303,7 @@ class ReserveButton extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            backgroundColor: Colors.black54,
+            backgroundColor: Color.fromARGB(137, 247, 100, 100),
             behavior: SnackBarBehavior.floating,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -288,14 +313,16 @@ class ReserveButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: 45,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 152, 1),
+          color: theme.isDarkTheme
+                  ? const Color.fromARGB(255, 173, 122, 153)
+                  : const Color.fromARGB(255, 167, 29, 49),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             "Confirm",
             style: TextStyle(
-              color: Colors.white,
+              color: theme.isDarkTheme ? const Color.fromARGB(255, 3, 96, 22) : const Color.fromARGB(255, 99, 235, 126),
               fontWeight: FontWeight.w700,
               fontSize: 16,
             ),
@@ -418,8 +445,9 @@ class ConfirmDialog extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 20),
                 child: Text(restaurantName,
+                textAlign: TextAlign.center,
                     style: const TextStyle(
-                        color: Color.fromARGB(255, 153, 47, 40),
+                        color: Color.fromARGB(255, 111, 94, 83),
                         fontSize: 30,
                         fontWeight: FontWeight.w600)),
               ),
@@ -429,6 +457,7 @@ class ConfirmDialog extends StatelessWidget {
                 child: Text(
                     "Table for $guest on ${DateFormat('EEEE').format(selectedDate!)}, ${DateFormat.yMMMMd().format(selectedDate)} at $selectedTime",
                     style: const TextStyle(
+                      color: Color.fromARGB(255, 53, 53, 49),
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     )),

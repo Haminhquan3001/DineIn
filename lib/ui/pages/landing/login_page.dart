@@ -90,8 +90,8 @@ class _Login extends State<LoginPage> {
                     _rememberMeWidget(),
                     TextButton(
                       onPressed: () {}, // TODO: implement forgot password
-                      child: const Text("Forgot Password?",
-                          style: TextStyle(fontSize: 15)),
+                      child: Text("Forgot Password?",
+                          style: Theme.of(context).textTheme.bodyMedium),
                     ),
                   ],
                 ),
@@ -148,7 +148,7 @@ class _Login extends State<LoginPage> {
                 }),
                 const SpaceY(10),
                 RedirectTo(
-                  messages: const ["Don't have an accont?", " Sign Up"],
+                  messages: const ["Don't have an account?", " Sign Up"],
                   onPressed: () => context.replace('/signup'),
                 ),
               ],
