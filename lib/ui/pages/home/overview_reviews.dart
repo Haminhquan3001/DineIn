@@ -24,7 +24,7 @@ class _OverviewAndReviewsState extends State<OverviewAndReviews> {
     List<dynamic> menuItems = widget.resObj["menu_items"];
 
     String overview = widget.resObj["description"] ?? "";
-    // String overview =  "asd";
+
     final theme = Provider.of<ThemeProvider>(context);
     return DefaultTabController(
       length: 3,
@@ -85,12 +85,13 @@ class _OverviewAndReviewsState extends State<OverviewAndReviews> {
               }),
             ),
 
+            //Menu
             Column(
               children: [
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: Color(0xffF5F5F5),
+                      color: Colors.white,
                     ),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -205,7 +206,7 @@ class FoodCard extends StatelessWidget {
     );
 
     return Container(
-      color: const Color.fromARGB(57, 24, 73, 109),
+      color: Colors.white,
       padding: const EdgeInsets.all(15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -221,7 +222,7 @@ class FoodCard extends StatelessWidget {
             ),
           ),
           Text(
-            foodObj["food_name"].toString(),
+            foodObj["name"].toString(),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(

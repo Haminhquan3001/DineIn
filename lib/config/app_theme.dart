@@ -34,21 +34,34 @@ class AppTheme {
     ),
 
     outlinedButtonTheme: OutlinedButtonThemeData(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.disabled)) {
-                  return const Color.fromARGB(
-                      125, 74, 81, 117); // disabled color
-                }
-                return const Color.fromARGB(255, 164, 168, 209); // normal color
-              },
-            ),
-            side: MaterialStateProperty.all(BorderSide.none),
-            shape: MaterialStateProperty.all(const StadiumBorder()))),
-    inputDecorationTheme: const InputDecorationTheme(
-      hintStyle: TextStyle(color: Colors.black),
-        filled: true, fillColor: Color.fromARGB(255, 250, 228, 228)),
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.disabled)) {
+                return const Color.fromARGB(125, 74, 81, 117); // disabled color
+              }
+              return const Color.fromARGB(255, 164, 168, 209); // normal color
+            },
+          ),
+          side: MaterialStateProperty.all(BorderSide.none),
+          shape: MaterialStateProperty.all(const StadiumBorder())),
+    ),
+
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: const TextStyle(color: Colors.black),
+      contentPadding: const EdgeInsets.all(10),
+      filled: true,
+      fillColor: const Color.fromRGBO(243, 241, 241, 1),
+      border: const OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      labelStyle: getTextTheme(Brightness.light).bodyMedium,
+    ),
+
+    scaffoldBackgroundColor: Colors.white,
+
     /// Primary color of the app
     // primaryColor: Colors.orange,
     // primaryColorDark: Colors.orange,
@@ -108,11 +121,12 @@ class AppTheme {
   );
 
   static ColorScheme lightScheme = const ColorScheme.light().copyWith(
+    
     brightness: Brightness.light,
     //
-    background: Colors.grey.shade100,
+    background: Colors.white,
     // onBackground: Color(0xff000000),
-    //
+
     primary: Colors.black,
     onPrimary: Colors.white,
     inversePrimary: Colors.grey,
@@ -186,9 +200,10 @@ class AppTheme {
       ),
     ),
     inputDecorationTheme: const InputDecorationTheme(
-      hintStyle: TextStyle(color: Colors.black),
-      labelStyle: TextStyle(color: Colors.black),
-        filled: true, fillColor: Color.fromARGB(255, 255, 203, 203)),
+        hintStyle: TextStyle(color: Colors.black),
+        labelStyle: TextStyle(color: Colors.black),
+        filled: true,
+        fillColor: Color.fromARGB(255, 255, 203, 203)),
     textTheme: getTextTheme(Brightness.dark),
   );
 
@@ -230,11 +245,16 @@ class AppTheme {
       displayLarge: headingFont.displayLarge!.copyWith(color: textColor),
       displayMedium: headingFont.displayMedium!.copyWith(color: textColor),
       displaySmall: headingFont.displaySmall!.copyWith(color: textColor),
+
       headlineLarge: headingFont.headlineLarge!.copyWith(color: textColor),
       headlineMedium: headingFont.headlineMedium!.copyWith(color: textColor),
       headlineSmall: headingFont.headlineSmall!.copyWith(color: textColor),
-      bodyLarge: bodyFont.bodyLarge!.copyWith(color: textColor),
-      bodyMedium: bodyFont.bodyMedium!.copyWith(color: textColor),
+
+      //
+      bodyLarge: bodyFont.bodyLarge!.copyWith(
+          color: textColor, fontWeight: FontWeight.w800, fontSize: 16),
+      bodyMedium: bodyFont.bodyMedium!.copyWith(
+          color: textColor, fontSize: 14, fontWeight: FontWeight.normal),
       bodySmall: bodyFont.bodySmall!.copyWith(color: textColor),
     );
   }

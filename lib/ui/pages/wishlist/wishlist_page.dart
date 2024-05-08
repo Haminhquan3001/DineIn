@@ -27,7 +27,9 @@ class WishlistPage extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 20,
       ),
-      backgroundColor: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,
+      backgroundColor: theme.isDarkTheme
+          ? const Color.fromARGB(255, 43, 45, 44)
+          : Colors.white,
       // bottomNavigationBar: const BottomNavBar(),
       body: Padding(
         padding: EdgeInsets.only(left: padding, right: padding),
@@ -44,7 +46,11 @@ class WishlistPage extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(color: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,),
+                decoration: BoxDecoration(
+                  color: theme.isDarkTheme
+                      ? const Color.fromARGB(255, 43, 45, 44)
+                      : Colors.white,
+                ),
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: favoriteRestaurants.length,

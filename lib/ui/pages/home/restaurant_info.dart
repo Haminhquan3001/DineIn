@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:group_project/ui/utils/format_address.dart';
 import 'package:provider/provider.dart';
 import 'overview_reviews.dart';
 
-import 'package:group_project/config/constants.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
+import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'package:group_project/providers/theme.provider.dart';
 
 class RestaurantInfo extends StatelessWidget {
   final Map resObj;
+
   const RestaurantInfo({
     super.key,
     required this.resObj,
@@ -14,8 +18,6 @@ class RestaurantInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log.d(resObj);
-
     double contextWidth = MediaQuery.of(context).size.width;
     double padding = 18;
     double paddingHeight = 12;
@@ -30,6 +32,13 @@ class RestaurantInfo extends StatelessWidget {
     );
 
     double imageHeight = 200;
+
+    // check if this restaurant is favorite
+    List<dynamic> favoriteRestaurants =
+        jsonDecode(KwunLocalStorage.getString("favorites"));
+    bool isFavorite = favoriteRestaurants.any(
+        (element) => element["restaurant_name"] == resObj["restaurant_name"]);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -85,7 +94,10 @@ class RestaurantInfo extends StatelessWidget {
                           width: 40,
                           height: 40,
                           padding: const EdgeInsets.only(left: 5),
-                          child: BackButton(color: theme.isDarkTheme ? Theme.of(context).primaryColor : Colors.black),
+                          child: BackButton(
+                              color: theme.isDarkTheme
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.black),
                         ),
                       ),
                       const Expanded(
@@ -100,7 +112,33 @@ class RestaurantInfo extends StatelessWidget {
                           ),
                           width: 40,
                           height: 40,
-                          child: Icon(Icons.favorite_border, color: theme.isDarkTheme ? Theme.of(context).primaryColor : Colors.black),
+                          child: ToggleHeartIconButton(
+                            initialValue: isFavorite,
+                            onChanged: (bool isToggled) {
+                              // get from data from localstorage
+                              String favoriteRestaurantsString =
+                                  KwunLocalStorage.getString("favorites");
+
+                              List<dynamic> favoriteRestaurants =
+                                  jsonDecode(favoriteRestaurantsString);
+
+                              // either save to favorites
+                              if (isToggled) {
+                                favoriteRestaurants.add(resObj);
+                              }
+
+                              // or remove from favorites
+                              else {
+                                // remove by name
+                                favoriteRestaurants.removeWhere(
+                                    (curr) => curr["id"] == resObj["id"]);
+                              }
+
+                              // save new data
+                              KwunLocalStorage.setString(
+                                  "favorites", jsonEncode(favoriteRestaurants));
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -123,22 +161,13 @@ class RestaurantInfo extends StatelessWidget {
                   Text(
                     resObj["restaurant_name"],
                     style: Theme.of(context).textTheme.bodyLarge,
-                    // style: TextStyle(
-                    //   color: const Color.fromARGB(254, 0, 0, 0),
-                    //   fontSize: fontSizeName,
-                    //   fontWeight: FontWeight.w800,
-                    // ),
                   ),
 
                   //Short location
                   Row(
                     children: [
                       Text(
-                        resObj["address"]
-                            .toString()
-                            .split(',')
-                            .sublist(1)
-                            .join(', '),
+                        formatAddressToStateAndCity(resObj["address"]),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const Expanded(child: Text("")),
@@ -171,7 +200,7 @@ class RestaurantInfo extends StatelessWidget {
                   ),
 
                   Text(
-                    resObj["food_categories"]["category_name"]
+                    "${resObj["food_categories"]["category_name"]
                         .toString()
                         .replaceRange(
                             0,
@@ -179,8 +208,8 @@ class RestaurantInfo extends StatelessWidget {
                             resObj["food_categories"]["category_name"]
                                 .toString()
                                 .substring(0, 1)
-                                .toUpperCase()),
-                    style: Theme.of(context).textTheme.bodyLarge,
+                                .toUpperCase())} Restaurant",
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
 
                   Column(
@@ -237,8 +266,9 @@ class RestaurantInfo extends StatelessWidget {
                               Text(
                                 resObj["address"],
                                 style: Theme.of(context).textTheme.bodyMedium,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              // Text("View on map"),
                             ],
                           )
                         ],

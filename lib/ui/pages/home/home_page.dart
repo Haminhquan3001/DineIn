@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
+import 'package:group_project/ui/widgets/space_y.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'restaurant_card.dart';
@@ -31,7 +32,6 @@ class _HomePage extends State<HomePage> {
           .from('restaurants')
           .select('*, food_categories(*), reviews(*, users(*)), menu_items(*)');
 
-
       setState(() => _foundRestanrants = response);
       setState(() => _restaurantsFiltered = response);
     } on Exception catch (e) {
@@ -58,15 +58,9 @@ class _HomePage extends State<HomePage> {
     });
   }
 
-  final myCustomStyle = const TextStyle(
-    color: Color.fromARGB(254, 0, 0, 0),
-    fontSize: 24,
-    fontWeight: FontWeight.w700,
-  );
-
   @override
   Widget build(BuildContext context) {
-    double padding = 10;
+    double appPadding = 15;
     final theme = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () {
@@ -76,40 +70,50 @@ class _HomePage extends State<HomePage> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           toolbarHeight: 20,
+          backgroundColor: Colors.white,
         ),
         // bottomNavigationBar: const BottomNavBar(),
         body: Padding(
-          padding: EdgeInsets.only(left: padding, right: padding),
+          padding: EdgeInsets.only(left: appPadding, right: appPadding),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Home Page Title
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 5.0),
+                padding: EdgeInsets.only(left: appPadding, bottom: 5.0),
                 child: Text(
                   "Explore Restaurants",
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
 
+              const SpaceY(5),
+
               // Search Bar
-              TextField(
-                onChanged: (value) => _runFilter(value),
-                decoration: const InputDecoration(
-                    labelText: 'Search for a restaurant',
-                    suffixIcon: Icon(Icons.search)),
+              Padding(
+                padding: EdgeInsets.only(left: appPadding, right: appPadding),
+                child: TextField(
+                  onChanged: (value) => _runFilter(value),
+                  decoration: const InputDecoration(
+                      labelText: 'Search for a restaurant',
+                      prefixIcon: Icon(Icons.search)),
+                ),
               ),
 
-              const SizedBox(
-                height: 5,
-              ),
+              const SpaceY(15),
 
               // Restaurant List
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(color: theme.isDarkTheme ? const Color.fromARGB(255, 30, 50, 49) : Colors.white ),
+                  decoration: BoxDecoration(
+                      // TODO modify dark theme
+                      color: theme.isDarkTheme
+                          ? const Color.fromARGB(255, 30, 50, 49)
+                          : Colors.white),
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: _restaurantsFiltered.length,
