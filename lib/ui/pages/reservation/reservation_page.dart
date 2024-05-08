@@ -69,34 +69,34 @@ class _ReservationPageState extends State<ReservationPage> {
     List<Map<String, dynamic>> previousReservations =
         filterByPreviousReservations(_reservationList);
 
-    return Padding(
-      padding: EdgeInsets.only(left: padding, right: padding, top: 15),
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          // toolbarHeight: 20,
-          title: Text(
-            "My Reservations",
-            style: Theme.of(context).textTheme.headlineMedium,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(left: padding, right: padding),
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: false,
+            title: Text(
+              "My Reservations",
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ),
-        ),
-        body: DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 0,
-              bottom: const TabBar(tabs: [
-                Tab(text: "Upcoming"),
-                Tab(text: "Previous"),
+          body: DefaultTabController(
+            length: 2,
+            child: Scaffold(
+              appBar: AppBar(
+                toolbarHeight: 0,
+                bottom: const TabBar(tabs: [
+                  Tab(text: "Upcoming"),
+                  Tab(text: "Previous"),
+                ]),
+              ),
+              body: TabBarView(children: [
+                UpcomingList(
+                    reservations: upcomingReservations,
+                    refreshReservation: fetchUserReservations),
+                PreviousList(reservations: previousReservations),
               ]),
             ),
-            body: TabBarView(children: [
-              UpcomingList(
-                reservations: upcomingReservations,
-                refreshReservation: fetchUserReservations
-              ),
-              PreviousList(reservations: previousReservations),
-            ]),
           ),
         ),
       ),

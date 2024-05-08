@@ -7,6 +7,7 @@ import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
+import 'package:group_project/ui/utils/format_address.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Map<String, dynamic> resObj;
@@ -21,8 +22,13 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double contextWidth = MediaQuery.of(context).size.width;
     double padding = 10;
-    double fontSizeName = 18, fontSizeLocation = 12, fontSizeOther = 14;
     final theme = Provider.of<ThemeProvider>(context);
+    // check if this restaurant is favorite
+    List<dynamic> favoriteRestaurants =
+        jsonDecode(KwunLocalStorage.getString("favorites"));
+    bool isFavorite = favoriteRestaurants.any(
+        (element) => element["restaurant_name"] == resObj["restaurant_name"]);
+
     return TextButton(
       onPressed: () {
         // save ther restaurant object to the provider
@@ -43,18 +49,30 @@ class RestaurantCard extends StatelessWidget {
       },
       child: Container(
           decoration: BoxDecoration(
-              color: theme.isDarkTheme ? const Color.fromARGB(255, 170, 144, 204) :const Color.fromARGB(57, 24, 73, 109),
-              borderRadius: BorderRadius.circular(10)),
+              color: theme.isDarkTheme
+                  ? const Color.fromARGB(255, 170, 144, 204)
+                  : const Color.fromARGB(57, 24, 73, 109),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color.fromRGBO(149, 157, 165, 0.2),
+                  blurRadius: 24,
+                  offset: Offset(0, 8),
+                ),
+              ]),
           margin: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
             children: [
               Stack(
                 children: <Widget>[
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
                     child: Image.network(
                       resObj["image_url"].toString(),
-                      height: 100,
+                      height: 110,
                       width: contextWidth,
                       fit: BoxFit.cover,
                     ),
@@ -67,7 +85,7 @@ class RestaurantCard extends StatelessWidget {
                       Padding(
                           padding: const EdgeInsets.all(18.0),
                           child: ToggleHeartIconButton(
-                            initialValue: favorite,
+                            initialValue: isFavorite,
                             onChanged: (bool isToggled) {
                               // get from data from localstorage
                               String favoriteRestaurantsString =
@@ -108,11 +126,6 @@ class RestaurantCard extends StatelessWidget {
                       child: Text(
                         resObj["restaurant_name"],
                         style: Theme.of(context).textTheme.bodyLarge,
-                        // style: TextStyle(
-                        //   color: const Color.fromARGB(254, 0, 0, 0),
-                        //   fontSize: fontSizeName,
-                        //   fontWeight: FontWeight.w800,
-                        // ),
                       ),
                     ),
                     const Icon(
@@ -126,11 +139,6 @@ class RestaurantCard extends StatelessWidget {
                     Text(
                       resObj["rating"].toString(),
                       style: Theme.of(context).textTheme.bodyMedium,
-                      // style: TextStyle(
-                      //   color: const Color.fromARGB(254, 0, 0, 0),
-                      //   fontSize: fontSizeOther,
-                      //   fontWeight: FontWeight.w700,
-                      // ),
                     ),
                   ],
                 ),
@@ -140,13 +148,8 @@ class RestaurantCard extends StatelessWidget {
                 child: Row(children: [
                   Expanded(
                     child: Text(
-                      resObj["address"].toString(),
+                      formatAddressToStateAndCity(["address"].toString()),
                       style: Theme.of(context).textTheme.bodyMedium,
-                      // style: TextStyle(
-                      //   color: const Color.fromARGB(254, 0, 0, 0),
-                      //   fontSize: fontSizeLocation,
-                      //   fontWeight: FontWeight.w700,
-                      // ),
                     ),
                   ),
                   Icon(
@@ -155,13 +158,8 @@ class RestaurantCard extends StatelessWidget {
                     size: 18,
                   ),
                   Text(
-                    resObj["min_price"].toString(),
+                    "${resObj["min_price"].toString()} - ${resObj["max_price"].toString()}",
                     style: Theme.of(context).textTheme.bodyMedium,
-                    // style: TextStyle(
-                    //   color: const Color.fromARGB(254, 0, 0, 0),
-                    //   fontSize: fontSizeOther,
-                    //   fontWeight: FontWeight.w700,
-                    // ),
                   ),
                 ]),
               ),

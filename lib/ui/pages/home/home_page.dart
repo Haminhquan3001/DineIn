@@ -31,7 +31,6 @@ class _HomePage extends State<HomePage> {
           .from('restaurants')
           .select('*, food_categories(*), reviews(*, users(*)), menu_items(*)');
 
-
       setState(() => _foundRestanrants = response);
       setState(() => _restaurantsFiltered = response);
     } on Exception catch (e) {
@@ -66,7 +65,7 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double padding = 10;
+    double appPadding = 15;
     final theme = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () {
@@ -75,19 +74,16 @@ class _HomePage extends State<HomePage> {
           currentFocus.unfocus();
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 20,
-        ),
-        // bottomNavigationBar: const BottomNavBar(),
-        body: Padding(
-          padding: EdgeInsets.only(left: padding, right: padding),
+      child: SafeArea(
+        child: Padding(
+          padding:
+              EdgeInsets.only(left: appPadding, right: appPadding, top: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, bottom: 5.0),
+                padding: EdgeInsets.only(left: appPadding, bottom: 5.0),
                 child: Text(
                   "Explore Restaurants",
                   style: Theme.of(context).textTheme.headlineMedium,
@@ -95,11 +91,14 @@ class _HomePage extends State<HomePage> {
               ),
 
               // Search Bar
-              TextField(
-                onChanged: (value) => _runFilter(value),
-                decoration: const InputDecoration(
-                    labelText: 'Search for a restaurant',
-                    suffixIcon: Icon(Icons.search)),
+              Padding(
+                padding: EdgeInsets.only(left: appPadding, right: appPadding),
+                child: TextField(
+                  onChanged: (value) => _runFilter(value),
+                  decoration: const InputDecoration(
+                      labelText: 'Search for a restaurant',
+                      prefixIcon: Icon(Icons.search)),
+                ),
               ),
 
               const SizedBox(
@@ -109,7 +108,10 @@ class _HomePage extends State<HomePage> {
               // Restaurant List
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(color: theme.isDarkTheme ? const Color.fromARGB(255, 30, 50, 49) : Colors.white ),
+                  decoration: BoxDecoration(
+                      color: theme.isDarkTheme
+                          ? const Color.fromARGB(255, 30, 50, 49)
+                          : Colors.white),
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     itemCount: _restaurantsFiltered.length,

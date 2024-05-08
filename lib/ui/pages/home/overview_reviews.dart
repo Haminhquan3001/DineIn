@@ -90,7 +90,7 @@ class _OverviewAndReviewsState extends State<OverviewAndReviews> {
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(
-                      color: Color(0xffF5F5F5),
+                      color: Colors.white,
                     ),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -198,14 +198,9 @@ class FoodCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double widthImage = 200;
     double heightImage = 110;
-    var myCustomStyle = const TextStyle(
-      color: Color.fromARGB(254, 0, 0, 0),
-      fontSize: 14,
-      fontWeight: FontWeight.w700,
-    );
 
     return Container(
-      color: const Color.fromARGB(57, 24, 73, 109),
+      color: Colors.white,
       padding: const EdgeInsets.all(15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -221,7 +216,7 @@ class FoodCard extends StatelessWidget {
             ),
           ),
           Text(
-            foodObj["food_name"].toString(),
+            foodObj["name"].toString(),
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(

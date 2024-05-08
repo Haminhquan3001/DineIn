@@ -33,28 +33,42 @@ class AppTheme {
       ),
     ),
 
-    outlinedButtonTheme: OutlinedButtonThemeData(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.disabled)) {
-                  return const Color.fromARGB(
-                      125, 74, 81, 117); // disabled color
-                }
-                return const Color.fromARGB(255, 164, 168, 209); // normal color
-              },
-            ),
-            side: MaterialStateProperty.all(BorderSide.none),
-            shape: MaterialStateProperty.all(const StadiumBorder()))),
-    inputDecorationTheme: const InputDecorationTheme(
-      hintStyle: TextStyle(color: Colors.black),
-        filled: true, fillColor: Color.fromARGB(255, 250, 228, 228)),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.disabled)) {
+                return const Color.fromARGB(125, 74, 81, 117); // disabled color
+              }
+              return const Color.fromARGB(255, 164, 168, 209); // normal color
+            },
+          ),
+          side: MaterialStateProperty.all(BorderSide.none),
+          shape: MaterialStateProperty.all(const StadiumBorder())),
+    ),
+
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: const TextStyle(color: Colors.black),
+      contentPadding: const EdgeInsets.all(10),
+      filled: true,
+      fillColor: const Color.fromRGBO(243, 241, 241, 1),
+      border: const OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+      labelStyle: getTextTheme(Brightness.light).bodyMedium,
+    ),
+
+    scaffoldBackgroundColor: Colors.white,
     /// Primary color of the app
     // primaryColor: Colors.orange,
     // primaryColorDark: Colors.orange,
 
     /// Styles for the app bar (top of the screen)
     // appBarTheme: const AppBarTheme(
+    //   foregroundColor: Colors.white,
+    //   scrolledUnderElevation: 0,
     //   elevation: 1,
     //   backgroundColor: Colors.white,
     //   iconTheme: IconThemeData(color: Colors.black),
@@ -186,9 +200,10 @@ class AppTheme {
       ),
     ),
     inputDecorationTheme: const InputDecorationTheme(
-      hintStyle: TextStyle(color: Colors.black),
-      labelStyle: TextStyle(color: Colors.black),
-        filled: true, fillColor: Color.fromARGB(255, 255, 203, 203)),
+        hintStyle: TextStyle(color: Colors.black),
+        labelStyle: TextStyle(color: Colors.black),
+        filled: true,
+        fillColor: Color.fromARGB(255, 255, 203, 203)),
     textTheme: getTextTheme(Brightness.dark),
   );
 
@@ -223,7 +238,7 @@ class AppTheme {
     const textTheme = TextTheme();
 
     final bodyFont = GoogleFonts.ibmPlexSansTextTheme(textTheme);
-    final headingFont = GoogleFonts.syneMonoTextTheme(textTheme);
+    final headingFont = GoogleFonts.concertOneTextTheme(textTheme);
     Color textColor =
         brightness == Brightness.light ? Colors.black : Colors.white;
     return bodyFont.copyWith(
@@ -233,7 +248,8 @@ class AppTheme {
       headlineLarge: headingFont.headlineLarge!.copyWith(color: textColor),
       headlineMedium: headingFont.headlineMedium!.copyWith(color: textColor),
       headlineSmall: headingFont.headlineSmall!.copyWith(color: textColor),
-      bodyLarge: bodyFont.bodyLarge!.copyWith(color: textColor),
+      bodyLarge: bodyFont.bodyLarge!
+          .copyWith(color: textColor, fontWeight: FontWeight.w900),
       bodyMedium: bodyFont.bodyMedium!.copyWith(color: textColor),
       bodySmall: bodyFont.bodySmall!.copyWith(color: textColor),
     );

@@ -23,14 +23,11 @@ class WishlistPage extends StatelessWidget {
 
     double padding = 10;
     final theme = Provider.of<ThemeProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 20,
-      ),
-      backgroundColor: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,
+    return SafeArea(
+      // backgroundColor: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,
       // bottomNavigationBar: const BottomNavBar(),
-      body: Padding(
-        padding: EdgeInsets.only(left: padding, right: padding),
+      child: Padding(
+        padding: EdgeInsets.only(left: padding, right: padding, top: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +41,11 @@ class WishlistPage extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(color: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,),
+                decoration: BoxDecoration(
+                  color: theme.isDarkTheme
+                      ? const Color.fromARGB(255, 43, 45, 44)
+                      : Colors.white,
+                ),
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   itemCount: favoriteRestaurants.length,
