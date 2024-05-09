@@ -33,7 +33,7 @@ class AppTheme {
       ),
     ),
 
-        outlinedButtonTheme: OutlinedButtonThemeData(
+    outlinedButtonTheme: OutlinedButtonThemeData(
       style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
@@ -61,6 +61,7 @@ class AppTheme {
     ),
 
     scaffoldBackgroundColor: Colors.white,
+
     /// Primary color of the app
     // primaryColor: Colors.orange,
     // primaryColorDark: Colors.orange,
@@ -151,6 +152,7 @@ class AppTheme {
   /// Dark theme for the app
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     colorScheme: darkScheme,
+    textTheme: getTextTheme(Brightness.dark),
     // iconTheme: const IconThemeData(color: Color.fromARGB(255, 101, 97, 118)),
 
     // appBarTheme: const AppBarTheme(
@@ -162,6 +164,20 @@ class AppTheme {
     //     fontSize: 20,
     //   ),
     // ),
+
+    scaffoldBackgroundColor: const Color.fromRGBO(21, 20, 19, 1),
+
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: getTextTheme(Brightness.dark).bodyMedium,
+      contentPadding: const EdgeInsets.all(10),
+      filled: true,
+      fillColor: const Color.fromRGBO(72, 66, 66, 1),
+      border: const OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.never,
+    ),
 
     outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
@@ -199,38 +215,28 @@ class AppTheme {
         shape: MaterialStateProperty.all(const StadiumBorder()),
       ),
     ),
-    inputDecorationTheme: const InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.black),
-        labelStyle: TextStyle(color: Colors.black),
-        filled: true,
-        fillColor: Color.fromARGB(255, 255, 203, 203)),
-    textTheme: getTextTheme(Brightness.dark),
   );
 
   // CHANGE THIS TO YOUR OWN COLOR SCHEME
   static ColorScheme darkScheme = const ColorScheme.dark().copyWith(
-      brightness: Brightness.dark,
-      //
-      background: const Color.fromARGB(255, 43, 45, 44),
-      // onBackground: ,
-      //
+    brightness: Brightness.dark,
 
-      primary: const Color.fromARGB(255, 202, 161, 174),
-      inversePrimary: const Color.fromARGB(59, 204, 141, 141),
+    background: const Color.fromARGB(37, 35, 33, 1),
+    primary: const Color.fromARGB(255, 202, 161, 174),
+    inversePrimary: const Color.fromARGB(59, 204, 141, 141),
 
-      //
-      secondary: const Color.fromARGB(255, 179, 163, 148),
-      onSecondary: const Color.fromARGB(255, 199, 130, 131)
-      //
-      // tertiary: Colors.white,
-      // onTertiary: Colors.black,
-      //
-      // error: ,
-      // onError:,
-      //
-      // surface: ,
-      // onSurface:,
-      );
+    secondary: const Color.fromARGB(255, 179, 163, 148),
+    onSecondary: const Color.fromARGB(255, 199, 130, 131),
+
+    // tertiary: Colors.white,
+    // onTertiary: Colors.black,
+
+    // error: ,
+    // onError:,
+
+    // surface: ,
+    // onSurface:,
+  );
 
   // ----------------------------------------------------------
 

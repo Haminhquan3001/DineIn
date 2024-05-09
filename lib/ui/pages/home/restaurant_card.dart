@@ -12,7 +12,8 @@ class RestaurantCard extends StatefulWidget {
   final Map<String, dynamic> resObj;
   final bool isHomePage;
 
-  const RestaurantCard({super.key, required this.resObj, required this.isHomePage});
+  const RestaurantCard(
+      {super.key, required this.resObj, required this.isHomePage});
 
   @override
   State<RestaurantCard> createState() => _RestaurantCardState();
@@ -52,7 +53,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
         context
             .read<ReserveFormProvider>()
             .updateCurrentRestaurant(widget.resObj["restaurant_name"]);
-        
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -69,11 +70,13 @@ class _RestaurantCardState extends State<RestaurantCard> {
                   ? const Color.fromARGB(255, 170, 144, 204)
                   : const Color.fromARGB(57, 24, 73, 109),
               borderRadius: BorderRadius.circular(10),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Color.fromRGBO(149, 157, 165, 0.2),
+                  color: theme.isDarkTheme
+                      ? const Color.fromRGBO(149, 157, 165, 0.0)
+                      : const Color.fromRGBO(149, 157, 165, 0.2),
                   blurRadius: 24,
-                  offset: Offset(0, 8),
+                  offset: const Offset(0, 8),
                 ),
               ]),
           margin: const EdgeInsets.symmetric(vertical: 8),
@@ -155,7 +158,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                       width: 3,
                     ),
                     Text(
-                     formatRating(widget.resObj["rating"].toString()),
+                      formatRating(widget.resObj["rating"].toString()),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],

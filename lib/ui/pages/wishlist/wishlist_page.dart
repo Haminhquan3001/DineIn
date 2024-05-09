@@ -77,7 +77,7 @@ class _WishlistPageState extends State<WishlistPage> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: theme.isDarkTheme
-                        ? const Color.fromARGB(255, 43, 45, 44)
+                        ? const Color.fromRGBO(21, 20, 19, 1)
                         : Colors.white,
                   ),
                   child: ListView.builder(

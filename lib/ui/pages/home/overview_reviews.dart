@@ -89,8 +89,10 @@ class _OverviewAndReviewsState extends State<OverviewAndReviews> {
               children: [
                 Expanded(
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: theme.isDarkTheme
+                          ? const Color.fromARGB(21, 20, 19, 1)
+                          : Colors.white,
                     ),
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -127,11 +129,6 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double padding = 10;
 
-    var myCustomStyle = const TextStyle(
-      color: Color.fromARGB(254, 0, 0, 0),
-      fontSize: 16,
-      fontWeight: FontWeight.w700,
-    );
     return Container(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -157,7 +154,7 @@ class ReviewCard extends StatelessWidget {
                 children: [
                   Text(
                     user["full_name"],
-                    style: myCustomStyle,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   Row(children: [
                     const Icon(
@@ -170,14 +167,15 @@ class ReviewCard extends StatelessWidget {
                     ),
                     Text(
                       reviewObj["rating"].toString(),
-                      style: myCustomStyle,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ]),
                 ],
               )
             ],
           ),
-          Text(formatDate(reviewObj["created_at"])),
+          Text(formatDate(reviewObj["created_at"]),
+              style: Theme.of(context).textTheme.bodyMedium),
           Text(
             reviewObj["content"].toString(),
           )
@@ -196,11 +194,14 @@ class FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context);
     double widthImage = 200;
     double heightImage = 110;
 
     return Container(
-      color: Colors.white,
+      color: theme.isDarkTheme
+          ? const Color.fromARGB(21, 20, 19, 1)
+          : Colors.white,
       padding: const EdgeInsets.all(15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

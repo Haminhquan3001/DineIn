@@ -110,7 +110,7 @@ class _HomePage extends State<HomePage> {
                   child: Container(
                     decoration: BoxDecoration(
                         color: theme.isDarkTheme
-                            ? const Color.fromARGB(255, 30, 50, 49)
+                            ? const Color.fromARGB(21, 20, 19, 1)
                             : Colors.white),
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
