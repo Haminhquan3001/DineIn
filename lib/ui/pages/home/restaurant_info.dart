@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:group_project/ui/utils/format_address.dart';
 import 'package:provider/provider.dart';
 import 'overview_reviews.dart';
@@ -8,13 +9,33 @@ import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'package:group_project/providers/theme.provider.dart';
 
-class RestaurantInfo extends StatelessWidget {
+class RestaurantInfo extends StatefulWidget {
   final Map resObj;
 
   const RestaurantInfo({
     super.key,
     required this.resObj,
   });
+
+  @override
+  State<RestaurantInfo> createState() => _RestaurantInfoState();
+}
+
+class _RestaurantInfoState extends State<RestaurantInfo> {
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // check if this restaurant is favorite
+    List<dynamic> favoriteRestaurants =
+        jsonDecode(KwunLocalStorage.getString("favorites"));
+    bool isfavorite = favoriteRestaurants.any((element) =>
+        element["restaurant_name"] == widget.resObj["restaurant_name"]);
+
+    setState(() => isFavorite = isfavorite);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +53,6 @@ class RestaurantInfo extends StatelessWidget {
     );
 
     double imageHeight = 200;
-
-    // check if this restaurant is favorite
-    List<dynamic> favoriteRestaurants =
-        jsonDecode(KwunLocalStorage.getString("favorites"));
-    bool isFavorite = favoriteRestaurants.any(
-        (element) => element["restaurant_name"] == resObj["restaurant_name"]);
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +75,7 @@ class RestaurantInfo extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      resObj["image_url"].toString(),
+                      widget.resObj["image_url"].toString(),
                       width: contextWidth,
                       fit: BoxFit.cover,
                     ),
@@ -95,6 +110,7 @@ class RestaurantInfo extends StatelessWidget {
                           height: 40,
                           padding: const EdgeInsets.only(left: 5),
                           child: BackButton(
+                              onPressed: () => Navigator.pop(context, isFavorite),
                               color: theme.isDarkTheme
                                   ? Theme.of(context).primaryColor
                                   : Colors.black),
@@ -115,6 +131,8 @@ class RestaurantInfo extends StatelessWidget {
                           child: ToggleHeartIconButton(
                             initialValue: isFavorite,
                             onChanged: (bool isToggled) {
+                              setState(() => isFavorite = isToggled);
+
                               // get from data from localstorage
                               String favoriteRestaurantsString =
                                   KwunLocalStorage.getString("favorites");
@@ -124,14 +142,14 @@ class RestaurantInfo extends StatelessWidget {
 
                               // either save to favorites
                               if (isToggled) {
-                                favoriteRestaurants.add(resObj);
+                                favoriteRestaurants.add(widget.resObj);
                               }
 
                               // or remove from favorites
                               else {
                                 // remove by name
-                                favoriteRestaurants.removeWhere(
-                                    (curr) => curr["id"] == resObj["id"]);
+                                favoriteRestaurants.removeWhere((curr) =>
+                                    curr["id"] == widget.resObj["id"]);
                               }
 
                               // save new data
@@ -159,7 +177,7 @@ class RestaurantInfo extends StatelessWidget {
                 children: [
                   //Restaurant name
                   Text(
-                    resObj["restaurant_name"],
+                    widget.resObj["restaurant_name"],
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
 
@@ -167,7 +185,7 @@ class RestaurantInfo extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        formatAddressToStateAndCity(resObj["address"]),
+                        formatAddressToStateAndCity(widget.resObj["address"]),
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const Expanded(child: Text("")),
@@ -181,14 +199,14 @@ class RestaurantInfo extends StatelessWidget {
                           width: 2,
                         ),
                         Text(
-                          resObj["rating"].toString(),
+                          widget.resObj["rating"].toString(),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(
                           width: 5,
                         ),
                         Text(
-                          "(${resObj["reviews_count"]} Reviews)",
+                          "(${widget.resObj["reviews_count"]} Reviews)",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ]),
@@ -200,15 +218,7 @@ class RestaurantInfo extends StatelessWidget {
                   ),
 
                   Text(
-                    "${resObj["food_categories"]["category_name"]
-                        .toString()
-                        .replaceRange(
-                            0,
-                            1,
-                            resObj["food_categories"]["category_name"]
-                                .toString()
-                                .substring(0, 1)
-                                .toUpperCase())} Restaurant",
+                    "${widget.resObj["food_categories"]["category_name"].toString().replaceRange(0, 1, widget.resObj["food_categories"]["category_name"].toString().substring(0, 1).toUpperCase())} Restaurant",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
 
@@ -219,7 +229,7 @@ class RestaurantInfo extends StatelessWidget {
                       ),
 
                       //Opening Hours
-                      if (resObj["working_start"] != null)
+                      if (widget.resObj["working_start"] != null)
                         Row(
                           children: [
                             Icon(
@@ -238,7 +248,7 @@ class RestaurantInfo extends StatelessWidget {
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 Text(
-                                  "${resObj["working_start"]} - ${resObj["working_end"]}",
+                                  "${widget.resObj["working_start"]} - ${widget.resObj["working_end"]}",
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ],
@@ -264,7 +274,7 @@ class RestaurantInfo extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                resObj["address"],
+                                widget.resObj["address"],
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -278,7 +288,7 @@ class RestaurantInfo extends StatelessWidget {
                       ),
 
                       //Phone number
-                      if (resObj["phone"] != null)
+                      if (widget.resObj["phone"] != null)
                         Row(
                           children: [
                             Icon(
@@ -289,7 +299,7 @@ class RestaurantInfo extends StatelessWidget {
                             ),
                             SizedBox(width: padding),
                             Text(
-                              resObj["phone"] ?? "",
+                              widget.resObj["phone"] ?? "",
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -299,7 +309,7 @@ class RestaurantInfo extends StatelessWidget {
                       ),
 
                       //Email
-                      if (resObj["email"] != null)
+                      if (widget.resObj["email"] != null)
                         Row(
                           children: [
                             Icon(
@@ -310,7 +320,7 @@ class RestaurantInfo extends StatelessWidget {
                             ),
                             SizedBox(width: padding),
                             Text(
-                              resObj["email"],
+                              widget.resObj["email"],
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -324,7 +334,7 @@ class RestaurantInfo extends StatelessWidget {
                     height: 280,
                     width: contextWidth,
                     child: OverviewAndReviews(
-                      resObj: resObj,
+                      resObj: widget.resObj,
                     ),
                   ),
 

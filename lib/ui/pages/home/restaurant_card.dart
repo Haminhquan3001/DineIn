@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/ui/utils/format_address.dart';
 import 'package:group_project/ui/widgets/space_y.dart';
 import 'restaurant_info.dart';
@@ -10,14 +11,33 @@ import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 
-class RestaurantCard extends StatelessWidget {
+class RestaurantCard extends StatefulWidget {
   final Map<String, dynamic> resObj;
-  final bool favorite;
+
   const RestaurantCard({
     super.key,
     required this.resObj,
-    required this.favorite,
   });
+
+  @override
+  State<RestaurantCard> createState() => _RestaurantCardState();
+}
+
+class _RestaurantCardState extends State<RestaurantCard> {
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // check if this restaurant is favorite
+    List<dynamic> favoriteRestaurants =
+        jsonDecode(KwunLocalStorage.getString("favorites"));
+    bool isfavorite = favoriteRestaurants.any((element) =>
+        element["restaurant_name"] == widget.resObj["restaurant_name"]);
+
+    setState(() => isFavorite = isfavorite);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,29 +46,27 @@ class RestaurantCard extends StatelessWidget {
     // double fontSizeName = 18, fontSizeLocation = 12, fontSizeOther = 14;
     final theme = Provider.of<ThemeProvider>(context);
 
-    // check if this restaurant is favorite
-    List<dynamic> favoriteRestaurants =
-        jsonDecode(KwunLocalStorage.getString("favorites"));
-    bool isFavorite = favoriteRestaurants.any(
-        (element) => element["restaurant_name"] == resObj["restaurant_name"]);
-
     return TextButton(
-      onPressed: () {
+      onPressed: () async {
         // save ther restaurant object to the provider
-        context.read<ReserveFormProvider>().updateRestaurantObject(resObj);
+        context
+            .read<ReserveFormProvider>()
+            .updateRestaurantObject(widget.resObj);
 
         context
             .read<ReserveFormProvider>()
-            .updateCurrentRestaurant(resObj["restaurant_name"]);
+            .updateCurrentRestaurant(widget.resObj["restaurant_name"]);
 
-        Navigator.push(
+        final onChangedisFavorite = await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RestaurantInfo(
-              resObj: resObj,
-            ),
+            builder: (context) => RestaurantInfo(resObj: widget.resObj),
           ),
         );
+
+        setState(() {
+          isFavorite = onChangedisFavorite;
+        });
       },
       child: Container(
           decoration: BoxDecoration(
@@ -74,7 +92,7 @@ class RestaurantCard extends StatelessWidget {
                       topRight: Radius.circular(10),
                     ),
                     child: Image.network(
-                      resObj["image_url"].toString(),
+                      widget.resObj["image_url"].toString(),
                       height: 110,
                       width: contextWidth,
                       fit: BoxFit.cover,
@@ -99,14 +117,14 @@ class RestaurantCard extends StatelessWidget {
 
                               // either save to favorites
                               if (isToggled) {
-                                favoriteRestaurants.add(resObj);
+                                favoriteRestaurants.add(widget.resObj);
                               }
 
                               // or remove from favorites
                               else {
                                 // remove by name
-                                favoriteRestaurants.removeWhere(
-                                    (curr) => curr["id"] == resObj["id"]);
+                                favoriteRestaurants.removeWhere((curr) =>
+                                    curr["id"] == widget.resObj["id"]);
                               }
 
                               // save new data
@@ -125,7 +143,7 @@ class RestaurantCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        resObj["restaurant_name"],
+                        widget.resObj["restaurant_name"],
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
@@ -138,7 +156,7 @@ class RestaurantCard extends StatelessWidget {
                       width: 3,
                     ),
                     Text(
-                      resObj["rating"].toString(),
+                      widget.resObj["rating"].toString(),
                       style: Theme.of(context).textTheme.bodyMedium,
                       // style: TextStyle(
                       //   color: const Color.fromARGB(254, 0, 0, 0),
@@ -155,7 +173,7 @@ class RestaurantCard extends StatelessWidget {
                 child: Row(children: [
                   Expanded(
                     child: Text(
-                      formatAddressToStateAndCity(resObj["address"]),
+                      formatAddressToStateAndCity(widget.resObj["address"]),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -165,7 +183,7 @@ class RestaurantCard extends StatelessWidget {
                     size: 18,
                   ),
                   Text(
-                    "${resObj["min_price"].toString()} - ${resObj["max_price"].toString()}",
+                    "${widget.resObj["min_price"].toString()} - ${widget.resObj["max_price"].toString()}",
                     style: Theme.of(context).textTheme.bodyMedium,
                     // style: TextStyle(
                     //   color: const Color.fromARGB(254, 0, 0, 0),

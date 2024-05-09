@@ -19,7 +19,7 @@ void main() async {
   if (KwunLocalStorage.getString("favorites").isEmpty) {
     await KwunLocalStorage.setString("favorites", "[]");
   }
-  
+
   final supabase = await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseKey,

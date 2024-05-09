@@ -124,12 +124,8 @@ class _HomePage extends State<HomePage> {
 
                       var resObj = _restaurantsFiltered[index];
 
-                      bool isFavorite = favoriteRestaurants.any(
-                          (eachFavorite) => eachFavorite['id'] == resObj['id']);
-
                       return RestaurantCard(
                         resObj: resObj,
-                        favorite: isFavorite,
                       );
                     }),
                   ),

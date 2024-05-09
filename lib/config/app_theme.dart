@@ -121,7 +121,6 @@ class AppTheme {
   );
 
   static ColorScheme lightScheme = const ColorScheme.light().copyWith(
-    
     brightness: Brightness.light,
     //
     background: Colors.white,
@@ -199,6 +198,7 @@ class AppTheme {
         shape: MaterialStateProperty.all(const StadiumBorder()),
       ),
     ),
+
     inputDecorationTheme: const InputDecorationTheme(
         hintStyle: TextStyle(color: Colors.black),
         labelStyle: TextStyle(color: Colors.black),

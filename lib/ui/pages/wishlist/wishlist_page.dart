@@ -58,7 +58,6 @@ class WishlistPage extends StatelessWidget {
                     var resObj = favoriteRestaurants[index];
                     return RestaurantCard(
                       resObj: resObj,
-                      favorite: true,
                     );
                   }),
                 ),
