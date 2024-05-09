@@ -55,8 +55,8 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
 
-    Image userPicture = user.avatarUrl != null
-        ? Image.network(user.avatarUrl!, width: 80, height: 80)
+    Image userPicture = user.avatarUrl.isNotEmpty
+        ? Image.network(user.avatarUrl, width: 80, height: 80)
         : Image.asset("assets/core/woman.png", width: 80, height: 80);
 
     return Scaffold(

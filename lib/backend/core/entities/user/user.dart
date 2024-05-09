@@ -9,7 +9,7 @@ class User {
   String email;
 
   String? phone;
-  String? avatarUrl;
+  String avatarUrl;
   CreditCard? creditcard;
   List<Restaurant>? wishlist;
   List<Reservation>? reservation;
@@ -23,8 +23,8 @@ class User {
     required this.id,
     required this.name,
     required this.email,
+    required this.avatarUrl,
     this.phone,
-    this.avatarUrl,
     this.creditcard,
     this.wishlist,
     this.reservation,

@@ -95,7 +95,7 @@ class UserProvider with ChangeNotifier {
     await _authRepository.signOut();
 
     _isLoading = false;
-    _user = User(id: '', name: '', email: '');
+    _user = User(id: '', name: '', email: '', avatarUrl: '');
 
     await KwunLocalStorage.setString("favorites", "[]");
     await KwunLocalStorage.setBool("is_owner", false);

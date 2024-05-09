@@ -5,8 +5,8 @@ class UserModel extends User {
     required super.id,
     required super.name,
     required super.email,
+    required super.avatarUrl,
     super.phone,
-    super.avatarUrl,
   });
 
   // TODO add more fields as the app grows
