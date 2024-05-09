@@ -5,9 +5,9 @@ import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
 
 import '../home/restaurant_card.dart';
-import 'package:group_project/ui/utils/local_storage_singleton.dart';
 
 class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
@@ -17,10 +17,10 @@ class WishlistPage extends StatefulWidget {
 }
 
 class _WishlistPageState extends State<WishlistPage> {
-  List<dynamic> favoriteRestaurants = [];
+  late List<dynamic> favoriteRestaurants = [];
 
   @override
-  void initState() {
+  void initState()   {
     super.initState();
     fetchWishListRestaurants();
   }
@@ -44,7 +44,6 @@ class _WishlistPageState extends State<WishlistPage> {
               .single()));
 
       log.d(favoriteRestaurantsFromDb);
-
       setState(() => favoriteRestaurants = favoriteRestaurantsFromDb);
     } on Exception catch (e) {
       if (mounted) {
@@ -55,10 +54,6 @@ class _WishlistPageState extends State<WishlistPage> {
 
   @override
   Widget build(BuildContext context) {
-    // get favorite restaurant object from localstorage
-    List<dynamic> favoriteRestaurants =
-        jsonDecode(KwunLocalStorage.getString("favorites"));
-
     double padding = 15;
     final theme = Provider.of<ThemeProvider>(context);
     return SafeArea(
@@ -91,7 +86,6 @@ class _WishlistPageState extends State<WishlistPage> {
                     var resObj = favoriteRestaurants[index];
                     return RestaurantCard(
                       resObj: resObj,
-                      favorite: true,
                     );
                   }),
                 ),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/config/constants.dart';
+import 'package:group_project/ui/utils/format_rating.dart';
 import 'restaurant_info.dart';
 import 'package:provider/provider.dart';
 
 import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:group_project/providers/theme.provider.dart';
-import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'package:group_project/ui/utils/format_address.dart';
 
@@ -25,7 +26,9 @@ class _RestaurantCardState extends State<RestaurantCard> {
     super.initState();
 
     final favoriteRestaurants =
-        context.watch<ReserveFormProvider>().favoriteRestaurants;
+        Provider.of<ReserveFormProvider>(context, listen: false)
+            .favoriteRestaurants;
+
     // check if this restaurant is favorite
     bool isfavorite = favoriteRestaurants.any((element) =>
         element["restaurant_name"] == widget.resObj["restaurant_name"]);
@@ -151,7 +154,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                       width: 3,
                     ),
                     Text(
-                      widget.resObj["rating"].toString(),
+                     formatRating(widget.resObj["rating"].toString()),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
