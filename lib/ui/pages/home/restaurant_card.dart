@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:group_project/config/constants.dart';
-import 'package:group_project/ui/utils/format_rating.dart';
 import 'restaurant_info.dart';
 import 'package:provider/provider.dart';
 
+import 'package:group_project/ui/utils/format_rating.dart';
 import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:group_project/config/constants.dart';
+
 import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +43,6 @@ class _WishlistPageState extends State<WishlistPage> {
               .eq("id", id)
               .single()));
 
-      log.d(favoriteRestaurantsFromDb);
       setState(() => favoriteRestaurants = favoriteRestaurantsFromDb);
     } on Exception catch (e) {
       if (mounted) {

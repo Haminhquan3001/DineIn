@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uuid/uuid.dart';
-import 'package:group_project/providers/theme.provider.dart';
+
 import 'package:group_project/ui/utils/format_time_of_day.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 

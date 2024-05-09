@@ -1,14 +1,13 @@
-import 'dart:convert';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
 import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:group_project/ui/pages/home/home_page.dart';
 import 'package:group_project/ui/utils/format_address.dart';
 import 'package:group_project/ui/utils/format_rating.dart';
-import 'package:provider/provider.dart';
-import 'overview_reviews.dart';
-import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'package:group_project/providers/theme.provider.dart';
+import 'overview_reviews.dart';
 
 class RestaurantInfo extends StatelessWidget {
   final Map resObj;
