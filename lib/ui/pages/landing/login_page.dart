@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/backend/core/entities/user/user.dart';
 import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/pages/landing/widgets/google_credentials_button.dart';
 import 'package:group_project/ui/pages/landing/widgets/or_divider.dart';
@@ -106,6 +107,11 @@ class _Login extends State<LoginPage> {
                         _passwordController.text,
                       );
 
+                      provider.setUser = User(
+                          id: res.data!.id,
+                          name: res.data!.name,
+                          email: res.data!.email);
+
                       // if the widget is not mounted, don't do anything
                       // this prevents memory leaks
                       if (!context.mounted) return;
@@ -129,6 +135,11 @@ class _Login extends State<LoginPage> {
                     loginOrSignupText: 'Login',
                     onPressed: () async {
                       final res = await provider.useLoginWithGoogle();
+
+                      provider.setUser = User(
+                          id: res.data!.id,
+                          name: res.data!.name,
+                          email: res.data!.email);
 
                       // since the provider makes to rebuild the widgets,
                       // we need to check if the widget is mounted before doing anything

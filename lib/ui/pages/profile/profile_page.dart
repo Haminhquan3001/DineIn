@@ -48,6 +48,8 @@ class _ProfilePageState extends State<ProfilePage> {
     final user = userProvider.getUser;
 
     if (user.id == "") {
+      userProvider.useSignOut();
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.go('/welcome');
       });
