@@ -16,9 +16,9 @@ class UserProvider with ChangeNotifier {
               ?.userMetadata?['full_name'] ??
           '',
       email: sp.Supabase.instance.client.auth.currentUser?.email ?? '',
-      avatarUrl: sp.Supabase.instance.client.auth.currentUser?.userMetadata?['avatar_url'] ?? ''
-      
-      );
+      avatarUrl: sp.Supabase.instance.client.auth.currentUser
+              ?.userMetadata?['avatar_url'] ??
+          '');
   bool _isLoading = false;
 
   User get getUser => _user;
@@ -91,7 +91,6 @@ class UserProvider with ChangeNotifier {
 
   Future<void> useSignOut() async {
     _isLoading = true;
-    notifyListeners();
 
     await _authRepository.signOut();
 
