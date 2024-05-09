@@ -21,7 +21,7 @@ class WishlistPage extends StatelessWidget {
     List<dynamic> favoriteRestaurants =
         jsonDecode(KwunLocalStorage.getString("favorites"));
 
-    double padding = 10;
+    double padding = 15;
     final theme = Provider.of<ThemeProvider>(context);
     return SafeArea(
       // backgroundColor: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,

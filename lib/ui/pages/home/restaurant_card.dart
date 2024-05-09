@@ -17,15 +17,15 @@ class RestaurantCard extends StatelessWidget {
     required this.resObj,
     required this.favorite,
   });
-
   @override
   Widget build(BuildContext context) {
     double contextWidth = MediaQuery.of(context).size.width;
     double padding = 10;
+    final favoriteRestaurants =
+        context.watch<ReserveFormProvider>().favoriteRestaurants;
     final theme = Provider.of<ThemeProvider>(context);
     // check if this restaurant is favorite
-    List<dynamic> favoriteRestaurants =
-        jsonDecode(KwunLocalStorage.getString("favorites"));
+
     bool isFavorite = favoriteRestaurants.any(
         (element) => element["restaurant_name"] == resObj["restaurant_name"]);
 
@@ -88,11 +88,11 @@ class RestaurantCard extends StatelessWidget {
                             initialValue: isFavorite,
                             onChanged: (bool isToggled) {
                               // get from data from localstorage
-                              String favoriteRestaurantsString =
-                                  KwunLocalStorage.getString("favorites");
 
                               List<dynamic> favoriteRestaurants =
-                                  jsonDecode(favoriteRestaurantsString);
+                                  Provider.of<ReserveFormProvider>(context,
+                                          listen: false)
+                                      .favoriteRestaurants;
 
                               // either save to favorites
                               if (isToggled) {
@@ -107,8 +107,10 @@ class RestaurantCard extends StatelessWidget {
                               }
 
                               // save new data
-                              KwunLocalStorage.setString(
-                                  "favorites", jsonEncode(favoriteRestaurants));
+                              context
+                                  .read<ReserveFormProvider>()
+                                  .updateFavoriteRestaurants(
+                                      favoriteRestaurants);
                             },
                           )),
                     ],
@@ -148,7 +150,7 @@ class RestaurantCard extends StatelessWidget {
                 child: Row(children: [
                   Expanded(
                     child: Text(
-                      formatAddressToStateAndCity(["address"].toString()),
+                      formatAddressToStateAndCity(resObj["address"].toString()),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),

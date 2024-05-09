@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
+import 'dart:convert';
 
 class ReserveFormProvider with ChangeNotifier {
   String _selectedTime = "";
@@ -37,5 +39,15 @@ class ReserveFormProvider with ChangeNotifier {
 
   void updateRestaurantObject(Map<String, dynamic> newRestaurant) {
     _restaurant = newRestaurant;
+  }
+
+  List<dynamic> _favoriteRestaurants =
+      jsonDecode(KwunLocalStorage.getString("favorites"));
+  List<dynamic> get favoriteRestaurants => _favoriteRestaurants;
+
+  void updateFavoriteRestaurants(List<dynamic> favRes) {
+    _favoriteRestaurants = favRes;
+    KwunLocalStorage.setString("favorites", jsonEncode(favRes));
+    notifyListeners();
   }
 }

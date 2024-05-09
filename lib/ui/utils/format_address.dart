@@ -4,7 +4,7 @@ String formatAddressToStateAndCity(String address) {
   String cityAndStateAndZip = "";
   String cityAndState = "";
   int zipLength = 0;
-  
+
   try {
     cityAndStateAndZip =
         addressList.sublist(addressList.length - 2).join(', ').toString();
