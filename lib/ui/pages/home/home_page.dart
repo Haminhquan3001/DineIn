@@ -119,6 +119,7 @@ class _HomePage extends State<HomePage> {
                         var resObj = _restaurantsFiltered[index];
                         return RestaurantCard(
                           resObj: resObj,
+                          key: Key(resObj["restaurant_name"]),
                           isHomePage: true,
                         );
                       }),
