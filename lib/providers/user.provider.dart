@@ -15,7 +15,10 @@ class UserProvider with ChangeNotifier {
       name: sp.Supabase.instance.client.auth.currentUser
               ?.userMetadata?['full_name'] ??
           '',
-      email: sp.Supabase.instance.client.auth.currentUser?.email ?? '');
+      email: sp.Supabase.instance.client.auth.currentUser?.email ?? '',
+      avatarUrl: sp.Supabase.instance.client.auth.currentUser?.userMetadata?['avatar_url'] ?? ''
+      
+      );
   bool _isLoading = false;
 
   User get getUser => _user;

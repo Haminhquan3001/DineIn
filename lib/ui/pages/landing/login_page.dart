@@ -110,7 +110,8 @@ class _Login extends State<LoginPage> {
                       provider.setUser = User(
                           id: res.data!.id,
                           name: res.data!.name,
-                          email: res.data!.email);
+                          email: res.data!.email,
+                          avatarUrl: res.data!.avatarUrl);
 
                       // if the widget is not mounted, don't do anything
                       // this prevents memory leaks
@@ -139,7 +140,8 @@ class _Login extends State<LoginPage> {
                       provider.setUser = User(
                           id: res.data!.id,
                           name: res.data!.name,
-                          email: res.data!.email);
+                          email: res.data!.email,
+                          avatarUrl: res.data!.avatarUrl);
 
                       // since the provider makes to rebuild the widgets,
                       // we need to check if the widget is mounted before doing anything
