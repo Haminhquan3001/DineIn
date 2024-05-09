@@ -194,7 +194,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
 
   XFile? _image;
   bool _imageSelected = false;
-
+  String _location = "";
   TimeOfDay _openingTime = const TimeOfDay(hour: 10, minute: 0);
   TimeOfDay _closingTime = const TimeOfDay(hour: 20, minute: 0);
   final _restaurantNameController = TextEditingController();
@@ -591,19 +591,23 @@ class _RestaurantFormState extends State<RestaurantForm> {
                   ),
                   const SizedBox(height: 5.0),
                   Text(
-                    "Location: ${generateAddress()}",
+                    "Location: $_location",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   TextFormField(
                     controller: _streetController,
                     decoration: const InputDecoration(labelText: 'Street'),
-                    onSaved: (value) => generateAddress(),
+                    onChanged: (value) => setState(() {
+                      _location = generateAddress();
+                    }),
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
                     controller: _cityController,
                     decoration: const InputDecoration(labelText: 'City'),
-                    onSaved: (value) => generateAddress(),
+                    onChanged: (value) => setState(() {
+                      _location = generateAddress();
+                    }),
                   ),
                   const SizedBox(height: 10),
                   DropdownButtonFormField(
@@ -613,7 +617,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
                       setState(() {
                         _state = value!;
                       });
-                      generateAddress();
+                      _location = generateAddress();
                     },
                     items:
                         _states.map<DropdownMenuItem<String>>((String value) {
@@ -635,7 +639,12 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     decoration: const InputDecoration(labelText: 'Zip Code'),
                     keyboardType: TextInputType.number,
                     maxLength: 5,
-                    onSaved: (value) => generateAddress(),
+                    onChanged: (value) => setState(() {
+                      _location = generateAddress();
+                    }),
+                    onSaved: (value) => setState(() {
+                      _location = generateAddress();
+                    }),
                   ),
                   const SizedBox(height: 5.0),
                   SizedBox(
