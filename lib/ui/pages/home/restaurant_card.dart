@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'restaurant_info.dart';
 import 'package:provider/provider.dart';
@@ -9,40 +8,53 @@ import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'package:group_project/ui/utils/format_address.dart';
 
-class RestaurantCard extends StatelessWidget {
+class RestaurantCard extends StatefulWidget {
   final Map<String, dynamic> resObj;
-  final bool favorite;
-  const RestaurantCard({
-    super.key,
-    required this.resObj,
-    required this.favorite,
-  });
+
+  const RestaurantCard({super.key, required this.resObj});
+
   @override
-  Widget build(BuildContext context) {
-    double contextWidth = MediaQuery.of(context).size.width;
-    double padding = 10;
+  State<RestaurantCard> createState() => _RestaurantCardState();
+}
+
+class _RestaurantCardState extends State<RestaurantCard> {
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+
     final favoriteRestaurants =
         context.watch<ReserveFormProvider>().favoriteRestaurants;
-    final theme = Provider.of<ThemeProvider>(context);
     // check if this restaurant is favorite
+    bool isfavorite = favoriteRestaurants.any((element) =>
+        element["restaurant_name"] == widget.resObj["restaurant_name"]);
 
-    bool isFavorite = favoriteRestaurants.any(
-        (element) => element["restaurant_name"] == resObj["restaurant_name"]);
+    setState(() => isFavorite = isfavorite);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context);
+    double contextWidth = MediaQuery.of(context).size.width;
+    double padding = 10;
 
     return TextButton(
       onPressed: () {
         // save ther restaurant object to the provider
-        context.read<ReserveFormProvider>().updateRestaurantObject(resObj);
+        context
+            .read<ReserveFormProvider>()
+            .updateRestaurantObject(widget.resObj);
 
         context
             .read<ReserveFormProvider>()
-            .updateCurrentRestaurant(resObj["restaurant_name"]);
+            .updateCurrentRestaurant(widget.resObj["restaurant_name"]);
 
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => RestaurantInfo(
-              resObj: resObj,
+              resObj: widget.resObj,
             ),
           ),
         );
@@ -71,7 +83,7 @@ class RestaurantCard extends StatelessWidget {
                       topRight: Radius.circular(10),
                     ),
                     child: Image.network(
-                      resObj["image_url"].toString(),
+                      widget.resObj["image_url"].toString(),
                       height: 110,
                       width: contextWidth,
                       fit: BoxFit.cover,
@@ -96,14 +108,14 @@ class RestaurantCard extends StatelessWidget {
 
                               // either save to favorites
                               if (isToggled) {
-                                favoriteRestaurants.add(resObj);
+                                favoriteRestaurants.add(widget.resObj);
                               }
 
                               // or remove from favorites
                               else {
                                 // remove by name
-                                favoriteRestaurants.removeWhere(
-                                    (curr) => curr["id"] == resObj["id"]);
+                                favoriteRestaurants.removeWhere((curr) =>
+                                    curr["id"] == widget.resObj["id"]);
                               }
 
                               // save new data
@@ -126,7 +138,7 @@ class RestaurantCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        resObj["restaurant_name"],
+                        widget.resObj["restaurant_name"],
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
@@ -139,7 +151,7 @@ class RestaurantCard extends StatelessWidget {
                       width: 3,
                     ),
                     Text(
-                      resObj["rating"].toString(),
+                      widget.resObj["rating"].toString(),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -150,7 +162,8 @@ class RestaurantCard extends StatelessWidget {
                 child: Row(children: [
                   Expanded(
                     child: Text(
-                      formatAddressToStateAndCity(resObj["address"].toString()),
+                      formatAddressToStateAndCity(
+                          widget.resObj["address"].toString()),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
@@ -160,7 +173,7 @@ class RestaurantCard extends StatelessWidget {
                     size: 18,
                   ),
                   Text(
-                    "${resObj["min_price"].toString()} - ${resObj["max_price"].toString()}",
+                    "${widget.resObj["min_price"].toString()} - ${widget.resObj["max_price"].toString()}",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ]),

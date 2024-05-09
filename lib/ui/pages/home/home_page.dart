@@ -76,7 +76,6 @@ class _HomePage extends State<HomePage> {
         }
       },
       child: SafeArea(
-        
         child: Hero(
           tag: 'homepage',
           child: Padding(
@@ -93,7 +92,7 @@ class _HomePage extends State<HomePage> {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
-          
+
                 // Search Bar
                 Padding(
                   padding: EdgeInsets.only(left: appPadding, right: appPadding),
@@ -104,11 +103,11 @@ class _HomePage extends State<HomePage> {
                         prefixIcon: Icon(Icons.search)),
                   ),
                 ),
-          
+
                 const SizedBox(
                   height: 5,
                 ),
-          
+
                 // Restaurant List
                 Expanded(
                   child: Container(
@@ -120,19 +119,8 @@ class _HomePage extends State<HomePage> {
                       scrollDirection: Axis.vertical,
                       itemCount: _restaurantsFiltered.length,
                       itemBuilder: ((context, index) {
-                        List<dynamic> favoriteRestaurants = context
-                            .watch<ReserveFormProvider>()
-                            .favoriteRestaurants;
-          
                         var resObj = _restaurantsFiltered[index];
-          
-                        bool isFavorite = favoriteRestaurants.any(
-                            (eachFavorite) => eachFavorite['id'] == resObj['id']);
-          
-                        return RestaurantCard(
-                          resObj: resObj,
-                          favorite: isFavorite,
-                        );
+                        return RestaurantCard(resObj: resObj);
                       }),
                     ),
                   ),
