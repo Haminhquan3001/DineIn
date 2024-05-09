@@ -20,7 +20,7 @@ class _WishlistPageState extends State<WishlistPage> {
   late List<dynamic> favoriteRestaurants = [];
 
   @override
-  void initState()   {
+  void initState() {
     super.initState();
     fetchWishListRestaurants();
   }
@@ -58,39 +58,43 @@ class _WishlistPageState extends State<WishlistPage> {
     return SafeArea(
       // backgroundColor: theme.isDarkTheme ? const Color.fromARGB(255, 43, 45, 44) : Colors.grey.shade100,
       // bottomNavigationBar: const BottomNavBar(),
-      child: Padding(
-        padding: EdgeInsets.only(left: padding, right: padding, top: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, bottom: 5.0),
-              child: Text(
-                "My Wishlist",
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: theme.isDarkTheme
-                      ? const Color.fromARGB(255, 43, 45, 44)
-                      : Colors.white,
-                ),
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: favoriteRestaurants.length,
-                  itemBuilder: ((context, index) {
-                    var resObj = favoriteRestaurants[index];
-                    return RestaurantCard(
-                      resObj: resObj,
-                    );
-                  }),
+      child: Hero(
+        tag: 'wishlist',
+        child: Padding(
+          padding: EdgeInsets.only(left: padding, right: padding, top: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, bottom: 5.0),
+                child: Text(
+                  "My Wishlist",
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.isDarkTheme
+                        ? const Color.fromARGB(255, 43, 45, 44)
+                        : Colors.white,
+                  ),
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: favoriteRestaurants.length,
+                    itemBuilder: ((context, index) {
+                      var resObj = favoriteRestaurants[index];
+                      return RestaurantCard(
+                        resObj: resObj,
+                        isHomePage: false,
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

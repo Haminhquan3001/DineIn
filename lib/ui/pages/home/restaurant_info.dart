@@ -8,13 +8,16 @@ import 'package:group_project/ui/utils/format_rating.dart';
 import 'package:group_project/ui/widgets/toggle_icon_button.dart';
 import 'package:group_project/providers/theme.provider.dart';
 import 'overview_reviews.dart';
+import 'package:group_project/ui/pages/wishlist/wishlist_page.dart';
 
 class RestaurantInfo extends StatelessWidget {
   final Map resObj;
+  final bool isHomePage;
 
   const RestaurantInfo({
     super.key,
     required this.resObj,
+    required this.isHomePage,
   });
 
   @override
@@ -35,7 +38,7 @@ class RestaurantInfo extends StatelessWidget {
         (element) => element["restaurant_name"] == resObj["restaurant_name"]);
 
     return Hero(
-      tag: 'homepage',
+      tag: isHomePage ? 'homepage' : 'wishlist',
       child: Scaffold(
         appBar: AppBar(
           iconTheme: const IconThemeData(
@@ -96,7 +99,9 @@ class RestaurantInfo extends StatelessWidget {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const HomePage(),
+                                      builder: (context) => isHomePage
+                                          ? const HomePage()
+                                          : const WishlistPage(),
                                     ),
                                   );
                                 },

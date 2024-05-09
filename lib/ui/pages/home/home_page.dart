@@ -118,8 +118,9 @@ class _HomePage extends State<HomePage> {
                       itemBuilder: ((context, index) {
                         var resObj = _restaurantsFiltered[index];
                         return RestaurantCard(
-                            resObj: resObj,
-                            key: Key(resObj["restaurant_name"]));
+                          resObj: resObj,
+                          isHomePage: true,
+                        );
                       }),
                     ),
                   ),

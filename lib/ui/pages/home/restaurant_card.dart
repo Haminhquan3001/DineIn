@@ -10,8 +10,9 @@ import 'package:group_project/ui/utils/format_address.dart';
 
 class RestaurantCard extends StatefulWidget {
   final Map<String, dynamic> resObj;
+  final bool isHomePage;
 
-  const RestaurantCard({super.key, required this.resObj});
+  const RestaurantCard({super.key, required this.resObj, required this.isHomePage});
 
   @override
   State<RestaurantCard> createState() => _RestaurantCardState();
@@ -51,12 +52,13 @@ class _RestaurantCardState extends State<RestaurantCard> {
         context
             .read<ReserveFormProvider>()
             .updateCurrentRestaurant(widget.resObj["restaurant_name"]);
-
+        
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => RestaurantInfo(
               resObj: widget.resObj,
+              isHomePage: widget.isHomePage,
             ),
           ),
         );
