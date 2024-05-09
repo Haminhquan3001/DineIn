@@ -3,13 +3,17 @@ import 'package:group_project/backend/auth/domain/repositories/auth_repository.d
 import 'package:group_project/backend/core/entities/user/user.dart';
 import 'package:group_project/config/constants.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as sp;
 
 class UserProvider with ChangeNotifier {
   UserProvider(this._authRepository);
 
   final AuthRepository _authRepository;
 
-  User _user = User(id: '', name: '', email: '');
+  User _user = User(
+      id: sp.Supabase.instance.client.auth.currentUser?.id ?? '',
+      name: '',
+      email: '');
   bool _isLoading = false;
 
   User get getUser => _user;

@@ -13,6 +13,6 @@ showKwunSnackBar(
     ),
     backgroundColor: color,
     behavior: SnackBarBehavior.floating,
-    duration: const Duration(milliseconds: 5000),
+    duration: const Duration(milliseconds: 3000),
   ));
 }

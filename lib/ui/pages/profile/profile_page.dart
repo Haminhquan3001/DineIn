@@ -47,9 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.getUser;
 
-    // TODO: in every hard refresh, the user_provider is cleaned up
-    // leading to an error to the whole app workflow
-    // This fixes temporarily.
     if (user.id == "") {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.go('/welcome');

@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 
 import 'package:group_project/providers/reserve_form.provider.dart';
 import 'package:group_project/providers/theme.provider.dart';
-import 'package:group_project/providers/user.provider.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 
 class ReserveForm extends StatelessWidget {
@@ -15,11 +14,6 @@ class ReserveForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const myCustomStyle = TextStyle(
-      color: Color.fromARGB(254, 0, 0, 0),
-      fontSize: 24,
-      fontWeight: FontWeight.w700,
-    );
     final theme = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: Container(
@@ -160,8 +154,8 @@ class TimeCard extends StatelessWidget {
           border: Border.all(
               color: selected
                   ? (theme.isDarkTheme
-                        ? const Color.fromARGB(255, 83, 28, 179)
-                        : const Color.fromARGB(255, 167, 29, 49))
+                      ? const Color.fromARGB(255, 83, 28, 179)
+                      : const Color.fromARGB(255, 167, 29, 49))
                   : (theme.isDarkTheme
                       ? const Color.fromARGB(255, 173, 122, 153)
                       : const Color.fromARGB(255, 186, 143, 149))),
@@ -203,8 +197,8 @@ class CounterWidget extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             color: theme.isDarkTheme
-                  ? const Color.fromARGB(255, 173, 122, 153)
-                  : const Color.fromARGB(255, 167, 29, 49),
+                ? const Color.fromARGB(255, 173, 122, 153)
+                : const Color.fromARGB(255, 167, 29, 49),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -315,15 +309,17 @@ class ReserveButton extends StatelessWidget {
         height: 45,
         decoration: BoxDecoration(
           color: theme.isDarkTheme
-                  ? const Color.fromARGB(255, 173, 122, 153)
-                  : const Color.fromARGB(255, 167, 29, 49),
+              ? const Color.fromARGB(255, 173, 122, 153)
+              : const Color.fromARGB(255, 167, 29, 49),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
           child: Text(
             "Confirm",
             style: TextStyle(
-              color: theme.isDarkTheme ? const Color.fromARGB(255, 3, 96, 22) : const Color.fromARGB(255, 99, 235, 126),
+              color: theme.isDarkTheme
+                  ? const Color.fromARGB(255, 3, 96, 22)
+                  : const Color.fromARGB(255, 99, 235, 126),
               fontWeight: FontWeight.w700,
               fontSize: 16,
             ),
@@ -419,7 +415,7 @@ class ConfirmDialog extends StatelessWidget {
         context.watch<ReserveFormProvider>().selectedTime;
     final Map<String, dynamic> selectedRestaurantObj =
         context.watch<ReserveFormProvider>().getRestaurantObj;
-    final userId = context.watch<UserProvider>().getUser.id;
+    final userId = Supabase.instance.client.auth.currentUser!.id;
 
     final String selectedTime = context
         .watch<ReserveFormProvider>()
@@ -446,7 +442,7 @@ class ConfirmDialog extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 20),
                 child: Text(restaurantName,
-                textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
                     style: const TextStyle(
                         color: Color.fromARGB(255, 111, 94, 83),
                         fontSize: 30,

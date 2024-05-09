@@ -1,19 +1,57 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/providers/theme.provider.dart';
+import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../home/restaurant_card.dart';
 import 'package:group_project/ui/utils/local_storage_singleton.dart';
 
-class WishlistPage extends StatelessWidget {
-  final myCustomStyle = const TextStyle(
-    color: Color.fromARGB(254, 0, 0, 0),
-    fontSize: 24,
-    fontWeight: FontWeight.w700,
-  );
-
+class WishlistPage extends StatefulWidget {
   const WishlistPage({super.key});
+
+  @override
+  State<WishlistPage> createState() => _WishlistPageState();
+}
+
+class _WishlistPageState extends State<WishlistPage> {
+  List<dynamic> favoriteRestaurants = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWishListRestaurants();
+  }
+
+  void fetchWishListRestaurants() async {
+    // get favorite restaurant object from localstorage
+    List<dynamic> fvRestaurants =
+        jsonDecode(KwunLocalStorage.getString("favorites"));
+
+    // get only the ids of favorites Restaurants
+    List<String> favoriteRestaurantIds =
+        fvRestaurants.map((restaurant) => restaurant['id'].toString()).toList();
+
+    try {
+      final favoriteRestaurantsFromDb = await Future.wait(
+          favoriteRestaurantIds.map((id) => Supabase.instance.client
+              .from("restaurants")
+              .select(
+                  "*, food_categories(*), reviews(*, users(*)), menu_items(*)")
+              .eq("id", id)
+              .single()));
+
+      log.d(favoriteRestaurantsFromDb);
+
+      setState(() => favoriteRestaurants = favoriteRestaurantsFromDb);
+    } on Exception catch (e) {
+      if (mounted) {
+        showKwunSnackBar(context: context, message: e.toString());
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/config/constants.dart';
 import 'package:group_project/providers/theme.provider.dart';
 import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
@@ -59,6 +60,7 @@ class UpcomingList extends StatelessWidget {
                                 color: Colors.green);
                           } on Exception catch (e) {
                             if (!context.mounted) return;
+                            log.d(e.toString());
                             showKwunSnackBar(
                                 context: context, message: e.toString());
                           }
