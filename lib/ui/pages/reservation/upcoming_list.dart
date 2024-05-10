@@ -6,7 +6,6 @@ import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class UpcomingList extends StatelessWidget {
-  // TODO sort based on date
   final List<Map<String, dynamic>> reservations;
 
   final VoidCallback refreshReservation;
@@ -109,8 +108,7 @@ class CancelBookingDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           onPressed: () {
-            Navigator.of(context)
-                .pop(false); // Return false when cancel is pressed
+            Navigator.of(context).pop(false);
           },
           child: Container(
               decoration: BoxDecoration(
@@ -126,18 +124,17 @@ class CancelBookingDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.of(context)
-                .pop(true); // Return true when confirm is pressed
+            Navigator.of(context).pop(true);
           },
           child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.black26,
-                  borderRadius: BorderRadius.circular(20)),
-              child: const Padding(
-                padding: EdgeInsets.only(
-                    left: 18.0, right: 18.0, top: 8.0, bottom: 8.0),
-                child: Text('Yes'),
-              )),
+            decoration: BoxDecoration(
+                color: Colors.black26, borderRadius: BorderRadius.circular(20)),
+            child: const Padding(
+              padding: EdgeInsets.only(
+                  left: 18.0, right: 18.0, top: 8.0, bottom: 8.0),
+              child: Text('Yes'),
+            ),
+          ),
         ),
       ],
     );
