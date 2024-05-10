@@ -7,9 +7,9 @@ class User {
   String id;
   String name;
   String email;
+  String avatarUrl;
 
   String? phone;
-  String avatarUrl;
   CreditCard? creditcard;
   List<Restaurant>? wishlist;
   List<Reservation>? reservation;
