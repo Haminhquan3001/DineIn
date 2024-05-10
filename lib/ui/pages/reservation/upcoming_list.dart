@@ -6,7 +6,6 @@ import 'package:group_project/ui/widgets/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class UpcomingList extends StatelessWidget {
-  // TODO sort based on date
   final List<Map<String, dynamic>> reservations;
 
   final VoidCallback refreshReservation;
@@ -44,25 +43,34 @@ class UpcomingList extends StatelessWidget {
                       const Expanded(child: Text("")),
                       TextButton(
                         onPressed: () async {
-                          try {
-                            await Supabase.instance.client
-                                .from("reservations")
-                                .delete()
-                                .eq("id", reservation['id']);
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const CancelBookingDialog();
+                            },
+                          ).then((confirmed) async {
+                            if (confirmed != null && confirmed) {
+                              try {
+                                await Supabase.instance.client
+                                    .from("reservations")
+                                    .delete()
+                                    .eq("id", reservation['id']);
 
-                            // revalidate the data
-                            refreshReservation();
+                                // revalidate the data
+                                refreshReservation();
 
-                            if (!context.mounted) return;
-                            showKwunSnackBar(
-                                context: context,
-                                message: "Your booking has been cancelled",
-                                color: Colors.green);
-                          } on Exception catch (e) {
-                            if (!context.mounted) return;
-                            showKwunSnackBar(
-                                context: context, message: e.toString());
-                          }
+                                if (!context.mounted) return;
+                                showKwunSnackBar(
+                                    context: context,
+                                    message: "Your booking has been cancelled",
+                                    color: Colors.green);
+                              } on Exception catch (e) {
+                                if (!context.mounted) return;
+                                showKwunSnackBar(
+                                    context: context, message: e.toString());
+                              }
+                            }
+                          });
                         },
                         child: Container(
                             padding: const EdgeInsets.all(5),
@@ -85,6 +93,54 @@ class UpcomingList extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class CancelBookingDialog extends StatelessWidget {
+  const CancelBookingDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Cancel Booking'),
+      content: const Text('Are you sure you want to cancel this booking?'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.black12,
+                  borderRadius: BorderRadius.circular(20)),
+              child: const Padding(
+                padding: EdgeInsets.only(
+                    left: 20.0, right: 20.0, top: 8.0, bottom: 8.0),
+                child: Text(
+                  'No',
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                ),
+              )),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.black12, borderRadius: BorderRadius.circular(20)),
+            child: const Padding(
+              padding: EdgeInsets.only(
+                  left: 18.0, right: 18.0, top: 8.0, bottom: 8.0),
+              child: Text(
+                'Yes',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
