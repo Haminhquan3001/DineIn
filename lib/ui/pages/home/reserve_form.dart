@@ -437,122 +437,119 @@ class ConfirmDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: const Color.fromARGB(255, 202, 200, 186),
       surfaceTintColor: Colors.transparent,
-      child: SizedBox(
-        height: 300,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 20),
-                child: Text(restaurantName,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 111, 94, 83),
-                        fontSize: 30,
-                        fontWeight: FontWeight.w600)),
-              ),
-              const Expanded(child: Text("")),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                    "Table for $guest on ${DateFormat('EEEE').format(selectedDate!)}, ${DateFormat.yMMMMd().format(selectedDate)} at $selectedTime",
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 53, 53, 49),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    )),
-              ),
-              const Expanded(child: Text("")),
-              Row(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: TextButton(
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 180, 47, 47),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                                top: 8.0, bottom: 8.0, right: 14, left: 14),
-                            child: Text(
-                              "Cancel",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Wrap(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 20),
+              child: Text(restaurantName,
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 111, 94, 83),
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600)),
+            ),
+            const Expanded(child: Text("")),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                  "Table for $guest on ${DateFormat('EEEE').format(selectedDate!)}, ${DateFormat.yMMMMd().format(selectedDate)} at $selectedTime",
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 53, 53, 49),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  )),
+            ),
+            const Expanded(child: Text("")),
+            Row(
+              children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: TextButton(
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 180, 47, 47),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                              top: 8.0, bottom: 8.0, right: 14, left: 14),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
                             ),
-                          )),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
+                          ),
+                        )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  const Expanded(child: Text("")),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: TextButton(
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 162, 176, 120),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                                top: 8.0, bottom: 8.0, right: 14, left: 14),
-                            child: Text(
-                              "Confirm",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
+                ),
+                const Expanded(child: Text("")),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: TextButton(
+                    child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 162, 176, 120),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                              top: 8.0, bottom: 8.0, right: 14, left: 14),
+                          child: Text(
+                            "Confirm",
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 28, 84, 16),
+                              fontWeight: FontWeight.w600,
                             ),
-                          )),
-                      onPressed: () async {
-                        showKwunSnackBar(
-                            context: context,
-                            message:
-                                "Thank you! Your reservation is confirmed.",
-                            color: Colors.green);
+                          ),
+                        )),
+                    onPressed: () async {
+                      showKwunSnackBar(
+                          context: context,
+                          message: "Thank you! Your reservation is confirmed.",
+                          color: Colors.green);
 
-                        try {
-                          await Supabase.instance.client
-                              .from('reservations')
-                              .insert({
-                            'date': selectedDateToInsert,
-                            'time': selectedTimeToInsert,
-                            'guests': guest,
-                            'is_reserved': true,
-                            'restaurant_id': selectedRestaurantObj['id'],
-                            'user_id': userId,
-                          });
-                        } on Exception catch (e) {
-                          if (context.mounted) {
-                            showKwunSnackBar(
-                                context: context, message: e.toString());
-                          }
+                      try {
+                        await Supabase.instance.client
+                            .from('reservations')
+                            .insert({
+                          'date': selectedDateToInsert,
+                          'time': selectedTimeToInsert,
+                          'guests': guest,
+                          'is_reserved': true,
+                          'restaurant_id': selectedRestaurantObj['id'],
+                          'user_id': userId,
+                        });
+                      } on Exception catch (e) {
+                        if (context.mounted) {
+                          showKwunSnackBar(
+                              context: context, message: e.toString());
                         }
+                      }
 
-                        if (!context.mounted) return;
+                      if (!context.mounted) return;
 
-                        Navigator.of(context).pop();
-                        context.read<ReserveFormProvider>().updateGuest(1);
-                        context
-                            .read<ReserveFormProvider>()
-                            .updateSelectedTime("");
-                        context
-                            .read<ReserveFormProvider>()
-                            .updateSelectedDate(DateTime.now());
-                      },
-                    ),
+                      Navigator.of(context).pop();
+                      context.read<ReserveFormProvider>().updateGuest(1);
+                      context
+                          .read<ReserveFormProvider>()
+                          .updateSelectedTime("");
+                      context
+                          .read<ReserveFormProvider>()
+                          .updateSelectedDate(DateTime.now());
+                    },
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
