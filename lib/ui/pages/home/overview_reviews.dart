@@ -259,14 +259,13 @@ class ReserveButton extends StatelessWidget {
               ),
             );
           },
-          child: Text(
+          child: const Text(
             "Reserve a Table",
-            style: Theme.of(context).textTheme.bodyLarge,
-            // style: TextStyle(
-            //   color: Colors.white,
-            //   fontWeight: FontWeight.w700,
-            //   fontSize: 16,
-            // ),
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+            ),
           ),
         ),
       ),

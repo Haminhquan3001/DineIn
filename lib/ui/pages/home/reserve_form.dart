@@ -15,13 +15,14 @@ class ReserveForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       body: Container(
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
             color: theme.isDarkTheme
-                ? const Color.fromARGB(255, 43, 45, 44)
-                : Colors.grey.shade100),
+                ? theme.themeData.colorScheme.background
+                : Colors.white),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +123,7 @@ class TimeGrid extends StatelessWidget {
         body: GridView.builder(
       itemCount: times.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5, childAspectRatio: 1.5),
+          crossAxisCount: 4, childAspectRatio: 1.5),
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.all(0),
@@ -151,14 +152,22 @@ class TimeCard extends StatelessWidget {
       child: Container(
         height: 40,
         decoration: BoxDecoration(
+          color: selected
+              ? (theme.isDarkTheme
+                  ? Color.fromARGB(255, 173, 122, 153)
+                  : const Color.fromARGB(255, 167, 29, 49))
+              : (theme.isDarkTheme
+                  ? Color.fromARGB(0, 0, 0, 0)
+                  : Color.fromARGB(0, 0, 0, 0)),
           border: Border.all(
-              color: selected
-                  ? (theme.isDarkTheme
-                      ? const Color.fromARGB(255, 83, 28, 179)
-                      : const Color.fromARGB(255, 167, 29, 49))
-                  : (theme.isDarkTheme
-                      ? const Color.fromARGB(255, 173, 122, 153)
-                      : const Color.fromARGB(255, 186, 143, 149))),
+            color: selected
+                ? (theme.isDarkTheme
+                    ? Color.fromARGB(255, 173, 122, 153)
+                    : const Color.fromARGB(255, 167, 29, 49))
+                : (theme.isDarkTheme
+                    ? const Color.fromARGB(255, 173, 122, 153)
+                    : Color.fromARGB(255, 46, 46, 46)),
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(
@@ -167,12 +176,10 @@ class TimeCard extends StatelessWidget {
             style: TextStyle(
                 fontSize: 10,
                 color: selected
-                    ? (theme.isDarkTheme
-                        ? const Color.fromARGB(255, 83, 28, 179)
-                        : const Color.fromARGB(255, 175, 91, 91))
+                    ? (theme.isDarkTheme ? Colors.white : Colors.white)
                     : (theme.isDarkTheme
                         ? const Color.fromARGB(255, 173, 122, 153)
-                        : const Color.fromARGB(255, 73, 136, 218))),
+                        : Colors.black)),
           ),
         ),
       ),
@@ -313,13 +320,11 @@ class ReserveButton extends StatelessWidget {
               : const Color.fromARGB(255, 167, 29, 49),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Center(
+        child: const Center(
           child: Text(
             "Confirm",
             style: TextStyle(
-              color: theme.isDarkTheme
-                  ? const Color.fromARGB(255, 3, 96, 22)
-                  : const Color.fromARGB(255, 99, 235, 126),
+              color: Colors.white,
               fontWeight: FontWeight.w700,
               fontSize: 16,
             ),
@@ -501,7 +506,7 @@ class ConfirmDialog extends StatelessWidget {
                             child: Text(
                               "Confirm",
                               style: TextStyle(
-                                color: Color.fromARGB(255, 28, 84, 16),
+                                color: Colors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

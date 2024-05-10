@@ -221,7 +221,7 @@ class AppTheme {
   static ColorScheme darkScheme = const ColorScheme.dark().copyWith(
     brightness: Brightness.dark,
 
-    background: const Color.fromARGB(37, 35, 33, 1),
+    background: const Color.fromARGB(21, 20, 19, 1),
     primary: const Color.fromARGB(255, 202, 161, 174),
     inversePrimary: const Color.fromARGB(59, 204, 141, 141),
 
