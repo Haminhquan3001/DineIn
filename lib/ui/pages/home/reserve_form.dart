@@ -447,7 +447,6 @@ class ConfirmDialog extends StatelessWidget {
                       fontSize: 30,
                       fontWeight: FontWeight.w600)),
             ),
-            const Expanded(child: Text("")),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Text(
@@ -458,7 +457,6 @@ class ConfirmDialog extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   )),
             ),
-            const Expanded(child: Text("")),
             Row(
               children: [
                 Align(

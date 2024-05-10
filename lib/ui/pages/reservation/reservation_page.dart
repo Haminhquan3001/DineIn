@@ -59,6 +59,19 @@ class _ReservationPageState extends State<ReservationPage> {
     }).toList();
   }
 
+  void sortByDateTime(
+      List<Map<String, dynamic>> reservationList, bool newToOld) {
+    reservationList.sort((a, b) {
+      DateTime reservationDateA = convertToDateTime(a['date'], a['time']);
+      DateTime reservationDateB = convertToDateTime(b['date'], b['time']);
+      if (newToOld) {
+        return reservationDateA.difference(reservationDateB).inSeconds;
+      } else {
+        return reservationDateB.difference(reservationDateA).inSeconds;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double padding = 10;
@@ -66,8 +79,12 @@ class _ReservationPageState extends State<ReservationPage> {
     List<Map<String, dynamic>> upcomingReservations =
         filterByUpcomingReservations(_reservationList);
 
+    sortByDateTime(upcomingReservations, true);
+
     List<Map<String, dynamic>> previousReservations =
         filterByPreviousReservations(_reservationList);
+
+    sortByDateTime(previousReservations, false);
 
     return SafeArea(
       child: Padding(
