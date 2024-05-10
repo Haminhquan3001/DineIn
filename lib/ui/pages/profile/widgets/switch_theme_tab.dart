@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_project/ui/utils/local_storage_singleton.dart';
 import 'package:provider/provider.dart';
 
 import 'package:group_project/providers/theme.provider.dart';
@@ -14,6 +15,9 @@ class _SwitchThemeTab extends State<SwitchThemeTab> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      isDark = Provider.of<ThemeProvider>(context, listen: false).isDarkTheme;
+    });
   }
 
   @override
@@ -40,7 +44,9 @@ class _SwitchThemeTab extends State<SwitchThemeTab> {
           activeColor: Colors.blue,
           inactiveTrackColor: Colors.grey,
           inactiveThumbColor: const Color.fromARGB(255, 202, 210, 197),
-          onChanged: (value) {
+          onChanged: (value) async {
+            await KwunLocalStorage.setBool("is_dark_theme", value);
+
             setState(() {
               isDark = value;
               Provider.of<ThemeProvider>(context, listen: false).toggleTheme();

@@ -20,6 +20,10 @@ class KwunLocalStorage {
     return _prefsInstance.getBool(key) ?? true;
   }
 
+  static bool getTheme(String key) {
+    return _prefsInstance.getBool(key) ?? false;
+  }
+
   static int getInt(String key) {
     return _prefsInstance.getInt(key) ?? 0;
   }

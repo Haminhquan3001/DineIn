@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:group_project/providers/theme.provider.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SplashPage extends StatefulWidget {
@@ -34,6 +36,8 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeProvider>(context, listen: false);
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -42,7 +46,9 @@ class _SplashPageState extends State<SplashPage> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
           ),
-          child: Image.asset('assets/logo/dinein-logo-light.png'), //TODO change logo depending on theme
+          child: theme.isDarkTheme
+              ? Image.asset('assets/logo/dinein-logo-dark.png')
+              : Image.asset('assets/logo/dinein-logo-light.png'),
         ),
       ),
     );
