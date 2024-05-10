@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icon_decoration/icon_decoration.dart';
 
 class ToggleHeartIconButton extends StatefulWidget {
   final Function(bool) onChanged;
@@ -35,9 +36,18 @@ class _ToggleHeartIconButtonState extends State<ToggleHeartIconButton> {
       child: Center(
         child: IconButton(
           padding: EdgeInsets.zero,
-          icon: Icon(
-              _isToggled ? Icons.favorite_outlined : Icons.favorite_border,
-              color: _isToggled ? Colors.red : Colors.black),
+          icon: DecoratedIcon(
+            decoration: _isToggled
+                ? const IconDecoration(
+                    border: IconBorder(
+                        width: 2.5, color: Color.fromARGB(255, 105, 16, 10)))
+                : null,
+            icon: Icon(
+              _isToggled ? Icons.favorite_sharp : Icons.favorite_border_sharp,
+              color: _isToggled ? Colors.red : Colors.black,
+              size: _isToggled ? 23 : 27,
+            ),
+          ),
           onPressed: () {
             setState(() {
               _isToggled = !_isToggled;

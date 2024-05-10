@@ -50,6 +50,7 @@ dependencies:
   shared_preferences: ^2.2.2
   uuid: 4.3.2
   flutter_launcher_icons: ^0.13.1
+  icon_decoration: ^2.0.2
 
 dev_dependencies:
   flutter_test:
