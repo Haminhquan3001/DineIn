@@ -64,7 +64,7 @@ class _Login extends State<LoginPage> {
               textAlign: TextAlign.center,
             ),
             const Text(
-                "Enter your credientials below to log in to your account",
+                "Enter your credentials below to log in to your account",
                 style: TextStyle(fontSize: 25)),
             const SizedBox(
               height: 50,
