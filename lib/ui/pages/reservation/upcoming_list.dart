@@ -112,13 +112,14 @@ class CancelBookingDialog extends StatelessWidget {
           },
           child: Container(
               decoration: BoxDecoration(
-                  color: Colors.black26,
+                  color: Colors.black12,
                   borderRadius: BorderRadius.circular(20)),
               child: const Padding(
                 padding: EdgeInsets.only(
                     left: 20.0, right: 20.0, top: 8.0, bottom: 8.0),
                 child: Text(
                   'No',
+                  style: TextStyle(fontWeight: FontWeight.w900),
                 ),
               )),
         ),
@@ -128,11 +129,14 @@ class CancelBookingDialog extends StatelessWidget {
           },
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.black26, borderRadius: BorderRadius.circular(20)),
+                color: Colors.black12, borderRadius: BorderRadius.circular(20)),
             child: const Padding(
               padding: EdgeInsets.only(
                   left: 18.0, right: 18.0, top: 8.0, bottom: 8.0),
-              child: Text('Yes'),
+              child: Text(
+                'Yes',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
             ),
           ),
         ),
