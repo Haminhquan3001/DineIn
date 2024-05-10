@@ -41,8 +41,8 @@ class _EditProfile extends State<EditProfileView> {
     _emailController.text = user.email;
     _phoneController.text = user.phone ?? '';
 
-    Image userPicture = user.avatarUrl != null
-        ? Image.network(user.avatarUrl!)
+    Image userPicture = user.avatarUrl.isNotEmpty
+        ? Image.network(user.avatarUrl)
         : Image.asset("assets/core/woman.png", width: 80, height: 80);
 
     return Scaffold(

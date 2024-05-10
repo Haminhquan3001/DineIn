@@ -129,6 +129,8 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double padding = 10;
 
+    final theme = Provider.of<ThemeProvider>(context);
+
     return Container(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -152,10 +154,12 @@ class ReviewCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    user["full_name"],
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+                  Text(user["full_name"],
+                      style: TextStyle(
+                        color: theme.isDarkTheme ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      )),
                   Row(children: [
                     const Icon(
                       Icons.star,
