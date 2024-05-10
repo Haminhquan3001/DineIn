@@ -129,7 +129,7 @@ class _SignUp extends State<SignUpPage> {
                           'login',
                           queryParameters: {
                             'email':
-                                'Please confirm your email at ${_emailController.text}',
+                                'You signed up succesfully with ${_emailController.text}',
                           },
                         );
                       },
